@@ -12,7 +12,7 @@
   $('detail').value='all';$('detail').dispatchEvent(new Event('change',{bubbles:true}));
   const language=lang=>{if(document.documentElement.lang.startsWith(lang))return;click('language');};
   language('en');
-  check($('algorithm-select').options.length===10,'ten lessons in navigation');
+  check($('algorithm-select').options.length===Object.keys(window.AlgorithmLessons).length+2,'every lesson in navigation');
   for(const lesson of Object.values(window.AlgorithmLessons).sort((a,b)=>a.number.localeCompare(b.number))){
     try{
       select(lesson.id);check($('lesson-title').textContent.includes(lesson.name),'correct title');
@@ -41,7 +41,8 @@
         check(document.documentElement.scrollWidth<=window.innerWidth+1,'no page overflow');
         results.push(lesson.id+':'+preset.id);
       }
-      click('reset');click('play');check($('play').getAttribute('aria-pressed')==='true','autoplay starts');click('play');check($('play').getAttribute('aria-pressed')==='false','pause');
+      // A two-frame trace (ready, done) finishes on the first tick, so only longer traces stay playing.
+      click('reset');click('play');if(Number($('timeline').max)>1){check($('play').getAttribute('aria-pressed')==='true','autoplay starts');click('play');}check($('play').getAttribute('aria-pressed')==='false','pause');
       click('new-example');check($('stage').dataset.kind==='ready','new example resets');
     }catch(error){failures.push({lesson:lesson.id,message:error.message});console.error('LIBRARY_QA_FAILURE '+lesson.id+': '+error.message);}
   }
