@@ -320,6 +320,18 @@
     description: message('Find shortest paths from one start node with nonnegative edge weights. Scan for the cheapest frontier node, then relax every outgoing edge.', 'نلاقي أقصر المسارات من start واحد، بأوزان مش سالبة. ندوّر على أقل مسافة في الـ frontier، وبعدين نجرب نحسّن المسافات بكل edge خارج منه.'),
     note: message('Directed graph; alphabetical scans and neighbors. Equal costs keep the first route. All source distances are computed, even with a target.', 'الجراف موجّه؛ المسح والجيران بترتيب الحروف. التكلفة المتساوية بتسيب أول طريق زي ما هو. بنحسب كل المسافات من start حتى لو فيه target.'),
     code,
+    keySteps: ['ready', 'source', 'settle', 'candidate', 'distance-update', 'keep-distance', 'path-append', 'path-reverse', 'done'],
+    view: {
+      nodeBadge: 'distances', treeRow: 'predecessors', hideRows: ['settled'],
+      legend: [
+        { tone: 'pivot', role: 'current', label: message('Current', 'الحالية') },
+        { tone: 'default', role: 'waiting', label: message('Frontier', 'Frontier') },
+        { tone: 'sorted', role: 'done', label: message('Final', 'نهائية') },
+        { tone: 'active', role: 'peek' },
+        { tone: 'found', role: 'path' },
+        { badge: true, label: message('Best distance so far', 'أقل مسافة لحد دلوقتي') },
+      ],
+    },
     fields: [
       { name: 'nodes', label: message('Nodes', 'الـ nodes'), type: 'text', maxLength: limits.nodes,
         help: message('List up to 8 distinct uppercase letters A–H, separated by spaces or commas. Include isolated nodes. Empty graph: clear all four fields.', 'اكتب لحد ٨ حروف إنجليزي كبيرة مختلفة من A لحد H، وافصل بمسافات أو فواصل إنجليزي. ضيف الـ nodes المعزولة. لجراف فاضي: امسح الأربع خانات.') },
@@ -349,6 +361,8 @@
         message('Empty graph · no start or target', 'جراف فاضي · مفيش بداية أو هدف');
     },
     theory: {
+      idea: message('Always make the closest unfinished node final next, then check whether going through it gives its neighbors a shorter route.',
+        'كل مرة ثبّت أقرب node لسه مش نهائية، وبعدين شوف: المرور منها بيدّي جيرانها طريق أقصر ولا لأ؟'),
       title: message('Why can the smallest distance become final?', 'ليه أقل مسافة ممكن تبقى نهائية؟'),
       intro: message('A path cost is the sum of its edge weights. Dijkstra finds shortest paths from one start in a directed graph with nonnegative weights. This lesson accepts integer weights 0–999, at most 8 nodes and 20 edges; it uses a linear minimum scan, not a heap.', 'تكلفة المسار هي مجموع أوزان الـ edges. Dijkstra بيلاقي أقصر المسارات من start واحد في جراف موجّه بأوزان مش سالبة. هنا بنقبل أوزان صحيحة من ٠ لـ ٩٩٩، ولحد ٨ nodes و٢٠ edge؛ وبنختار الأصغر بمسح خطّي، من غير heap.'),
       invariant: message('Every settled distance is final; every finite tentative distance is a discovered path cost. Suppose a shorter route to the chosen minimum existed. Its first unsettled node follows a settled node whose outgoing edge was already relaxed. That unsettled distance would be at most the route prefix, and hence smaller than our minimum because the remaining weights are nonnegative: a contradiction.', 'كل مسافة اتثبّتت نهائية؛ وكل مسافة مؤقتة محدودة جاية من مسار لقيناه. افترض إن فيه طريق أقصر للاختيار الأقل. أول node لسه مؤقت في الطريق ده جاي بعد node نهائي، والـ edge اللي بينهم اتجرّب قبل كده. يبقى مسافة الـ node المؤقت مش أكبر من تكلفة الجزء ده من الطريق، وبالتالي أقل من اختيارنا؛ لأن الأوزان اللي فاضلة مش سالبة. وده يناقض إننا اخترنا الأقل.'),
@@ -363,7 +377,6 @@
         message('This is single-source shortest paths, not all-pairs. A target adds reconstruction; it does not stop the search early. Every reachable outgoing edge is tested once; edges whose source is unreachable are never visited.', 'دي أقصر مسارات من بداية واحدة، مش بين كل زوج nodes. target بيضيف بناء المسار، ومش بيوقّف البحث بدري. كل edge خارج من node نقدر نوصله بيتجرّب مرة؛ edges اللي مصدرها مش ممكن نوصله مش بنزورها.'),
         message('Linear scans are simple and useful for small or dense graphs. For large sparse graphs, a binary heap with adjacency lists can give O((V + E) log V). If every edge has the same positive cost, BFS is enough.', 'المسح الخطّي بسيط ومناسب للجراف الصغير أو الكثيف. للجراف الكبير اللي edges فيه قليلة، binary heap مع adjacency lists ممكن يدي O((V + E) log V). ولو كل edge له نفس التكلفة الموجبة، BFS يكفي.'),
         message('Node and neighbor order is A–H, independent of input order. Validation and canonical ordering take O(V² + E); adjacency is then built once. Parallel directed edges are rejected; reverse edges and self-loops are allowed. Ties keep the first predecessor, so one shortest path is returned.', 'ترتيب الـ nodes والجيران من A لـ H، مهما كان ترتيب المدخلات. التحقّق وتجهيز الترتيب بياخد O(V² + E)، وبنجهّز قوائم الجيران مرة واحدة. بنرفض تكرار نفس الـ edge في نفس الاتجاه؛ الاتجاه العكسي والـ self-loop مسموحين. التعادل بيسيّب أول predecessor، فبنرجّع مسار أقصر واحد.'),
-        message('The algorithm cost excludes teaching snapshots. There are O(V² + E) frames, each copying O(V + E) state and scene data. Snapshot generation and storage therefore use O((V² + E)(V + E)); the small input limits keep seeking responsive.', 'تكلفة الخوارزمية مش شاملة لقطات الشرح. فيه O(V² + E) لقطة، وكل واحدة بتنسخ O(V + E) بيانات للحالة والرسم. تجهيز وتخزين اللقطات بياخد O((V² + E)(V + E))؛ حدود المدخلات الصغيرة بتخلّي التنقّل سريع.'),
       ],
       costs: [
         { label: message('Worst-case time · linear scans + edges', 'أسوأ وقت · المسح + الـ edges'), value: 'O(V² + E)' },

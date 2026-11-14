@@ -263,6 +263,7 @@
     note: message('Every suffix must be scanned, even on sorted input. Distant swaps make this version unstable.',
       'لازم نفحص كل جزء فاضل، حتى لو الصف مترتّب. التبديل البعيد بيخلّي النسخة دي مش stable.'),
     code,
+    keySteps: ['ready', 'minimum', 'compare', 'new-minimum', 'swap', 'done'],
     fields: [{ name: 'numbers', label: message('Numbers', 'الأرقام'), type: 'text', maxLength: MAX_TEXT,
       help: message('Up to 16 integers from -999 to 999, separated by commas or spaces. Arabic digits work. Leave blank for an empty array.',
         '١٦ عدد صحيح بالكتير من -٩٩٩ لحد ٩٩٩، بينهم فواصل أو مسافات. الأرقام العربي شغّالة. سيبه فاضي عشان تجرّب صف فاضي.') }],
@@ -285,6 +286,8 @@
         `${numbers.length} كروت · ${comparisons} مقارنة قيم · من الصغير للكبير`);
     },
     theory: {
+      idea: message('Find the smallest card in the unsorted part and swap it to the front of that part. Repeat, and the sorted part grows from the left one card at a time.',
+        'دوّر على أصغر كارت في الجزء اللي لسه مش مترتّب، وبدّله مع أول مكان في الجزء ده. كرّر، والجزء المترتّب بيكبر من الشمال كارت كارت.'),
       title: message('Select, swap, and fix', 'نختار، نبدّل، ونثبّت'),
       intro: message('Prerequisites: array indices, loops, comparisons, and swapping two values. This standard minimum-selection sort repeatedly finds the smallest remaining value and fixes one position. Indices are zero-based; letters A–P track original card identities.',
         'محتاج تبقى عارف أماكن الـ array، والـ loops، والمقارنات، وتبديل قيمتين. دي Selection Sort العادية: كل مرة بنختار أصغر قيمة فاضلة ونثبّت مكان. الأماكن بتبدأ من صفر؛ وحروف A–P بتتابع هوية الكروت الأصلية.'),
@@ -305,8 +308,8 @@
           'حتى الصف المترتّب أو اللي كله نفس القيمة محتاج (n−1) + (n−2) + … + 1 = n(n−1)/2 مقارنة قيم. النسخة دي مفيهاش خروج بدري. العداد مش بيحسب شروط حدود الحلقات ولا مقارنة الأماكن.'),
         message('Selection sort uses few swaps and can suit tiny inputs when moving records is expensive. It is a poor choice for large or nearly sorted arrays: insertion sort can exploit existing order, while selection sort still scans every suffix.',
           'Selection Sort بتعمل تبديلات قليلة، وممكن تنفع مع عدد صغير لو تحريك البيانات مكلف. مش اختيار مناسب لصفوف كبيرة أو شبه مترتّبة: Insertion Sort تقدر تستفيد من الترتيب الموجود، لكن هنا لسه بنفحص كل جزء فاضل.'),
-        message('Complexity assumes constant-time comparisons and swaps. The algorithm itself is in-place with O(1) extra space. This teaching API copies its input and retains independent frames: O(n²) frames of O(n) data, hence O(n³) trace storage. Input is limited to 16 cards.',
-          'التعقيد هنا بافتراض إن المقارنة والتبديل وقتهم ثابت. الخوارزمية نفسها بتشتغل في نفس الصف وبمساحة زيادة O(1). واجهة الشرح بتنسخ المدخل وبتحتفظ بلقطات مستقلة: O(n²) لقطة، كل واحدة فيها O(n) بيانات، يعني تخزين الشرح O(n³). عشان كده الحد ١٦ كارت.'),
+        message('Complexity assumes constant-time comparisons and swaps. The algorithm itself is in-place with O(1) extra space.',
+          'التعقيد هنا بافتراض إن المقارنة والتبديل وقتهم ثابت. الخوارزمية نفسها بتشتغل في نفس الصف وبمساحة زيادة O(1).'),
       ],
       costs: [
         { label: message('Best / average / worst time', 'أفضل / متوسط / أسوأ وقت'), value: 'Θ(n²)' },

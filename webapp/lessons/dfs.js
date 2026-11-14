@@ -300,6 +300,15 @@
     description: message('Go deep along one branch, then backtrack. Watch recursive calls build the discovery order.', 'ننزل في فرع لحد آخره وبعدين نرجع. شوف الـ recursive calls وهي بتبني ترتيب الاكتشاف.'),
     note: message('Undirected, unweighted graph. Neighbors run A to H. Only the start component is visited; the result is discovery order.', 'Graph من غير اتجاه أو أوزان. الجيران من A لحد H. بنزور بس الجزء المتصل بـ start، والنتيجة ترتيب الاكتشاف.'),
     code,
+    keySteps: ['ready', 'discover', 'skip', 'return', 'done'],
+    view: {
+      hideCollections: true, markers: { 'dfs-stack': ['top'] },
+      legend: [
+        { tone: 'active', role: 'current', label: message('Current', 'الحالية') },
+        { tone: 'pivot', role: 'waiting', label: message('Waiting on the stack', 'مستنية على الـ stack') },
+        { tone: 'sorted', role: 'done', label: message('Finished', 'خلصت') },
+      ],
+    },
     fields: [
       {
         name: 'graph', label: message('Graph edges and isolated nodes', 'Edges الـ graph والـ nodes المنفصلة'), type: 'textarea', maxLength: graphLimit,
@@ -329,6 +338,8 @@
         : message(`${nodes.length} nodes · ${edges.length} undirected edges · start ${start} · A–H neighbor order`, `${nodes.length} nodes · ${edges.length} edges من غير اتجاه · البداية ${start} · الجيران من A لحد H`);
     },
     theory: {
+      idea: message('Follow one path as deep as it goes. Only at a dead end, go back one step and try the next neighbor.',
+        'امشي في طريق واحد لحد آخره. ولما الطريق يتقفل، ارجع خطوة وجرّب الجار اللي بعده.'),
       title: message('Depth first, then backtrack', 'ننزل للأعمق وبعدين نرجع'),
       intro: message('DFS explores a graph using recursive calls. Know what a node, an undirected edge, an adjacency list, and a last-in-first-out call stack mean. Each call keeps its position while a child explores deeper.', 'DFS بيستكشف الـ graph بـ recursive calls. محتاج تعرف node وedge من غير اتجاه وadjacency list، وإن آخر call يدخل الـ stack هو أول واحد يخرج. كل call فاكر مكانه لحد ما اللي بعده يخلص.'),
       invariant: message('Each node is marked discovered before any outgoing exploration, so it is called at most once. Active calls form a path from the start; each suspended call remembers its next neighbor. A finished node has examined every neighbor and all its child calls have returned. Following any path from the start therefore discovers every reachable node; no call crosses to a disconnected component.', 'بنعلّم كل node إنه اتكتشف قبل فحص جيرانه، فمش بنناديه مرتين. الـ calls الشغّالة بتكوّن مسار من start، وكل call واقف فاكر الجار الجاي. أي node خلص يبقى فحص كل جيرانه وكل calls اللي خرجت منه رجعت. عشان كده أي مسار من start هنكتشف كل nodes اللي فيه، ومفيش call هيوصل لجزء منفصل.'),
@@ -343,7 +354,6 @@
         message('With adjacency lists already ordered and constant-time discovered-set lookup, the traversal takes O(Vr + Er) for reachable nodes and edges, with O(V + E) as the whole-graph worst case. Input normalization and neighbor sorting happen before traversal; sorting costs O(V log V + E log(E + 1) + Σ deg(v) log(deg(v) + 1)).', 'لو adjacency lists مترتّبة، والبحث في discovered بياخد وقت ثابت، الزيارة بتاخد O(Vr + Er) للـ nodes والـ edges اللي نقدر نوصلها. أسوأ حالة للـ graph كله O(V + E). تجهيز الـ input وترتيب الجيران بيحصل قبل الزيارة؛ الترتيب تكلفته O(V log V + E log(E + 1) + Σ deg(v) log(deg(v) + 1)).'),
         message('The call stack can grow to Vr on a long path. On large graphs recursion may overflow the runtime stack; explicit stack frames with a saved neighbor cursor preserve this exact order. Pushing every neighbor at once with a different marking rule may change the DFS tree.', 'الـ call stack ممكن يوصل لـ Vr في مسار طويل. في graph كبير، recursion ممكن يملا stack البرنامج. نقدر نستخدم stack صريح، وكل frame حافظ مكان الجار الجاي عشان نفس الترتيب يفضل. لو حطّينا كل الجيران مرة واحدة وغيّرنا وقت العلامة، شجرة DFS ممكن تتغيّر.'),
         message('DFS is useful for reachability, maze exploration, and as a building block for other graph algorithms. Its parent tree provides a route, but does not guarantee the fewest edges; BFS does for unweighted graphs. Alphabetical order makes this lesson reproducible, not uniquely correct.', 'DFS مفيد لمعرفة الوصول واستكشاف المتاهات وكجزء من خوارزميات graph تانية. شجرة parent بتدينا مسار، بس مش شرط بأقل عدد edges؛ BFS بيضمن ده في graph من غير أوزان. الترتيب الأبجدي بيخلّي نفس المثال يدي نفس النتيجة، لكنه مش الترتيب الصح الوحيد.'),
-        message('The lesson caps input at 8 nodes and 20 edges. Complexity figures describe the algorithm; the teaching trace additionally stores F independent snapshots, using O(F × (V + E)) memory for rewind and playback.', 'الدرس بيقبل لحد ٨ nodes و٢٠ edge. أرقام التعقيد تخص الخوارزمية؛ الشرح بيحفظ كمان F snapshots مستقلين، بذاكرة O(F × (V + E)) عشان نرجع لأي خطوة ونشغّلها.'),
       ],
       costs: [
         { label: message('Worst-case traversal time', 'وقت الزيارة في أسوأ حالة'), value: 'O(V + E)' },

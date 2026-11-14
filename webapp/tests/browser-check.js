@@ -9,6 +9,8 @@
   const check=(name,fn)=>{fn();results.push(name);};
   const select=id=>document.querySelector(`.algorithm-option[data-algorithm="${id}"]`).click();
   const seek=value=>{$('timeline').value=value;$('timeline').dispatchEvent(new Event('input',{bubbles:true}));};
+  // The checks below walk the full trace, so leave the default key-steps view first.
+  $('detail').value='all';$('detail').dispatchEvent(new Event('change',{bubbles:true}));
   const apply=(array,target='71')=>{if($('input-editor').hidden)$('edit-input').click();$('array-input').value=array;$('target-input').value=target;$('input-editor').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));};
   try{
     select('binary-search');apply('1, 3, 5, 7, 9','7');

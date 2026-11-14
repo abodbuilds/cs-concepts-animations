@@ -8,6 +8,8 @@
   const check=(condition,message)=>{if(!condition)throw new Error(message);};
   const select=id=>{const el=$('algorithm-select');el.value=id;el.dispatchEvent(new Event('change',{bubbles:true}));};
   const seek=index=>{$('timeline').value=index;$('timeline').dispatchEvent(new Event('input',{bubbles:true}));};
+  // The checks below walk the full trace, so leave the default key-steps view first.
+  $('detail').value='all';$('detail').dispatchEvent(new Event('change',{bubbles:true}));
   const language=lang=>{if(document.documentElement.lang.startsWith(lang))return;click('language');};
   language('en');
   check($('algorithm-select').options.length===10,'ten lessons in navigation');
@@ -32,7 +34,7 @@
         click('explore-tab');check(Number($('timeline').value)===midpoint,'theory preserves playback');
         seek(frames.length-1);check($('stage').dataset.done==='true','completed state');
         check($('next').disabled,'next disabled at end');check($('play-label').textContent==='Replay','replay available');
-        const endScene=frames.at(-1).scene;const cells=(endScene.rows||[]).filter(row=>!endScene.graph||row.cells.some(cell=>cell.value!==null&&cell.value!==undefined&&cell.value!=='—')).reduce((sum,row)=>sum+row.cells.length,0);
+        const endScene=frames.at(-1).scene;const view=lesson.view||{},onGraph=new Set([...(view.hideRows||[]),view.nodeBadge,view.treeRow]);const cells=(endScene.rows||[]).filter(row=>!onGraph.has(row.id)).filter(row=>!endScene.graph||row.cells.some(cell=>cell.value!==null&&cell.value!==undefined&&cell.value!=='—')).reduce((sum,row)=>sum+row.cells.length,0);
         check(document.querySelectorAll('#lesson-scene .scene-cell').length===cells,'complete scene cells');
         click('previous');check(Number($('timeline').value)===frames.length-2,'previous step');
         language('ar');check(document.documentElement.dir==='rtl','Arabic direction');check($('step-title').textContent===frames[frames.length-2].title.ar,'Arabic explanation');language('en');

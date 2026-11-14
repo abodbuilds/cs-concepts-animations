@@ -16,7 +16,14 @@ The host owns navigation, inputs, playback, seeking, pseudocode, localization, l
 - `parse(rawInput)`: returns validated algorithm input; reject excessive or malformed input. Throw an Error with optional `.userMessage = {en,ar}`. No DOM use. All constraints must also be enforced by `build` on its public input.
 - `build(parsedInput)`: returns a finite, deterministic array of immutable-by-snapshot frames (independent deep copies; no input mutation). First frame is ready, last has `state.done === true` and a meaningful `state.result`.
 - `summary(parsedInput)`: bilingual short dataset summary.
-- `theory`: `{title,intro,invariant,steps:[{title,body}],notes:[bilingual],costs:[{label:bilingual,value:string}]}`; all title/body text bilingual. Include prerequisites, complexity assumptions, correctness invariant, and honest tradeoffs.
+- `theory`: `{title,idea?,intro,invariant,steps:[{title,body}],notes:[bilingual],costs:[{label:bilingual,value:string}]}`; all title/body text bilingual. `idea` is one or two plain sentences a beginner can repeat back; it leads the theory page. Describe the algorithm, not this app's trace storage. Include prerequisites, complexity assumptions, correctness invariant, and honest tradeoffs.
+- `keySteps` (optional): frame kinds that carry the idea (a comparison, a move, a decision). The default "Key steps" view plays the first frame, the last frame, and these; "Every line" plays the full trace. Without it every frame is a key step.
+- `view` (optional): presentation hints, so frames can stay complete while the screen stays quiet.
+  - `hideRows: [rowId]`, `hideCollections: true`: state the picture already shows.
+  - `markers: {rowId: [text]}`: only these marker texts are drawn on that row.
+  - `nodeBadge: rowId`: draw that row's values beside the graph nodes (cell `marker` is the node id, `value` the badge).
+  - `treeRow: rowId`: same row shape with a parent id as the value; those edges are drawn as the current tree.
+  - `legend: [{tone, role, label?} | {badge:true, label}]`: maps a node tone to a visual role (`current`, `waiting`, `done`, `peek`, `path`) and lists the labelled ones under the graph.
 
 ## Frame
 

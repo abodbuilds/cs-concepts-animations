@@ -27,3 +27,29 @@ html[dir=rtl] .sidebar-note,html[dir=rtl] .sidebar-heading,html[dir=rtl] main,ht
 @media(max-width:1050px){.sidebar{padding-top:17px}.sidebar .algorithm-nav{display:none}.library-mobile{margin:0}.library-mobile select{width:100%;max-width:100%;font-size:12px;padding:10px 12px}.lesson-header h1{display:none}.lesson-header{justify-content:flex-end;margin-bottom:12px}main{padding-top:18px}.input-actions{gap:16px}.code-panel{position:static}}
 @media(max-width:760px){.site-header{height:62px}.wordmark{font-size:11px;letter-spacing:1px}.playback{gap:9px 12px;padding:12px}.speed-select{grid-column:2;grid-row:1}.scrubber{grid-column:1/-1;grid-row:2}.scrubber #step-count{font-size:8px}.step-story,.modular-panel .step-story{padding:15px 17px}.visual-panel .variables,.modular-panel .variables{padding:12px 17px;gap:8px 17px}.code-heading{padding:12px 15px 4px}.input-actions .text-button{font-size:11px}.input-actions .compact{font-size:10px}}
 .variable{flex-direction:row}.variable-value{margin:0}.scene-collection{border-radius:0}.visual-panel .variables[hidden]{display:none!important}
+
+/* Teaching aids: step detail, the active line beside the animation on phones, and graph scenes that carry their own state. */
+.detail-select{font-family:var(--font-sans);font-size:10px;max-width:150px}.code-line.passed{background:#f4d35e07;border-left-color:#f4d35e55}
+.step-code{display:none;margin:8px 0 0;padding:6px 10px;border-left:2px solid var(--primary);border-radius:0 6px 6px 0;background:#f4d35e12;color:var(--primary);font:11px/1.7 var(--font-mono);white-space:pre;overflow-x:auto;text-align:left;scrollbar-width:none}
+.scene-row-label[dir=rtl],.scene-collection>span[dir=rtl]{font-family:var(--font-sans)}
+.graph-scene .lesson-graph{max-width:390px}
+.graph-scene .scene-row,.graph-scene .scene-row.row-empty{display:grid;grid-template-columns:92px minmax(0,1fr);align-items:center;justify-content:normal;gap:12px;min-height:50px;padding:3px 10px;border:0}
+.graph-scene .scene-row-label,.graph-scene .scene-row.row-empty .scene-row-label{margin:0;font-size:10px;line-height:1.5}
+.graph-scene .scene-row-cells{justify-content:flex-start;gap:6px;padding:14px 0 3px}
+.graph-scene .scene-cell{flex:0 0 auto;width:auto;min-width:32px;height:32px;padding:0 7px;border-radius:7px;box-shadow:0 3px 0 #2a123b}
+.graph-scene .scene-cell-index{display:none}.graph-scene .scene-cell-marker{bottom:calc(100% + 2px);width:auto;white-space:nowrap}
+.graph-scene .scene-row.row-empty .scene-empty{padding:0;font-size:10px;text-align:left}
+.graph-scene .scene-collections{margin:6px 10px 0}
+.graph-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 16px;margin:0 8px 10px;font-size:10px;line-height:1.6;color:var(--muted)}.graph-legend span{display:inline-flex;align-items:center;gap:6px}
+.legend-node{flex:none;width:12px;height:12px;border-radius:50%;border:2px solid #b38ac166;background:#684078}.legend-node.role-current{background:#a8793a;border-color:var(--primary);box-shadow:0 0 0 2px #f4d35e40}.legend-node.role-waiting{background:#3a1c4c;border:2px dashed var(--primary)}.legend-node.role-done{background:var(--primary);border-color:#ffe9ad}.legend-node.role-peek{border-color:#efaeff}
+.legend-badge{flex:none;width:19px;height:12px;border-radius:6px;border:1px solid #f4d35e88;background:#2b133c}
+.graph-node.role-waiting circle{fill:#3a1c4c;stroke:var(--primary);stroke-width:2.2;stroke-dasharray:5 3.5}.graph-node.role-waiting .node-label{fill:var(--primary)}
+.graph-node.role-current circle{fill:#a8793a;stroke:var(--primary);stroke-width:3.5;stroke-dasharray:none;animation:node-focus .5s ease-out;filter:drop-shadow(0 0 7px #f4d35e66)}.graph-node.role-current .node-label{fill:#fff6d6}
+.graph-node.role-done circle{fill:var(--primary);stroke:#ffe9ad;stroke-width:2;stroke-dasharray:none;animation:none;filter:none}.graph-node.role-done .node-label{fill:var(--primary-foreground)}
+.graph-node.role-peek circle{fill:#684078;stroke:#efaeff;stroke-width:3;stroke-dasharray:none;animation:none}.graph-node.role-peek .node-label{fill:#ffe0ff}
+.graph-node.role-path circle{fill:var(--primary);stroke:#fff8dc;stroke-width:3.5;stroke-dasharray:none;animation:none;filter:drop-shadow(0 0 6px #f4d35e55)}.graph-node.role-path .node-label{fill:var(--primary-foreground)}
+.graph-node.tone-muted{opacity:.45}
+.node-badge rect{fill:#2b133c;stroke:#f4d35e88;stroke-width:1;stroke-dasharray:none}.graph-node .node-badge text{font-size:11px;fill:var(--primary)}.node-badge.unset rect{stroke:#74518466}.graph-node .node-badge.unset text{fill:var(--muted)}
+.graph-edge.tone-found>path{stroke-width:3.4}.graph-edge.edge-tree{color:#d4ad71}.graph-edge.edge-tree>path{stroke-width:2.8}.graph-edge.tone-sorted{color:#886096;opacity:.35}
+@media(max-width:760px){.step-code{display:block}.playback{grid-template-columns:minmax(0,1fr) auto}.detail-select{grid-column:2;grid-row:2}.scrubber{grid-column:1;grid-row:2}.graph-scene .lesson-graph{max-width:350px}.graph-scene .scene-row,.graph-scene .scene-row.row-empty{grid-template-columns:78px minmax(0,1fr);gap:9px;padding-inline:4px}}
+.theory-idea{margin:0 0 12px;color:var(--foreground);font-size:17px;line-height:1.75;font-weight:600}

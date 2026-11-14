@@ -51,6 +51,9 @@
         average:"المتوسط",
         space:"مساحة إضافية",
         backToLab:"ارجع للتجربة",
+        keySteps:"الخطوات المهمة",
+        everyLine:"كل سطر",
+        detail:"تفاصيل الخطوات",
       },
       en: {
         skip:"Skip to the lab",
@@ -98,12 +101,15 @@
         average:"Average case",
         space:"Extra space",
         backToLab:"Back to animation",
+        keySteps:"Key steps",
+        everyLine:"Every line",
+        detail:"Step detail",
       },
     };
     const episodeValues = [4,9,14,21,28,35,43,50,57,64,71,78,85,92,99];
     const configs = {
-      'binary-search':{number:'01',name:'Binary Search',label:'BINARY SEARCH',cost:'O(log n)',values:episodeValues,target:71},
-      'insertion-sort':{number:'02',name:'Insertion Sort',label:'INSERT SORT',cost:'O(n²)',values:[7,3,5,2,6],target:71},
+      'binary-search':{number:'01',name:'Binary Search',label:'BINARY SEARCH',cost:'O(log n)',values:episodeValues,target:71,keySteps:['ready','middle','move-left','move-right','found','missing']},
+      'insertion-sort':{number:'02',name:'Insertion Sort',label:'INSERT SORT',cost:'O(n²)',values:[7,3,5,2,6],target:71,keySteps:['ready','save','compare','shift','insert','done']},
     };
     Object.values(lessons).sort((a,b)=>Number(a.number)-Number(b.number)).forEach(lesson=>{
       configs[lesson.id]=lesson;
@@ -116,6 +122,7 @@
     let inputs = Object.fromEntries(Object.entries(configs).map(([id,c])=>[id,lessons[id]?c.parse({...c.defaults}):{numbers:[...c.values],target:c.target}]));
     const rawInputs=Object.fromEntries(Object.entries(lessons).map(([id,c])=>[id,{...c.defaults}]));
     const presetPositions={};
+    let allFrames=[],origins=[],detail='key';try{if(localStorage.getItem('algorithm-lab-detail')==='all')detail='all';}catch{}
     let frames=[],index=0,playing=false,timer=null,toastTimer=null,view='explore',cardEls=[],slotEls=[],lastWidth=0;
     const t=key=>dictionaries[lang][key]||key;
     const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -124,7 +131,8 @@
     const lesson=()=>lessons[algorithm];
     const code=()=>lesson()?.code||(isBinary()?A.binaryCode:A.insertionCode);
     const frame=()=>frames[index];
-    const period=()=>1100/Number($('speed').value);
+    // Key steps carry more change per step, so they get a little longer on screen.
+    const period=()=>(detail==='key'?1500:1100)/Number($('speed').value);
     function pause(){playing=false;clearTimeout(timer);timer=null;renderControls();}
     function notify(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,2300);}
     function setIndex(next,{jump=false}={}){
@@ -141,10 +149,19 @@
       playing=true;renderControls();tick();
     }
     function buildTrace(){
-      pause();const input=inputs[algorithm];frames=lesson()?lesson().build(input):isBinary()?A.binarySearch(input.numbers,input.target):A.insertionSort(input.numbers);index=0;
+      pause();const input=inputs[algorithm];allFrames=lesson()?lesson().build(input):isBinary()?A.binarySearch(input.numbers,input.target):A.insertionSort(input.numbers);index=0;applyDetail();
       document.documentElement.style.setProperty('--move-time','0ms');
-      buildCards();buildCode();$('timeline').max=frames.length-1;renderState();
+      buildCards();buildCode();renderState();
       if(cardEls.length)void cardEls[0].offsetWidth;
+    }
+    // "Key steps" keeps the frames that change the picture and folds the bookkeeping
+    // lines between them into the next step; "Every line" plays the full trace.
+    function applyDetail(keepOrigin){
+      const keys=configs[algorithm].keySteps,last=allFrames.length-1;
+      origins=allFrames.map((_,i)=>i).filter(i=>detail==='all'||!keys||i===0||i===last||keys.includes(allFrames[i].kind));
+      frames=origins.map(i=>allFrames[i]);
+      if(keepOrigin!==undefined){index=0;origins.forEach((origin,i)=>{if(origin<=keepOrigin)index=i;});}
+      $('timeline').max=frames.length-1;$('detail').value=detail;
     }
     function buildCards(){
       if(lesson()){cardEls=[];slotEls=[];$('card-layer').replaceChildren();$('slot-layer').replaceChildren();return;}
@@ -178,7 +195,7 @@
       if(!frames.length||view!=='explore')return;
       const stage=$('stage'),width=stage.clientWidth;if(!width)return;
       lastWidth=width;
-      if(lesson()){V.renderScene(stage,frame().scene||{},lang,algorithm,frame().kind);return;}
+      if(lesson()){V.renderScene(stage,frame().scene||{},lang,algorithm,frame().kind,lesson().view);return;}
       V.setActive(stage,false);
       const s=frame().state,n=s.numbers.length,binary=isBinary();
       const maxCols=Math.max(5,Math.floor((width-12)/(width>=420?57:77)));
@@ -229,9 +246,12 @@
       $('variables').innerHTML=visibleVars.map(([name,value,marker])=>`<div class="variable ${previous&&(lesson()?V.display(frames[index-1].variables.find(v=>v.name===name)?.value)!==value:previous[name]!==value)?'changed':''}"><span class="variable-name">${escape(name)}</span><span class="variable-value ${value===null?'unset':''}" data-variable="${escape(name)}">${value===null?'—':escape(value)}</span></div>`).join('');
       const metrics=lesson()?frame().metrics.map(m=>[m.value,V.text(m.label,lang)]):isBinary()?[[s.probes,'probes'],[s.comparisons,'comparisons']]:[[s.comparisons,'comparisons'],[s.shifts,'shifts']];
       $('metrics').innerHTML=metrics.map(([count,label])=>`<div class="metric"><strong>${escape(String(count).padStart(2,'0'))}</strong><span>${escape(lesson()?label:t(label))}</span></div>`).join('');
+      const passed=new Set();
+      if(index)for(let i=origins[index-1]+1;i<origins[index];i++)allFrames[i].lines.forEach(line=>passed.add(line));
+      $('step-code').textContent=f.lines.map(line=>(code()[line-1]||'').trim()).filter(Boolean).join('\n');$('step-code').hidden=!$('step-code').textContent;
       $('code-lines').querySelectorAll('.code-line').forEach(row=>{
         const number=Number(row.dataset.line),active=f.lines.includes(number);
-        row.classList.toggle('active',active);row.classList.toggle('skipped',!lesson()&&!isBinary()&&f.kind==='bounds'&&!s.condition&&number===6);
+        row.classList.toggle('active',active);row.classList.toggle('passed',!active&&passed.has(number));row.classList.toggle('skipped',!lesson()&&!isBinary()&&f.kind==='bounds'&&!s.condition&&number===6);
         if(active)row.setAttribute('aria-current','step');else row.removeAttribute('aria-current');
       });
       const activeLine=$('code-lines').querySelector('.code-line.active'),scroll=$('code-scroll');
@@ -245,7 +265,7 @@
       $('language').setAttribute('aria-label',lang==='ar'?'Switch to English':'التغيير للعربية');
       ['reset','previous','next'].forEach(id=>{$(id).setAttribute('aria-label',t(id));$(id).title=t(id);});
       $('copy-code').setAttribute('aria-label',t('copy'));$('copy-code').title=t('copy');
-      $('timeline').setAttribute('aria-label',t('execution'));$('speed').setAttribute('aria-label',t('speed'));
+      $('timeline').setAttribute('aria-label',t('execution'));$('speed').setAttribute('aria-label',t('speed'));$('detail').setAttribute('aria-label',t('detail'));
       document.querySelector('.visual-panel').classList.toggle('modular-panel',!!lesson());
       const c=configs[algorithm];document.title=`${c.name} · CS Concept Lab`;
       $('lesson-title').textContent=c.name;
@@ -330,6 +350,10 @@
     $('reset').addEventListener('click',()=>{pause();setIndex(0,{jump:true});});
     $('timeline').addEventListener('input',event=>{const next=Number(event.target.value);pause();setIndex(next,{jump:true});});
     $('speed').addEventListener('change',()=>{if(playing){clearTimeout(timer);timer=setTimeout(tick,period());}});
+    $('detail').addEventListener('change',event=>{
+      const origin=origins[index];pause();detail=event.target.value==='all'?'all':'key';try{localStorage.setItem('algorithm-lab-detail',detail);}catch{}
+      applyDetail(origin);document.documentElement.style.setProperty('--move-time','0ms');renderState();
+    });
     $('language').addEventListener('click',()=>{lang=lang==='ar'?'en':'ar';try{localStorage.setItem('algorithm-lab-language',lang);}catch{}renderCopy();});
     $('edit-input').addEventListener('click',()=>{if($('input-editor').hidden)openEditor();else closeEditor();});
     $('cancel-input').addEventListener('click',()=>{closeEditor();$('edit-input').focus();});
@@ -337,7 +361,7 @@
     $('sort-apply').addEventListener('click',()=>{if(applyInput(true))$('play').focus();});
     document.querySelectorAll('[data-preset]').forEach(button=>button.addEventListener('click',()=>preset(button.dataset.preset)));
     $('new-example').addEventListener('click',()=>{
-      if(lesson()){const c=lesson(),position=((presetPositions[algorithm]||0)+1)%c.presets.length;presetPositions[algorithm]=position;const raw={...c.presets[position].input};inputs[algorithm]=c.parse(raw);rawInputs[algorithm]=raw;closeEditor();buildTrace();renderCopy();return;}
+      if(lesson()){const c=lesson(),position=((presetPositions[algorithm]||0)+1)%c.presets.length;presetPositions[algorithm]=position;const raw={...c.presets[position].input};inputs[algorithm]=c.parse(raw);rawInputs[algorithm]=raw;closeEditor();buildTrace();renderCopy();notify(V.text(c.presets[position].label,lang));return;}
       let numbers=Array.from({length:isBinary()?10:6},()=>Math.floor(Math.random()*90)+1);
       if(isBinary())numbers.sort((a,b)=>a-b);
       inputs[algorithm]={numbers,target:numbers[Math.floor(Math.random()*numbers.length)]};closeEditor();buildTrace();renderCopy();

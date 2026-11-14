@@ -402,6 +402,7 @@
     note: message('Lomuto partition · <= goes left · inclusive, zero-based ranges · unstable',
       'تقسيم Lomuto · الأصغر أو المساوي يروح شمال · الحدود شاملة وبتبدأ من 0 · مش stable'),
     code,
+    keySteps: ['ready', 'pivot', 'compare', 'swap', 'pivot-swap', 'done'],
     fields: [{
       name: 'numbers', label: message('Numbers', 'الأرقام'), type: 'text', maxLength: MAX_TEXT,
       help: message('Up to 16 integers from -999 to 999. Separate with spaces or commas ( , or ، ). Arabic and Persian digits work. Leave blank for an empty array.',
@@ -421,6 +422,8 @@
     ],
     parse, build, summary,
     theory: {
+      idea: message('Pick a pivot, then move every smaller card to its left and every larger card to its right. The pivot is now in its final place, so repeat the same idea on each side.',
+        'اختار pivot، وانقل كل كارت أصغر منه على شماله وكل كارت أكبر على يمينه. كده الـ pivot بقى في مكانه النهائي، فكرّر نفس الفكرة على كل ناحية.'),
       title: message('Quicksort with Lomuto partitioning', 'Quicksort بتقسيم Lomuto'),
       intro: message('Prerequisites: zero-based array indices, swaps, loops, and recursive calls. This version sorts ascending with inclusive left/right bounds, chooses the last element as pivot, and sends equal values left.',
         'قبل ما نبدأ: نكون فاهمين أماكن الصف اللي بتبدأ من 0، والتبديل، والحلقات، وrecursion. النسخة دي بترتّب تصاعدي بحدود left وright شاملة، وبتختار آخر كارت كـ pivot، والمساوي بيروح شمال.'),
@@ -451,8 +454,8 @@
           'Quicksort مش stable: في مثال الكروت المتساوية، كارتين القيمة 2 بيعكسوا ترتيبهم الأصلي لما pivot اللي قيمته 1 ييجي للأول. كل كارت له ID ثابت يوضّح حركته حتى لو الأرقام شبه بعض.'),
         message('Partitioning uses O(1) auxiliary space, but this recursive version is not O(1) space overall: balanced or expected depth is O(log n) under the average-case assumptions; worst depth is O(n). The depth metric counts sort calls, including base cases, and excludes the constant-size partition helper.',
           'التقسيم بيستخدم مساحة إضافية O(1)، بس النسخة اللي فيها recursion مش O(1) إجمالًا: العمق المتوازن أو المتوقع O(log n) بنفس افتراضات المتوسط، والأسوأ O(n). عدّاد العمق بيحسب استدعاءات sort حتى حالات التوقّف، ومش بيحسب partition اللي مساحتها ثابتة.'),
-        message('The algorithm exchanges cards in place and needs no merge buffer. This teaching API copies its input and stores independent snapshots for seeking; that visualization storage is extra and is not included in the algorithm space bounds.',
-          'الخوارزمية بتبدّل الكروت جوّه الصف ومش محتاجة مساحة دمج. الـ API التعليمي بينسخ الإدخال وبيحفظ snapshots مستقلة عشان نرجع لأي خطوة؛ تخزين العرض ده زيادة ومش داخل في حساب مساحة الخوارزمية.'),
+        message('The algorithm exchanges cards in place and needs no merge buffer.',
+          'الخوارزمية بتبدّل الكروت جوّه الصف ومش محتاجة مساحة دمج.'),
       ],
       costs: [
         { label: message('One partition', 'تقسيم واحد'), value: 'O(m) time · O(1) auxiliary space' },

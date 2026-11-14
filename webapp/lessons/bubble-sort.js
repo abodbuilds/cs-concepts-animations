@@ -226,6 +226,7 @@
     note: message('Strict > keeps equal cards stable. Each pass shrinks right; an already-sorted input needs just one pass.',
       'شرط > بيحافظ على ترتيب الكروت المتساوية. كل لفة بتقلّل right؛ ولو الصف مترتّب أصلًا بنحتاج لفة واحدة.'),
     code,
+    keySteps: ['ready', 'compare', 'swap', 'shrink', 'early-exit', 'done'],
     fields: [{
       name: 'numbers', label: message('Numbers', 'الأرقام'), type: 'text', maxLength: MAX_LENGTH,
       help: message('Up to 16 integers from -999 to 999, separated by commas or spaces. Arabic digits work too. Leave blank for an empty array.',
@@ -250,6 +251,8 @@
         `${numbers.length} كروت · من الصغير للكبير · بنقارن اللي جنب بعض`);
     },
     theory: {
+      idea: message('Compare each pair of neighbors and swap them when they are out of order. After every pass, the largest remaining card has bubbled to the end.',
+        'قارن كل كارتين جنب بعض، ولو ترتيبهم غلط بدّلهم. بعد كل لفة، أكبر كارت فاضل بيوصل لآخر الصف.'),
       title: message('One pass fixes one more position', 'كل لفة بتثبّت مكان جديد'),
       intro: message('You only need array indices, loops, and a swap of two values. Bubble Sort repeatedly scans adjacent pairs from left to right. This version uses a shrinking right boundary and a swapped flag.',
         'محتاج تعرف أماكن الصف، والـ loops، وإزاي نبدّل قيمتين. Bubble Sort بيمرّ على كل زوج جنب بعض من الشمال لليمين. هنا بنصغّر right وبنستخدم swapped.'),
@@ -270,8 +273,8 @@
           'لو n ≥ 2 والصف مترتّب أو كله متساوي، بنعمل لفة واحدة وn − 1 مقارنة ومن غير تبديل: O(n). الفاضي والكارت الواحد شغلهم ثابت. الصف اللي شبه مترتّب مش دايمًا سريع: قيمة صغيرة في الآخر بتتحرّك شمال مكان واحد بس كل لفة.'),
         message('With constant-time integer comparisons and swaps, reverse distinct input requires n(n − 1)/2 comparisons and swaps. Typical random inputs also take O(n²) time. Each strict adjacent swap removes exactly one inversion.',
           'بافتراض إن مقارنة الأرقام وتبديلها بياخدوا وقت ثابت، الصف المقلوب وقيمه مختلفة بيحتاج n(n − 1)/2 مقارنة وتبديل. المدخلات العشوائية المعتادة وقتها كمان O(n²). كل تبديل بيشيل inversion واحدة: زوج كان الكبير فيه قبل الصغير.'),
-        message('The sorting algorithm is in-place with O(1) extra space. This teaching build copies the input and records independent O(n)-size frames; storing up to O(n²) frames takes O(n³) space and copying time. The UI limits n to 16.',
-          'الخوارزمية نفسها in-place وبتحتاج مساحة زيادة O(1). نسخة الشرح بتنسخ المدخل وبتحفظ snapshots مستقلة حجم كل واحدة O(n). تخزين لحد O(n²) لقطة بيحتاج O(n³) مساحة ووقت للنسخ. الواجهة بتسمح بـ 16 رقم بالكتير.'),
+        message('The sorting algorithm is in-place with O(1) extra space.',
+          'الخوارزمية نفسها in-place وبتحتاج مساحة زيادة O(1).'),
         message('Bubble Sort is easy to inspect and needs no auxiliary array, but repeated swaps make it inefficient for large data. Insertion Sort often does less work on nearly sorted data; O(n log n) sorts scale better.',
           'Bubble Sort سهل تتابعه ومش محتاج صف مساعد، بس التبديلات الكتير بتبطّأه مع بيانات كبيرة. Insertion Sort غالبًا بيعمل شغل أقل لو الصف شبه مترتّب، وخوارزميات O(n log n) أنسب لما البيانات تكبر.'),
         message('Counters show value comparisons, adjacent swaps, and passes started. Loop guards are shown separately and do not increase Comparisons. sortedFrom is a display boundary: indices from it onward are known to be in final position.',

@@ -229,6 +229,7 @@
     description: message('Find the first exact occurrence by sliding the pattern one code point at a time.', 'نلاقي أول تطابق بالظبط، ونحرّك pattern كل مرة code point واحد.'),
     note: message('Zero-based code-point indices. Empty pattern → 0; no match → -1. Case and whitespace matter.', 'الأماكن بتبدأ من صفر وبنعدّ code points. pattern فاضي → 0؛ مفيش تطابق → -1. حالة الحروف والمسافات بتفرق.'),
     code,
+    keySteps: ['ready', 'candidate', 'compare', 'mismatch', 'found', 'missing', 'empty-found', 'too-long'],
     fields: [
       { name: 'text', type: 'textarea', maxLength: 48, label: message('Text', 'النص · text'),
         help: message('Up to 24 Unicode code points. Spaces and line breaks are kept.', 'لحد 24 Unicode code points. المسافات والسطر الجديد بيتحسبوا.') },
@@ -258,6 +259,8 @@
         `${n} code points في text · ${m} في pattern · ${m === 0 ? 'pattern الفاضي بيرجّع 0' : `${Math.max(0, n - m + 1)} بدايات ممكنة`}`);
     },
     theory: {
+      idea: message('Slide the pattern along the text one position at a time. At each position compare character by character; at the first mismatch, move one position over and start again.',
+        'حرّك الـ pattern على الـ text مكان مكان. في كل مكان قارن حرف حرف؛ ومع أول اختلاف، اتحرّك مكان واحد وابدأ من الأول.'),
       title: message('Naive first-match string search', 'البحث البسيط عن أول تطابق'),
       intro: message('You need zero-based indexing, equality tests, and nested loops. No sorting or preprocessing is required. n and m count Unicode code points, not JavaScript UTF-16 code units.',
         'محتاج تفهم الأماكن اللي بتبدأ من صفر، مقارنة المساواة، وحلقة جوّه حلقة. مش محتاج ترتيب ولا تجهيز للـ pattern. n وm بيعدّوا Unicode code points، مش وحدات UTF-16 بتاعة JavaScript.'),
@@ -271,7 +274,7 @@
       notes: [
         message('For 1 ≤ m ≤ n, at most n − m + 1 starts each compare m code points. Repeated prefixes can force every comparison, for example a text of a characters against a pattern ending in b. The metric counts character comparisons only, not loop or length checks.', 'لما 1 ≤ m ≤ n، عندنا n − m + 1 بدايات بالكتير، وكل بداية ممكن تحتاج m مقارنات. تكرار نفس الحروف ممكن يجبرنا نعملهم كلهم، زي text كله a وpattern آخره b. العداد بيحسب مقارنات الحروف بس، مش شروط الحلقات أو الأطوال.'),
         message('Empty and longer-pattern shortcuts take O(1) matching work after lengths are known. This module first validates and converts strings to code-point arrays in O(n + m) time and space, even on those shortcuts.', 'حالة pattern الفاضي أو الأطول بتاخد O(1) في البحث بعد ما نعرف الأطوال. الموديول الأول بيتأكد من النصوص ويحوّلهم لصفوف code points في وقت ومساحة O(n + m)، حتى في الحالات دي.'),
-        message('The search itself needs O(1) extra space on code-point arrays. Recording F independent animation frames takes O(F(n + m + 1)) time and storage; that teaching overhead is separate from the search algorithm.', 'البحث نفسه محتاج مساحة إضافية O(1) لما الصفوف جاهزة. تسجيل F لقطات مستقلة للشرح بياخد وقت ومساحة O(F(n + m + 1))؛ ده تكلفة العرض، غير تكلفة البحث.'),
+        message('The search itself needs O(1) extra space on code-point arrays.', 'البحث نفسه محتاج مساحة إضافية O(1) لما الصفوف جاهزة.'),
         message('This simple approach works well for small inputs, but repeats prefix work after a failure. KMP reuses prefix information to achieve O(n + m) search including preprocessing, with O(m) extra space. This lesson deliberately shows the naive approach.', 'الطريقة دي بسيطة ومناسبة للنصوص الصغيرة، بس بتعيد شغل الحروف اللي طابقت بعد الفشل. KMP بيستفيد من معلومات الـ prefix عشان يوصل لوقت O(n + m) شامل التجهيز، بمساحة إضافية O(m). هنا بنشرح الطريقة البسيطة.'),
         message('Matching is exact: no case folding or Unicode normalization. Combining accents and joined emoji can span several cards. Returned indices count code points, so they can differ from String.indexOf indices. Inputs are capped at 24 text and 10 pattern code points to keep playback manageable.', 'التطابق حرفي: مش بنغيّر حالة الحروف ولا بنعمل Unicode normalization. التشكيل والإيموجي المركّب ممكن ياخدوا أكتر من كارت. المكان الراجع بعدّ الـ code points، فممكن يختلف عن String.indexOf. الحد 24 لـ text و10 لـ pattern عشان العرض يفضل سهل المتابعة.'),
       ],
@@ -281,7 +284,6 @@
         { label: message('Empty or longer pattern · after lengths', 'pattern فاضي أو أطول · بعد حساب الأطوال'), value: 'O(1)' },
         { label: message('Code-point input preparation', 'تجهيز الـ code points'), value: 'O(n + m) time / space' },
         { label: message('Search auxiliary space', 'المساحة الإضافية للبحث'), value: 'O(1)' },
-        { label: message('F animation snapshots', 'F لقطات للعرض'), value: 'O(F(n + m + 1)) time / space' },
       ],
     },
   };

@@ -66,7 +66,6 @@ test('exports a standalone classic module and the complete lesson contract', () 
   for (const note of lesson.theory.notes) bilingual(note);
   for (const cost of lesson.theory.costs) { bilingual(cost.label); assert.equal(typeof cost.value, 'string'); }
   assert.match(lesson.theory.invariant.en, /equality/u);
-  assert.match(lesson.theory.notes.map(note => note.en).join(' '), /snapshots/u);
 });
 
 test('parses bounded integers, Arabic digits, mixed delimiters, and empty input', () => {

@@ -377,6 +377,8 @@
     description: message('Split into smaller ranges, then merge sorted halves with a reusable buffer.', 'نقسّم لأجزاء أصغر، وبعدين ندمج النصّين المترتّبين باستخدام buffer واحد.'),
     note: message('Stable: take left on equality. Time O(n log n), auxiliary storage O(n), plus O(log n) call frames.', 'ثابت: عند التساوي ناخد الشمال. الوقت O(n log n)، والذاكرة المساعدة O(n)، ومعاها O(log n) نداءات.'),
     code,
+    keySteps: ['ready', 'split', 'compare', 'buffer-write', 'merge-return', 'done'],
+    view: { markers: { buffer: ['write'] } },
     fields: [{ name: 'numbers', type: 'text', maxLength: MAX_TEXT_LENGTH,
       label: message('Numbers', 'الأرقام'),
       help: message('Up to 16 integers from -999 to 999. Separate with spaces or commas (including ،). Arabic digits work. Leave blank for an empty array.',
@@ -398,6 +400,8 @@
         `${numbers.length} كارت · ${repeated} تكرار زيادة · ترتيب تصاعدي ثابت`);
     },
     theory: {
+      idea: message('Split the array in half until every piece is a single card, then merge the sorted pieces back together by always taking the smaller front card.',
+        'اقسم الصف نصّين لحد ما كل جزء يبقى كارت واحد، وبعدين ادمج الأجزاء المترتّبة مع بعض: كل مرة خُد الكارت الأصغر من أول الجزئين.'),
       title: message('Small sorted halves make a sorted whole', 'نصّين مترتّبين يعملوا جزء كامل مترتّب'),
       intro: message('Start with array indices, loops, and function calls. Recursion pauses a caller while a smaller subproblem runs. No initial sorting is required. This top-down version uses zero-based, half-open ranges [left, right).',
         'ابدأ بفهم أماكن الصف والحلقات ونداءات الدوال. Recursion بيوقّف النداء لحد ما الجزء الأصغر يخلص. مش محتاجين الإدخال يكون مترتّب. النسخة top-down دي بتبدأ الأماكن من 0 وبتستخدم [left, right)، يعني right مش ضمن الجزء.'),
@@ -418,8 +422,8 @@
           'كل مستوى بيكتب الكروت المشاركة في buffer وبيرجّعها. التقسيم المتوازن بيدي O(log n) مستويات، فالوقت O(n log n) لما n ≥ 2، بافتراض المقارنة والكتابة وقتهم ثابت. النسخة دي مش بتتخطّى الدمج لو النصّين مترتّبين مع بعض أصلًا.'),
         message('Compared with in-place sorts, this version needs an n-slot buffer and extra writes. It offers stable ordering and predictable worst-case time, but it is not adaptive on nearly sorted input. Empty and singleton inputs take O(1) time.',
           'مقارنة بالترتيب in-place، النسخة دي محتاجة buffer بحجم n وكتابات زيادة. مقابل ده بتضمن الثبات ووقت أسوأ حالة واضح، بس مش بتستفيد من إن الإدخال شبه مترتّب. الصف الفاضي والكارت الواحد بياخدوا O(1) وقت.'),
-        message('Metrics count value comparisons and individual writes; loop-bound checks are shown but excluded from the value-comparison count. O(n) auxiliary space describes the algorithm, not the teaching trace: full independent snapshots add O(n² log n) stored data for n ≥ 2.',
-          'العدادات بتحسب مقارنات القيم وكل كتابة لوحدها؛ فحص حدود الحلقات ظاهر بس مش ضمن عدّاد مقارنات القيم. O(n) ذاكرة مساعدة بتوصف الخوارزمية، مش تسجيل الدرس: اللقطات المستقلة الكاملة بتضيف O(n² log n) بيانات محفوظة لما n ≥ 2.'),
+        message('Metrics count value comparisons and individual writes; loop-bound checks are shown but excluded from the value-comparison count.',
+          'العدادات بتحسب مقارنات القيم وكل كتابة لوحدها؛ فحص حدود الحلقات ظاهر بس مش ضمن عدّاد مقارنات القيم.'),
       ],
       costs: [
         { label: message('Best / average / worst time', 'أفضل / متوسط / أسوأ وقت'), value: 'O(n log n) for n ≥ 2' },

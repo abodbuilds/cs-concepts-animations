@@ -332,6 +332,17 @@
     note: message('Undirected and unweighted. Check neighbors A to H, mark discovered on enqueue, and record traversal on dequeue. Only the start component is visited; ∞ means unreachable at the end.',
       'من غير اتجاه أو أوزان. نفحص الجيران من A لـ H، ونعلّم وقت دخول الطابور، ونسجّل الزيارة وقت الخروج. بنزور بس الجزء المتصل بالبداية؛ ∞ في الآخر يعني مش ممكن نوصل له.'),
     code,
+    keySteps: ['ready', 'seed', 'dequeue', 'discovery-check', 'discover', 'done'],
+    view: {
+      nodeBadge: 'bfs-distance', hideRows: ['bfs-current'], hideCollections: true,
+      legend: [
+        { tone: 'active', role: 'current', label: message('Current', 'الحالية') },
+        { tone: 'found', role: 'waiting', label: message('In the queue', 'في الطابور') },
+        { tone: 'sorted', role: 'done', label: message('Done', 'خلصت') },
+        { tone: 'pivot', role: 'peek' },
+        { badge: true, label: message('Edges from start', 'عدد الوصلات من البداية') },
+      ],
+    },
     fields: [
       { name: 'graph', type: 'textarea', maxLength: MAX_GRAPH_LENGTH,
         label: message('Graph · undirected edges', 'الـ graph · وصلات من غير اتجاه'),
@@ -360,6 +371,8 @@
         message('Empty graph · no start node', 'graph فاضي · مفيش نقطة بداية');
     },
     theory: {
+      idea: message('Explore the graph in waves: first the start node, then all of its neighbors, then their neighbors. A queue keeps nodes in the order they were discovered.',
+        'استكشف الـ graph موجة موجة: الأول نقطة البداية، بعدين كل جيرانها، بعدين جيران جيرانها. الطابور بيحفظ الـ nodes بترتيب اكتشافها.'),
       title: message('Why a queue finds the shortest route', 'ليه الطابور بيوصل لأقصر طريق؟'),
       intro: message('BFS explores by distance from one start. You need an unweighted graph, adjacency lists, a FIFO queue and a discovered set. This lesson uses undirected edges; each edge costs one step.',
         'BFS بيكتشف الـ graph حسب المسافة من بداية واحدة. محتاج graph من غير أوزان، وقوائم جيران، وطابور FIFO، ومجموعة discovered. هنا الوصلات من غير اتجاه، وكل وصلة بخطوة واحدة.'),
@@ -388,15 +401,14 @@
           'مع قوائم الجيران، وعمليات FIFO والبحث في discovered بتكلفة O(1)، أسوأ وقت هو O(V + E) والمساحة الإضافية O(V). هنا بنجهّز مسافات كل V، بس بنفحص الجزء المتصل بالبداية. الوصلة بتتفحص من كل طرف مرة؛ وصلة الـ node لنفسها مرة واحدة.'),
         message('A broad level can require a large queue. DFS uses a different frontier and does not guarantee shortest paths by first discovery. BFS does not minimize weighted cost; use Dijkstra for nonnegative weights.',
           'لو المستوى واسع، الطابور ممكن يكبر. DFS بيختار الخطوة الجاية بطريقة تانية ومش بيضمن أقصر مسافة من أول اكتشاف. BFS مش بيقلّل تكلفة الأوزان؛ استخدم Dijkstra للأوزان غير السالبة.'),
-        message('V is all input nodes; E is unique undirected edges. Input normalization sorts nodes and edges before the trace. Animation stores F independent frames and has extra copying and rendering costs; O(V + E) describes BFS, not the complete visualizer.',
-          'V عدد كل nodes في المدخلات، وE عدد الوصلات من غير تكرار. بنرتّب nodes والوصلات قبل بداية الخطوات. العرض بيحفظ F لقطات مستقلة وليه تكلفة نسخ ورسم إضافية؛ O(V + E) دي تكلفة BFS نفسها.'),
+        message('V is all input nodes; E is unique undirected edges.',
+          'V عدد كل nodes في المدخلات، وE عدد الوصلات من غير تكرار.'),
       ],
       costs: [
         { label: message('Worst-case BFS time', 'أسوأ وقت لـ BFS'), value: 'O(V + E)' },
         { label: message('Traversal auxiliary space', 'مساحة إضافية للتنفيذ'), value: 'O(V)' },
         { label: message('Largest possible queue', 'أكبر طابور ممكن'), value: 'O(V)' },
         { label: message('Adjacency storage', 'تخزين قوائم الجيران'), value: 'O(V + E)' },
-        { label: message('Saved animation frames', 'تخزين لقطات الحركة'), value: 'O(F × (V + E))' },
       ],
     },
   };
