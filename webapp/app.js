@@ -1,11 +1,12 @@
 (function () {
   'use strict';
   function init() {
-    const A = window.AlgorithmLab;
+    const A = window.AlgorithmLab, V = window.LessonView;
+    const lessons = window.AlgorithmLessons || {};
     const $ = id => document.getElementById(id);
     const dictionaries = {
       ar: {
-        skip:'انتقل للتجربة',library:'المكتبة',searchCategory:'خوارزميات البحث',sortCategory:'خوارزميات الترتيب',
+        chooseLesson:'اختار المفهوم',graphCategory:'خوارزميات الجراف',stringCategory:'البحث في النصوص',skip:'انتقل للتجربة',library:'المكتبة',searchCategory:'خوارزميات البحث',sortCategory:'خوارزميات الترتيب',
         sideNote:'الفكرة بتوضح لما تشوف كل خطوة.',sideDescription:'غيّر المدخلات. امشي مع الكود. وشوف اللي بيحصل.',local:'التجربة كلها على جهازك',
         interactive:'تجربة تفاعلية',explore:'جرّب بنفسك',theory:'افهم الفكرة',tabsNote:'خطوة واحدة. تغيير واضح.',newExample:'مثال جديد',editInput:'غيّر المدخلات',
         arrayLabel:'الأرقام',targetLabel:'المطلوب · target',inputHelp:'لحد 16 عدد صحيح من -999 لـ 999، بينهم فاصلة. سيبها فاضية لتجربة الصف الفاضي.',
@@ -24,7 +25,7 @@
         insertionNote:'الخانة المعلّمة مكان للكتابة، مش حذف من الذاكرة. الرقم الباهت يفضل موجود لحد ما نكتب فوقه.',
       },
       en: {
-        skip:'Skip to the lab',library:'THE LIBRARY',searchCategory:'Search algorithms',sortCategory:'Sorting algorithms',
+        chooseLesson:'Choose a concept',graphCategory:'Graph algorithms',stringCategory:'String algorithms',skip:'Skip to the lab',library:'THE LIBRARY',searchCategory:'Search algorithms',sortCategory:'Sorting algorithms',
         sideNote:'A little movement. A lot more clarity.',sideDescription:'Change the input. Follow the code. See what happens.',local:'Runs entirely on your device',
         interactive:'Interactive lesson',explore:'Explore',theory:'The idea',tabsNote:'One step. One clear change.',newExample:'New example',editInput:'Edit input',
         arrayLabel:'Array',targetLabel:'Search target',inputHelp:'Up to 16 integers from -999 to 999, separated by commas. Leave blank to try an empty array.',
@@ -48,14 +49,27 @@
       'binary-search':{number:'01',name:'Binary Search',label:'BINARY SEARCH',cost:'O(log n)',values:episodeValues,target:71},
       'insertion-sort':{number:'02',name:'Insertion Sort',label:'INSERT SORT',cost:'O(n²)',values:[7,3,5,2,6],target:71},
     };
+    Object.values(lessons).sort((a,b)=>Number(a.number)-Number(b.number)).forEach(lesson=>{
+      configs[lesson.id]=lesson;
+      const button=document.createElement('button');button.className='algorithm-option';button.dataset.algorithm=lesson.id;button.setAttribute('aria-pressed','false');
+      const category=lesson.category==='sort'?'sortCategory':lesson.category==='graph'?'graphCategory':'stringCategory';
+      button.innerHTML=`<span class="nav-icon" aria-hidden="true">${lesson.category==='graph'?'⌘':lesson.category==='string'?'≋':'▤'}</span><span><b></b><small data-i18n="${category}"></small></span><span class="nav-arrow" aria-hidden="true">↗</span>`;
+      button.querySelector('b').textContent=lesson.name;document.querySelector('.algorithm-nav').append(button);
+    });
+    document.querySelector('.library-count').textContent=String(Object.keys(configs).length).padStart(2,'0');
+    Object.entries(configs).forEach(([id,c])=>{const option=document.createElement('option');option.value=id;option.textContent=c.name;$('algorithm-select').append(option);});
     let lang = 'ar'; try { const stored=localStorage.getItem('algorithm-lab-language'); if(stored==='en'||stored==='ar')lang=stored; } catch {}
     let algorithm = configs[location.hash.slice(1)] ? location.hash.slice(1) : 'binary-search';
-    let inputs = Object.fromEntries(Object.entries(configs).map(([id,c])=>[id,{numbers:[...c.values],target:c.target}]));
+    let inputs = Object.fromEntries(Object.entries(configs).map(([id,c])=>[id,lessons[id]?c.parse({...c.defaults}):{numbers:[...c.values],target:c.target}]));
+    const rawInputs=Object.fromEntries(Object.entries(lessons).map(([id,c])=>[id,{...c.defaults}]));
+    const presetPositions={};
     let frames=[],index=0,playing=false,timer=null,toastTimer=null,view='explore',cardEls=[],slotEls=[],lastWidth=0;
     const t=key=>dictionaries[lang][key]||key;
     const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const rich=s=>escape(s).replace(/\b(value|current|compareIndex|numbers|left|right|middle|target|NOT_FOUND|Binary Search|Insertion Sort)\b/g,'<bdi>$1</bdi>');
     const isBinary=()=>algorithm==='binary-search';
+    const lesson=()=>lessons[algorithm];
+    const code=()=>lesson()?.code||(isBinary()?A.binaryCode:A.insertionCode);
     const frame=()=>frames[index];
     const period=()=>1100/Number($('speed').value);
     function pause(){playing=false;clearTimeout(timer);timer=null;renderControls();}
@@ -74,12 +88,13 @@
       playing=true;renderControls();tick();
     }
     function buildTrace(){
-      pause();const input=inputs[algorithm];frames=isBinary()?A.binarySearch(input.numbers,input.target):A.insertionSort(input.numbers);index=0;
+      pause();const input=inputs[algorithm];frames=lesson()?lesson().build(input):isBinary()?A.binarySearch(input.numbers,input.target):A.insertionSort(input.numbers);index=0;
       document.documentElement.style.setProperty('--move-time','0ms');
       buildCards();buildCode();$('timeline').max=frames.length-1;renderState();
       if(cardEls.length)void cardEls[0].offsetWidth;
     }
     function buildCards(){
+      if(lesson()){cardEls=[];slotEls=[];$('card-layer').replaceChildren();$('slot-layer').replaceChildren();return;}
       const numbers=inputs[algorithm].numbers;
       $('card-layer').replaceChildren();$('slot-layer').replaceChildren();cardEls=[];slotEls=[];
       $('slot-layer').setAttribute('role','list');$('card-layer').setAttribute('aria-hidden','true');
@@ -94,8 +109,8 @@
       });
     }
     function buildCode(){
-      const code=isBinary()?A.binaryCode:A.insertionCode;
-      $('code-lines').innerHTML=code.map((line,i)=>`<li class="code-line" data-line="${i+1}"><span class="line-number" aria-hidden="true">${String(i+1).padStart(2,'0')}</span><code>${escape(line).replace(/\b(while|if|else|for|return|and)\b/g,'<span class="keyword">$1</span>')}</code></li>`).join('');
+      const lines=code();
+      $('code-lines').innerHTML=lines.map((line,i)=>`<li class="code-line" data-line="${i+1}"><span class="line-number" aria-hidden="true">${String(i+1).padStart(2,'0')}</span><code>${escape(line).replace(/\b(while|if|else|for|return|and)\b/g,'<span class="keyword">$1</span>')}</code></li>`).join('');
       $('code-scroll').scrollTop=0;
     }
     function renderControls(){
@@ -109,7 +124,10 @@
     function renderStage(){
       if(!frames.length||view!=='explore')return;
       const stage=$('stage'),width=stage.clientWidth;if(!width)return;
-      lastWidth=width;const s=frame().state,n=s.numbers.length,binary=isBinary();
+      lastWidth=width;
+      if(lesson()){V.renderScene(stage,frame().scene||{},lang,algorithm);return;}
+      V.setActive(stage,false);
+      const s=frame().state,n=s.numbers.length,binary=isBinary();
       const maxCols=Math.max(5,Math.floor((width-12)/(width>=420?57:77)));
       const cols=n?Math.ceil(n/Math.ceil(n/maxCols)):1;
       const gap=12,cw=Math.min(65,(width-24-(cols-1)*gap)/cols),ch=Math.round(cw*1.08+10);
@@ -156,16 +174,18 @@
       $('step-equation').textContent=f.equation;$('step-equation').hidden=!f.equation;
       $('story-mark').textContent=s.done?(f.kind==='missing'?'∅':'✓'):'↳';
       $('phase-badge').textContent=t(s.done?'complete':index===0?'ready':'running');
-      const vars=isBinary()?[['left',s.left,'L'],['middle',s.middle,'M'],['right',s.right,'R']]:[['current',s.current,'C'],['value',s.value,''],['compareIndex',s.compareIndex,'i']];
+      const vars=lesson()?frame().variables.map(v=>[v.name,V.display(v.value),'']):isBinary()?[['left',s.left,'L'],['middle',s.middle,'M'],['right',s.right,'R']]:[['current',s.current,'C'],['value',s.value,''],['compareIndex',s.compareIndex,'i']];
       const previous=index?frames[index-1].state:null;
-      $('variables').innerHTML=vars.map(([name,value,marker])=>`<div class="variable ${previous&&previous[name]!==value?'changed':''}"><span class="variable-name">${marker?`<small class="pointer">${marker}</small>`:''}${name}</span><span class="variable-value ${value===null?'unset':''}" data-variable="${name}">${value===null?'—':value}</span></div>`).join('');
-      const metrics=isBinary()?[[s.probes,'probes'],[s.comparisons,'comparisons']]:[[s.comparisons,'comparisons'],[s.shifts,'shifts']];
-      $('metrics').innerHTML=metrics.map(([count,label])=>`<div class="metric"><strong>${String(count).padStart(2,'0')}</strong><span>${t(label)}</span></div>`).join('');
+      $('variables').innerHTML=vars.map(([name,value,marker])=>`<div class="variable ${previous&&(lesson()?V.display(frames[index-1].variables.find(v=>v.name===name)?.value)!==value:previous[name]!==value)?'changed':''}"><span class="variable-name">${marker?`<small class="pointer">${marker}</small>`:''}${escape(name)}</span><span class="variable-value ${value===null?'unset':''}" data-variable="${escape(name)}">${value===null?'—':escape(value)}</span></div>`).join('');
+      const metrics=lesson()?frame().metrics.map(m=>[m.value,V.text(m.label,lang)]):isBinary()?[[s.probes,'probes'],[s.comparisons,'comparisons']]:[[s.comparisons,'comparisons'],[s.shifts,'shifts']];
+      $('metrics').innerHTML=metrics.map(([count,label])=>`<div class="metric"><strong>${String(count).padStart(2,'0')}</strong><span>${escape(lesson()?label:t(label))}</span></div>`).join('');
       $('code-lines').querySelectorAll('.code-line').forEach(row=>{
         const number=Number(row.dataset.line),active=f.lines.includes(number);
-        row.classList.toggle('active',active);row.classList.toggle('skipped',!isBinary()&&f.kind==='bounds'&&!s.condition&&number===6);
+        row.classList.toggle('active',active);row.classList.toggle('skipped',!lesson()&&!isBinary()&&f.kind==='bounds'&&!s.condition&&number===6);
         if(active)row.setAttribute('aria-current','step');else row.removeAttribute('aria-current');
       });
+      const activeLine=$('code-lines').querySelector('.code-line.active'),scroll=$('code-scroll');
+      if(activeLine&&scroll.clientHeight){const top=activeLine.offsetTop-scroll.offsetTop;if(top<scroll.scrollTop||top+activeLine.offsetHeight>scroll.scrollTop+scroll.clientHeight)scroll.scrollTop=Math.max(0,top-scroll.clientHeight/2);}
       renderStage();renderControls();
     }
     function renderCopy(){
@@ -178,13 +198,16 @@
       $('timeline').setAttribute('aria-label',t('execution'));$('speed').setAttribute('aria-label',t('speed'));
       const c=configs[algorithm];document.title=`${c.name} · Algorithm Lab`;
       $('lesson-id').textContent=`${c.number} / ALGORITHMS / ${c.label}`;
-      $('lesson-title').innerHTML=`${c.name}<span class="title-dot">.</span>`;
-      $('lesson-description').textContent=t(isBinary()?'binaryDescription':'insertionDescription');
+      $('lesson-title').innerHTML=`${escape(c.name)}<span class="title-dot">.</span>`;
+      $('lesson-description').textContent=lesson()?V.text(c.description,lang):t(isBinary()?'binaryDescription':'insertionDescription');
       $('complexity-badge').textContent=c.cost;$('complexity-badge').title=t('worst');
-      $('legend-last').textContent=t(isBinary()?'discarded':'sorted');
-      $('code-note').innerHTML=rich(t(isBinary()?'binaryNote':'insertionNote'));
-      $('dataset-description').textContent=lang==='ar'?`${inputs[algorithm].numbers.length} عنصر${isBinary()?' · بالترتيب':''}`:`${inputs[algorithm].numbers.length} elements${isBinary()?' · sorted ascending':''}`;
+      $('legend-last').textContent=lesson()?t('complete'):t(isBinary()?'discarded':'sorted');
+      $('code-note').innerHTML=rich(lesson()?V.text(c.note,lang):t(isBinary()?'binaryNote':'insertionNote'));
+      $('dataset-description').textContent=lesson()?V.text(c.summary(inputs[algorithm]),lang):lang==='ar'?`${inputs[algorithm].numbers.length} عنصر${isBinary()?' · بالترتيب':''}`:`${inputs[algorithm].numbers.length} elements${isBinary()?' · sorted ascending':''}`;
       $('edge-preset').textContent=t(isBinary()?'notFound':'reverse');$('target-field').hidden=!isBinary();
+      $('legacy-input-fields').hidden=!!lesson();$('legacy-presets').hidden=!!lesson();$('input-help').hidden=!!lesson();
+      $('lesson-input-fields').hidden=!lesson();$('lesson-presets').hidden=!lesson();$('algorithm-select').value=algorithm;
+      if(lesson()&&!$('input-editor').hidden)renderLessonFields(readLessonFields());
       document.querySelectorAll('.algorithm-option[data-algorithm]').forEach(button=>{const selected=button.dataset.algorithm===algorithm;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',selected);});
       renderTheory();if(frames.length)renderState();
     }
@@ -198,11 +221,23 @@
       algorithm=id;closeEditor();buildTrace();renderCopy();
       try{history.replaceState(null,'',`#${id}`);}catch{}
     }
-    function openEditor(){pause();$('array-input').value=inputs[algorithm].numbers.join(', ');$('target-input').value=inputs[algorithm].target;clearError();$('input-editor').hidden=false;$('edit-input').setAttribute('aria-expanded','true');$('array-input').focus();}
+    function readLessonFields(){const raw={...rawInputs[algorithm]};$('lesson-input-fields').querySelectorAll('[data-field]').forEach(el=>{raw[el.dataset.field]=el.value;});return raw;}
+    function renderLessonFields(raw=rawInputs[algorithm]){
+      const c=lesson();$('lesson-input-fields').innerHTML=c.fields.map(field=>`<label><span>${escape(V.text(field.label,lang))}</span>${field.type==='textarea'?`<textarea rows="3" id="field-${escape(field.name)}" data-field="${escape(field.name)}" dir="ltr" spellcheck="false" aria-describedby="help-${escape(field.name)} input-error"${field.maxLength?` maxlength="${field.maxLength}"`:''}>${escape(raw[field.name]??'')}</textarea>`:`<input type="text" id="field-${escape(field.name)}" data-field="${escape(field.name)}" value="${escape(raw[field.name]??'')}" dir="ltr" autocomplete="off" spellcheck="false" aria-describedby="help-${escape(field.name)} input-error"${field.maxLength?` maxlength="${field.maxLength}"`:''}>`}<small id="help-${escape(field.name)}">${escape(V.text(field.help,lang))}</small></label>`).join('');
+      $('lesson-presets').innerHTML=c.presets.map(preset=>`<button type="button" data-lesson-preset="${escape(preset.id)}">${escape(V.text(preset.label,lang))}</button>`).join('');
+    }
+    function openEditor(){pause();if(lesson())renderLessonFields();else{$('array-input').value=inputs[algorithm].numbers.join(', ');$('target-input').value=inputs[algorithm].target;}clearError();$('input-editor').hidden=false;$('edit-input').setAttribute('aria-expanded','true');(lesson()?$('lesson-input-fields').querySelector('input,textarea'):$('array-input')).focus();}
     function closeEditor(){$('input-editor').hidden=true;$('edit-input').setAttribute('aria-expanded','false');clearError();}
     function clearError(){$('input-error').hidden=true;$('sort-apply').hidden=true;$('array-input').removeAttribute('aria-invalid');$('target-input').removeAttribute('aria-invalid');}
     function applyInput(sort=false){
-      clearError();let numbers,target=inputs[algorithm].target;
+      clearError();
+      if(lesson()){
+        const raw=readLessonFields();
+        try{const parsed=lesson().parse(raw);lesson().build(parsed);inputs[algorithm]=parsed;rawInputs[algorithm]=raw;}
+        catch(error){showError(V.text(error.userMessage,lang)||error.message);return false;}
+        closeEditor();buildTrace();renderCopy();return true;
+      }
+      let numbers,target=inputs[algorithm].target;
       try{numbers=A.parseNumbers($('array-input').value);}catch(error){$('array-input').setAttribute('aria-invalid','true');showError(t(error.message==='too-many'?'tooMany':'invalid'));return false;}
       if(isBinary()){
         try{target=A.parseTarget($('target-input').value);}catch{$('target-input').setAttribute('aria-invalid','true');showError(t('invalidTarget'));return false;}
@@ -220,6 +255,7 @@
       $('array-input').value=numbers.join(', ');$('target-input').value=target;clearError();
     }
     function renderTheory(){
+      if(lesson()){V.renderTheory($('theory-panel'),lesson(),lang,()=>{setView('explore');$('explore-tab').focus();});return;}
       const binary=isBinary(),ar=lang==='ar';
       const content=binary?{
         title:ar?'كل مرة، استبعد الجزء المستحيل.':'Rule out the impossible half.',
@@ -241,6 +277,8 @@
       $('theory-play').addEventListener('click',()=>{setView('explore');$('explore-tab').focus();});
     }
     document.querySelectorAll('.algorithm-option[data-algorithm]').forEach(button=>button.addEventListener('click',()=>selectAlgorithm(button.dataset.algorithm)));
+    $('algorithm-select').addEventListener('change',event=>selectAlgorithm(event.target.value));
+    $('lesson-presets').addEventListener('click',event=>{const button=event.target.closest('[data-lesson-preset]');if(!button||!lesson())return;const preset=lesson().presets.find(p=>p.id===button.dataset.lessonPreset);if(preset){renderLessonFields(preset.input);clearError();}});
     $('play').addEventListener('click',togglePlay);$('next').addEventListener('click',()=>{pause();setIndex(index+1);});$('previous').addEventListener('click',()=>{pause();setIndex(index-1);});
     $('reset').addEventListener('click',()=>{pause();setIndex(0,{jump:true});});
     $('timeline').addEventListener('input',event=>{const next=Number(event.target.value);pause();setIndex(next,{jump:true});});
@@ -252,6 +290,7 @@
     $('sort-apply').addEventListener('click',()=>{if(applyInput(true))$('play').focus();});
     document.querySelectorAll('[data-preset]').forEach(button=>button.addEventListener('click',()=>preset(button.dataset.preset)));
     $('new-example').addEventListener('click',()=>{
+      if(lesson()){const c=lesson(),position=((presetPositions[algorithm]||0)+1)%c.presets.length;presetPositions[algorithm]=position;const raw={...c.presets[position].input};inputs[algorithm]=c.parse(raw);rawInputs[algorithm]=raw;closeEditor();buildTrace();renderCopy();return;}
       let numbers=Array.from({length:isBinary()?10:6},()=>Math.floor(Math.random()*90)+1);
       if(isBinary())numbers.sort((a,b)=>a-b);
       inputs[algorithm]={numbers,target:numbers[Math.floor(Math.random()*numbers.length)]};closeEditor();buildTrace();renderCopy();
@@ -266,9 +305,9 @@
       if(event.key==='ArrowLeft'){event.preventDefault();pause();setIndex(index-1);}
     });
     $('copy-code').addEventListener('click',async()=>{
-      const code=(isBinary()?A.binaryCode:A.insertionCode).join('\n');let copied=false;
-      try{if(navigator.clipboard){await navigator.clipboard.writeText(code);copied=true;}}catch{}
-      if(!copied){const area=document.createElement('textarea');area.value=code;area.style.position='fixed';area.style.left='-9999px';document.body.append(area);area.select();try{copied=document.execCommand('copy');}catch{}area.remove();$('copy-code').focus();}
+      const codeText=code().join('\n');let copied=false;
+      try{if(navigator.clipboard){await navigator.clipboard.writeText(codeText);copied=true;}}catch{}
+      if(!copied){const area=document.createElement('textarea');area.value=codeText;area.style.position='fixed';area.style.left='-9999px';document.body.append(area);area.select();try{copied=document.execCommand('copy');}catch{}area.remove();$('copy-code').focus();}
       notify(t(copied?'copied':'copyFailed'));
     });
     window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(configs[id]&&id!==algorithm)selectAlgorithm(id);});

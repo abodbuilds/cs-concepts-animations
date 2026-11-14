@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#2D123F">
-  <meta name="description" content="Explore Binary Search and Insertion Sort with interactive animations and line-by-line pseudocode.">
+  <meta name="description" content="Explore searching, sorting, graph algorithms and string matching with interactive animations, theory, and line-by-line pseudocode.">
   <title>Algorithm Lab · @abodbuilds</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232D123F'/%3E%3Cpath d='M16 43V29h8v14zm12 0V16h8v27zm12 0V23h8v20z' fill='%23F4D35E'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
   <script src="algorithms.js" defer></script>
+  <!-- lesson-modules -->
+  <script src="lesson-view.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -21,6 +23,7 @@
     <div class="workspace" dir="ltr">
       <aside class="sidebar" aria-label="Algorithm library">
         <div class="sidebar-heading"><span class="eyebrow" data-i18n="library">المكتبة</span><span class="library-count">02</span></div>
+        <div class="library-mobile"><label for="algorithm-select" data-i18n="chooseLesson">اختار المفهوم</label><select id="algorithm-select" aria-label="Algorithm"></select></div>
         <nav class="algorithm-nav" aria-label="Algorithms">
           <button class="algorithm-option selected" data-algorithm="binary-search" aria-pressed="true"><span class="nav-icon" aria-hidden="true">⌕</span><span><b>Binary Search</b><small data-i18n="searchCategory">خوارزميات البحث</small></span><span class="nav-arrow" aria-hidden="true">↗</span></button>
           <button class="algorithm-option" data-algorithm="insertion-sort" aria-pressed="false"><span class="nav-icon sort-icon" aria-hidden="true">▂▅▇</span><span><b>Insertion Sort</b><small data-i18n="sortCategory">خوارزميات الترتيب</small></span><span class="nav-arrow" aria-hidden="true">↗</span></button>
@@ -37,10 +40,11 @@
         <section id="explore-panel" role="tabpanel" aria-labelledby="explore-tab">
           <div class="input-toolbar"><div class="dataset-summary"><span class="status-dot"></span><span id="dataset-description"></span></div><div class="input-actions"><button class="text-button" id="new-example"><span aria-hidden="true">⤨</span><span data-i18n="newExample">مثال جديد</span></button><button class="secondary-button compact" id="edit-input" aria-expanded="false" aria-controls="input-editor"><span aria-hidden="true">⌘</span><span data-i18n="editInput">غيّر المدخلات</span></button></div></div>
           <form id="input-editor" class="input-editor" hidden novalidate>
-            <div class="input-fields"><label class="array-field"><span data-i18n="arrayLabel">الأرقام</span><input id="array-input" type="text" dir="ltr" autocomplete="off" spellcheck="false" aria-describedby="input-help input-error"></label><label class="target-field" id="target-field"><span data-i18n="targetLabel">المطلوب · target</span><input id="target-input" type="text" inputmode="numeric" dir="ltr" autocomplete="off" aria-describedby="input-error"></label></div>
+            <div id="lesson-input-fields" class="lesson-input-fields" hidden></div>
+            <div class="input-fields" id="legacy-input-fields"><label class="array-field"><span data-i18n="arrayLabel">الأرقام</span><input id="array-input" type="text" dir="ltr" autocomplete="off" spellcheck="false" aria-describedby="input-help input-error"></label><label class="target-field" id="target-field"><span data-i18n="targetLabel">المطلوب · target</span><input id="target-input" type="text" inputmode="numeric" dir="ltr" autocomplete="off" aria-describedby="input-error"></label></div>
             <p class="input-help" id="input-help" data-i18n="inputHelp">لحد 16 عدد صحيح من -999 لـ 999، بينهم فاصلة. سيبها فاضية لتجربة الصف الفاضي.</p>
             <p class="input-error" id="input-error" role="alert" hidden></p>
-            <div class="editor-bottom"><div class="presets"><span data-i18n="try">جرّب:</span><button type="button" data-preset="default" data-i18n="presetDefault">مثال الحلقة</button><button type="button" data-preset="edge" id="edge-preset">مش موجود</button><button type="button" data-preset="duplicates" data-i18n="duplicates">قيم مكرّرة</button><button type="button" data-preset="empty" data-i18n="empty">صف فاضي</button></div><div class="editor-actions"><button type="button" class="text-button" id="cancel-input" data-i18n="cancel">إلغاء</button><button type="button" id="sort-apply" class="secondary-button compact" hidden data-i18n="sortApply">رتّب وطبّق</button><button class="primary-button compact" type="submit" data-i18n="apply">طبّق</button></div></div>
+            <div class="editor-bottom"><div id="lesson-presets" class="presets" hidden></div><div class="presets" id="legacy-presets"><span data-i18n="try">جرّب:</span><button type="button" data-preset="default" data-i18n="presetDefault">مثال الحلقة</button><button type="button" data-preset="edge" id="edge-preset">مش موجود</button><button type="button" data-preset="duplicates" data-i18n="duplicates">قيم مكرّرة</button><button type="button" data-preset="empty" data-i18n="empty">صف فاضي</button></div><div class="editor-actions"><button type="button" class="text-button" id="cancel-input" data-i18n="cancel">إلغاء</button><button type="button" id="sort-apply" class="secondary-button compact" hidden data-i18n="sortApply">رتّب وطبّق</button><button class="primary-button compact" type="submit" data-i18n="apply">طبّق</button></div></div>
           </form>
           <div class="lab-grid">
             <section class="visual-panel panel" aria-label="Algorithm animation">
