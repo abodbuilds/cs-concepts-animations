@@ -484,6 +484,17 @@
         `min-heap · بيبدأ بـ ${initial.length} أرقام · ${count('insert')} insert و ${count('extract')} extract و ${count('peek')} peek · الـ capacity ${CAPACITY}`);
     },
     theory: {
+      whenToUse: {
+        use: [
+          { en: "You keep needing the smallest (or largest) item: task schedulers, event queues.", ar: "محتاج أصغر (أو أكبر) element كل شوية: الـ task schedulers، الـ event queues." },
+          { en: "Your algorithm picks the cheapest next step: Dijkstra, Prim, merging sorted lists.", ar: "الـ algorithm بتختار أرخص خطوة جاية: Dijkstra، Prim، دمج sorted lists." },
+          { en: "You want the top k of a stream without sorting all of it.", ar: "عايز أكبر k من stream من غير ما تعمل sort لكله." },
+        ],
+        avoid: [
+          { en: "You search for an arbitrary value → a heap is not sorted, so that is O(n); use a hash table or a search tree.", ar: "بتدوّر على value أي كلام ← الـ heap مش sorted، فده O(n)؛ استخدم hash table أو search tree." },
+          { en: "You need everything in order at once → just sort the array.", ar: "محتاج كل حاجة مترتّبة مرة واحدة ← اعمل sort للـ array وخلاص." },
+        ],
+      },
       idea: message('A heap keeps the smallest value on top so you can always grab it fast. Each parent is only smaller than its own children, so adding or removing a value repairs just one path from top to bottom.',
         'الـ heap بيخلّي أصغر رقم فوق، فتقدر تجيبه على طول. كل parent أصغر بس من الـ children بتوعه، فلما تضيف أو تشيل رقم بتصلّح path واحد من فوق لتحت.'),
       title: message('Smallest on top, in one flat array', 'أصغر رقم فوق، والـ tree كلها في array واحدة'),

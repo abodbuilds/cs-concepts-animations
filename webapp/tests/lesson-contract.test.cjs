@@ -14,6 +14,8 @@ for(const id of ids)test(id+' follows the shared lesson contract for every prese
  for(const step of lesson.theory.steps){bilingual(step.title,'step title');bilingual(step.body,'step body');}
  lesson.theory.notes.forEach(note=>bilingual(note,'theory note'));
  lesson.theory.costs.forEach(cost=>{bilingual(cost.label,'cost label');assert.equal(typeof cost.value,'string');});
+ if(lesson.theme==='data-structures')assert.ok(lesson.theory.whenToUse,'data structures say when to use them');
+ if(lesson.theory.whenToUse)for(const key of ['use','avoid']){assert.ok(lesson.theory.whenToUse[key].length>=2,'whenToUse.'+key);lesson.theory.whenToUse[key].forEach(item=>bilingual(item,'whenToUse '+key));}
  for(const preset of [{id:'defaults',input:lesson.defaults},...lesson.presets]){
   const input=lesson.parse({...preset.input}),before=structuredClone(input);
   bilingual(lesson.summary(input),'summary');

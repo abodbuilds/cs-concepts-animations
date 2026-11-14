@@ -48,7 +48,7 @@
       fail('Enter numbers as text.', 'اكتب الأرقام كـ text.');
     }
     if (rawInput.numbers.length > MAX_LENGTH) {
-      fail('Keep the input within 256 characters and 16 integers.', 'خلّي الـ input في حدود 256 حرف و16 رقم صحيح.');
+      fail('Keep the input within 256 characters and 16 integers.', 'خلّي الـ input في حدود 256 حرف و 16 رقم صحيح.');
     }
     const text = rawInput.numbers.trim()
       .replace(/[٠-٩]/g, digit => String(digit.charCodeAt(0) - 1632))
@@ -151,7 +151,7 @@
         emit('pair-check', [6], message(state.condition ? 'Both neighbors are in bounds' : 'The pass is complete', state.condition ? 'الرقمين لسه جوّه الحدود' : 'الـ pass خلصت'),
           message(state.condition ? `Indices ${state.i} and ${state.i + 1} are within the active prefix.`
             : `i has reached right at index ${state.right}. The largest value in this pass has reached that position.`,
-          state.condition ? `index ${state.i} و${state.i + 1} الاتنين جوّه الجزء اللي بنشتغل عليه.`
+          state.condition ? `index ${state.i} و ${state.i + 1} الاتنين جوّه الجزء اللي بنشتغل عليه.`
             : `i وصل لـ right عند index ${state.right}. أكبر رقم في الـ pass دي وصل للمكان ده.`),
           `${state.i} < ${state.right} → ${state.condition}`);
         if (!state.condition) break;
@@ -162,9 +162,9 @@
           message(state.condition ? `At indices ${i} and ${i + 1}, ${leftValue} is larger than ${rightValue}. Swap the neighbors so the larger value moves right.`
             : leftValue === rightValue ? `Both neighbors have value ${leftValue}. The strict > test is false, so their original relative order is preserved.`
               : `At indices ${i} and ${i + 1}, ${leftValue} is smaller than ${rightValue}. This pair is already in ascending order.`,
-          state.condition ? `عند index ${i} و${i + 1}، الـ ${leftValue} أكبر من الـ ${rightValue}. هنعمل swap عشان الأكبر يروح يمين.`
+          state.condition ? `عند index ${i} و ${i + 1}، الـ ${leftValue} أكبر من الـ ${rightValue}. هنعمل swap عشان الأكبر يروح يمين.`
             : leftValue === rightValue ? `الرقمين ${leftValue} زي بعض. الـ condition > طلع false، فهيفضلوا بنفس ترتيبهم الأصلي.`
-              : `عند index ${i} و${i + 1}، الـ ${leftValue} أصغر من الـ ${rightValue}. يعني مترتّبين أصلًا.`),
+              : `عند index ${i} و ${i + 1}، الـ ${leftValue} أصغر من الـ ${rightValue}. يعني مترتّبين أصلًا.`),
           `${leftValue} > ${rightValue} → ${state.condition}`);
         if (state.condition) {
           [state.numbers[i], state.numbers[i + 1]] = [state.numbers[i + 1], state.numbers[i]];
@@ -203,7 +203,7 @@
         state.earlyExit = true; state.sortedFrom = 0; state.condition = null;
         emit('early-exit', [13], message('Stop early', 'بنعمل break ونوقف بدري'),
           message(`No swap was needed in pass ${state.passes}. The remaining cards are also fixed; another pass would add no information.`,
-            `الـ pass رقم ${state.passes} ماحتاجتش ولا swap. يعني باقي الأرقام كمان في مكانها، وpass تانية مش هتضيف حاجة.`), 'break');
+            `الـ pass رقم ${state.passes} ماحتاجتش ولا swap. يعني باقي الأرقام كمان في مكانها، و pass تانية مش هتضيف حاجة.`), 'break');
         break;
       }
     }
@@ -214,7 +214,7 @@
       message(numbers.length < 2 ? 'An empty or single-card array is already sorted. Return it without comparisons or swaps.'
         : `Return the ascending result after ${state.comparisons} comparisons and ${state.swaps} swaps. Equal cards never crossed, so the sort is stable.`,
       numbers.length < 2 ? 'الـ array الفاضية أو اللي فيها رقم واحد sorted أصلًا. بنعمل return ليها من غير مقارنات ولا swaps.'
-        : `بنعمل return للنتيجة من الصغير للكبير بعد ${state.comparisons} مقارنات و${state.swaps} swaps. الأرقام المتساوية عمرها ما عدّت بعض، فالـ sort ده stable.`), 'return numbers');
+        : `بنعمل return للنتيجة من الصغير للكبير بعد ${state.comparisons} مقارنات و ${state.swaps} swaps. الأرقام المتساوية عمرها ما عدّت بعض، فالـ sort ده stable.`), 'return numbers');
     return frames;
   }
 
@@ -255,14 +255,14 @@
         'بنقارن كل رقمين جنب بعض، ولو ترتيبهم غلط بنعمل swap. بعد كل pass، أكبر رقم فاضل بيوصل لآخر الـ array.'),
       title: message('One pass fixes one more position', 'كل pass بتثبّت مكان زيادة'),
       intro: message('You only need array indices, loops, and a swap of two values. Bubble Sort repeatedly scans adjacent pairs from left to right. This version uses a shrinking right boundary and a swapped flag.',
-        'محتاج بس تعرف الـ indices والـ loops وإزاي تعمل swap لرقمين. Bubble Sort بيلف على كل رقمين جنب بعض من الشمال لليمين، ويعيد تاني. النسخة دي فيها right بيصغر كل مرة، وflag اسمه swapped.'),
+        'محتاج بس تعرف الـ indices والـ loops وإزاي تعمل swap لرقمين. Bubble Sort بيلف على كل رقمين جنب بعض من الشمال لليمين، ويعيد تاني. النسخة دي فيها right بيصغر كل مرة، و flag اسمه swapped.'),
       invariant: message('At each pass start, positions after right form a sorted suffix in their final positions, and every active value is no larger than any suffix value. During a pass, the largest value seen so far reaches i after each advance. Therefore the pass fixes index right; a pass without swaps proves all remaining adjacent pairs are ordered.',
         'في أول كل pass، الأرقام اللي بعد right مترتّبة وفي مكانها النهائي، وكل رقم قبل right أصغر من أو بيساوي أي رقم بعده. جوّه الـ pass، أكبر رقم قابلناه بيوصل لـ i بعد كل خطوة. عشان كده كل pass بتثبّت index right. ولو pass عدّت من غير swap، يبقى كل الأرقام اللي فاضلة مترتّبة.'),
       steps: [
         { title: message('Scan the active prefix', 'بنلف على الجزء اللي فاضل'), body: message('Reset swapped to false and i to 0. While i < right, compare numbers[i] with numbers[i + 1]; the guard prevents an out-of-bounds read.',
-          'بنرجّع swapped = false وi = 0. طول ما i < right، بنقارن numbers[i] بـ numbers[i + 1]. الـ condition ده بيمنعنا نطلع برّه الـ array.') },
+          'بنرجّع swapped = false و i = 0. طول ما i < right، بنقارن numbers[i] بـ numbers[i + 1]. الـ condition ده بيمنعنا نطلع برّه الـ array.') },
         { title: message('Swap only inverted neighbors', 'بنعمل swap بس لو الكبير قبل الصغير'), body: message('When the left value is strictly larger, swap both cards and set swapped to true. Equal values stay put. Move i right whether a swap happened or not.',
-          'لو اللي على الشمال أكبر (مش بيساوي)، بنعمل swap وswapped بتبقى true. الأرقام المتساوية بتفضل مكانها. وبنحرّك i يمين، عملنا swap أو لأ.') },
+          'لو اللي على الشمال أكبر (مش بيساوي)، بنعمل swap و swapped بتبقى true. الأرقام المتساوية بتفضل مكانها. وبنحرّك i يمين، عملنا swap أو لأ.') },
         { title: message('Fix the boundary, then decide', 'بنثبّت آخر مكان، وبعدين نقرّر نكمّل ولا لأ'), body: message('The largest active value has reached right. Decrease right to exclude it. If swapped is false, break; otherwise repeat while right > 0. The shrinking boundary guarantees termination.',
           'أكبر رقم في الجزء اللي بنشتغل عليه وصل لـ right. بنقلّل right عشان مانقارنوش تاني. لو swapped لسه false، بنعمل break. غير كده بنكرّر طول ما right > 0. الجزء اللي بنشتغل عليه بيصغر كل مرة، فالـ loop لازم تخلص.') },
       ],

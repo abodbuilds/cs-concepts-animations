@@ -69,7 +69,7 @@
     }
     if (rawInput.operations.length > MAX_LENGTH) {
       fail(`Keep the script within ${MAX_LENGTH} characters and ${MAX_OPERATIONS} operations.`,
-        `خلّي الـ operations في حدود ${MAX_LENGTH} حرف و${MAX_OPERATIONS} operation.`);
+        `خلّي الـ operations في حدود ${MAX_LENGTH} حرف و ${MAX_OPERATIONS} operation.`);
     }
     const text = rawInput.operations.trim()
       .replace(/[٠-٩]/g, digit => String(digit.charCodeAt(0) - 1632))
@@ -150,7 +150,7 @@
                 : count === 1 ? `One element, in slot ${start}. The next enqueue writes at rear = ${rear}.`
                 : wrapped ? `${count} elements from slot ${start} past slot 5, wrapping to slot ${(start + count - 1) % CAPACITY}. The next enqueue writes at rear = ${rear}.`
                   : `${count} elements in slots ${start} to ${start + count - 1}. The next enqueue writes at rear = ${rear}.`,
-            count === 0 ? `الـ queue فاضية. front = ${state.front}، وrear = (front + size) % 6 = ${rear} ده المكان اللي أول enqueue جاي هيكتب فيه.`
+            count === 0 ? `الـ queue فاضية. front = ${state.front}، و rear = (front + size) % 6 = ${rear} ده المكان اللي أول enqueue جاي هيكتب فيه.`
               : count === CAPACITY ? `الـ 6 slots مليانين، فـ rear لفّ ووقف على front (${rear}). أي enqueue جاي هيعمل overflow.`
                 : count === 1 ? `فيه element واحد بس، في slot ${start}. الـ enqueue الجاي هيكتب عند rear = ${rear}.`
                 : wrapped ? `عدد الـ elements: ${count}، بيبدأوا من slot ${start}، بيعدّوا slot 5 ويلفّوا لحد slot ${(start + count - 1) % CAPACITY}. الـ enqueue الجاي هيكتب عند rear = ${rear}.`
@@ -163,7 +163,7 @@
 
     emit('ready', [], message('An empty queue in a fixed array', 'queue فاضية جوّه array ثابتة'),
       message(`We have ${CAPACITY} slots, front = 0 and size = 0, and ${operations.length} operations to run. New values go in at rear, old values leave from front, and nothing ever shifts.`,
-        `عندنا ${CAPACITY} slots، وfront = 0 وsize = 0، وهنشغّل ${operations.length} operations. الجديد بيدخل عند rear، والقديم بيخرج من عند front، ومفيش أي element بيتحرّك من مكانه.`));
+        `عندنا ${CAPACITY} slots، و front = 0 و size = 0، وهنشغّل ${operations.length} operations. الجديد بيدخل عند rear، والقديم بيخرج من عند front، ومفيش أي element بيتحرّك من مكانه.`));
 
     operations.forEach((operation, step) => {
       state.step = step + 1; state.op = operation.op; state.value = null; focus(null);
@@ -202,7 +202,7 @@
         state.outputs.push({ op: 'enqueue', value, status: 'ok' });
         emit('write', [4, 5], message(`Write ${value} into slot ${slot}`, `بنكتب الـ ${value} في slot ${slot}`),
           message(`buffer[${slot}] = ${value} and size grows to ${state.size}. One write and one counter update: enqueue is O(1), and no other element moved.`,
-            `buffer[${slot}] = ${value}، وsize بقى ${state.size}. كتابة واحدة وعدّاد واحد، يعني الـ enqueue بـ O(1)، ومفيش ولا element تاني اتحرّك.`),
+            `buffer[${slot}] = ${value}، و size بقى ${state.size}. كتابة واحدة وعدّاد واحد، يعني الـ enqueue بـ O(1)، ومفيش ولا element تاني اتحرّك.`),
           `buffer[${slot}] = ${value}; size = ${state.size}`);
         return;
       }
@@ -221,7 +221,7 @@
         state.outputs.push({ op: operation.op, value: null, status: 'underflow' });
         emit('underflow', [checkLines[1]], message(`Underflow: ${operation.op} on an empty queue`, `underflow: ${operation.op} على queue فاضية`),
           message(`The queue is empty, so ${operation.op} returns underflow and front stays at ${state.front}. Reading buffer[front] now would return a stale or empty slot, which is why the size check comes first.`,
-            `الـ queue فاضية، فالـ ${operation.op} بترجع underflow، وfront فاضل ${state.front}. لو قرينا buffer[front] دلوقتي هنجيب slot فاضي أو قيمة قديمة، وعشان كده بنشيك على size الأول.`),
+            `الـ queue فاضية، فالـ ${operation.op} بترجع underflow، و front فاضل ${state.front}. لو قرينا buffer[front] دلوقتي هنجيب slot فاضي أو قيمة قديمة، وعشان كده بنشيك على size الأول.`),
           'return underflow');
         return;
       }
@@ -232,7 +232,7 @@
         state.outputs.push({ op: 'peek', value: state.value, status: 'ok' });
         emit('peek', [14], message(`peek returns ${state.value}`, `الـ peek بترجع ${state.value}`),
           message(`We read buffer[${state.front}] = ${state.value} and change nothing: front and size stay the same. peek is O(1) and the next dequeue returns this same value.`,
-            `بنقرا buffer[${state.front}] = ${state.value} ومش بنغيّر حاجة، front وsize زي ما هما. الـ peek بـ O(1)، والـ dequeue الجاية هترجع نفس الرقم ده.`),
+            `بنقرا buffer[${state.front}] = ${state.value} ومش بنغيّر حاجة، front و size زي ما هما. الـ peek بـ O(1)، والـ dequeue الجاية هترجع نفس الرقم ده.`),
           `return buffer[${state.front}] = ${state.value}`);
         return;
       }
@@ -305,13 +305,25 @@
         `${operations.length} operations · الـ capacity ${CAPACITY} · circular buffer`);
     },
     theory: {
+      whenToUse: {
+        use: [
+          { en: "Work must be handled in arrival order: print jobs, requests, messages.", ar: "الشغل لازم يتعمل بترتيب وصوله: الـ print jobs، الـ requests، الـ messages." },
+          { en: "One side adds and another side takes at different speeds: the buffer absorbs the gap.", ar: "فيه حد بيحط وحد بيسحب بسرعات مختلفة: الـ buffer بيستوعب الفرق." },
+          { en: "You explore level by level: BFS keeps its frontier in a queue.", ar: "بتلف level ورا level: الـ BFS بيحفظ الـ frontier بتاعه في queue." },
+        ],
+        avoid: [
+          { en: "Some items are more urgent than others → use a priority queue (a heap).", ar: "فيه elements أهم من غيرها ← استخدم priority queue، يعني heap." },
+          { en: "The newest item should leave first → use a stack.", ar: "الأحدث لازم يطلع الأول ← استخدم stack." },
+          { en: "You cannot bound the size → a fixed circular buffer overflows; grow it, or use a queue built on a linked list.", ar: "مش عارف الحجم هيوصل لحد فين ← الـ circular buffer الثابت هيعمل overflow؛ كبّره، أو استخدم queue مبني على linked list." },
+        ],
+      },
       idea: message('A queue lets the first element in be the first one out, like a line at a bakery. Store it in a fixed array, move front and rear forward instead of the elements, and wrap them back to 0 with modulo.',
-        'الـ queue بتخلّي أول element دخل هو أول واحد يخرج، زي طابور الفرن. بنخزّنها في array ثابتة، وبنحرّك front وrear نفسهم بدل الـ elements، ولما يوصلوا للآخر بيلفّوا لـ 0 بالـ %.'),
+        'الـ queue بتخلّي أول element دخل هو أول واحد يخرج، زي طابور الفرن. بنخزّنها في array ثابتة، وبنحرّك front و rear نفسهم بدل الـ elements، ولما يوصلوا للآخر بيلفّوا لـ 0 بالـ %.'),
       title: message('Move the indices, not the elements', 'حرّك الـ indices، مش الـ elements'),
       intro: message('You need arrays, indices and the remainder operator %. A queue is FIFO: enqueue adds at the back, dequeue removes from the front, peek reads the front. The naive array version keeps the front at index 0, so every dequeue shifts the rest left. A circular buffer keeps a front index and a size and treats the array as a ring, so both ends move in O(1).',
-        'محتاج تعرف الـ arrays والـ indices وعلامة الـ % (باقي القسمة). الـ queue دي FIFO: الـ enqueue بتضيف في الآخر، والـ dequeue بتشيل من الأول، والـ peek بتقرا الأول من غير ما تشيله. لو عملناها array عادية الـ front بتاعها دايمًا عند index 0، كل dequeue هتعمل shift لباقي الـ elements شمال. الـ circular buffer بيحتفظ بـ front وsize، وبيعامل الـ array كأنها دايرة، فالطرفين بيتحرّكوا في O(1).'),
+        'محتاج تعرف الـ arrays والـ indices وعلامة الـ % (باقي القسمة). الـ queue دي FIFO: الـ enqueue بتضيف في الآخر، والـ dequeue بتشيل من الأول، والـ peek بتقرا الأول من غير ما تشيله. لو عملناها array عادية الـ front بتاعها دايمًا عند index 0، كل dequeue هتعمل shift لباقي الـ elements شمال. الـ circular buffer بيحتفظ بـ front و size، وبيعامل الـ array كأنها دايرة، فالطرفين بيتحرّكوا في O(1).'),
       invariant: message('0 ≤ size ≤ capacity, and the queue is exactly buffer[front], buffer[(front + 1) % capacity], …, buffer[(front + size − 1) % capacity], oldest first. Every other slot is free, and rear = (front + size) % capacity is the first free one. enqueue and dequeue each change one slot and one index, so the invariant survives every step.',
-        '0 ≤ size ≤ capacity، والـ queue هي بالظبط buffer[front]، buffer[(front + 1) % capacity]، …، buffer[(front + size − 1) % capacity]، من الأقدم للأجدد. أي slot تاني فاضي، وrear = (front + size) % capacity هو أول slot فاضي. الـ enqueue والـ dequeue كل واحدة بتغيّر slot واحد وindex واحد، فالـ invariant بيفضل صح بعد كل خطوة.'),
+        '0 ≤ size ≤ capacity، والـ queue هي بالظبط buffer[front]، buffer[(front + 1) % capacity]، …، buffer[(front + size − 1) % capacity]، من الأقدم للأجدد. أي slot تاني فاضي، و rear = (front + size) % capacity هو أول slot فاضي. الـ enqueue والـ dequeue كل واحدة بتغيّر slot واحد و index واحد، فالـ invariant بيفضل صح بعد كل خطوة.'),
       steps: [
         { title: message('enqueue writes at rear', 'الـ enqueue بتكتب عند rear'), body: message('If size == capacity, report overflow. Otherwise rear = (front + size) % capacity, write the value there, and add 1 to size. When front + size passes the end, % wraps rear into a slot that an earlier dequeue freed.',
           'لو size == capacity، بنرجّع overflow. غير كده rear = (front + size) % capacity، بنكتب الرقم هناك، وبنزوّد size بواحد. لما front + size يعدّي آخر الـ array، الـ % بيلفّ rear لـ slot فضي من dequeue قديمة.') },
@@ -320,15 +332,15 @@
         { title: message('peek only looks', 'الـ peek بتبص بس'), body: message('peek checks size == 0 like dequeue, then returns buffer[front] without changing front or size.',
           'الـ peek بتشيك على size == 0 زي الـ dequeue، وبعدين بترجّع buffer[front] من غير ما تغيّر front ولا size.') },
         { title: message('Why keep size', 'ليه بنحتفظ بـ size'), body: message('With only front and rear, an empty queue and a full queue both have front == rear. Keeping size (or leaving one slot always empty) tells them apart.',
-          'لو معانا front وrear بس، الـ queue الفاضية والمليانة الاتنين فيهم front == rear. لما نحتفظ بـ size (أو نسيب slot واحد فاضي على طول) نقدر نفرّق بينهم.') },
+          'لو معانا front و rear بس، الـ queue الفاضية والمليانة الاتنين فيهم front == rear. لما نحتفظ بـ size (أو نسيب slot واحد فاضي على طول) نقدر نفرّق بينهم.') },
       ],
       notes: [
         message('The naive array queue makes dequeue O(n) because it shifts size − 1 elements left each time. The metric "Shifts a naive array would do" adds those shifts up so you can compare.',
           'الـ queue المعمولة بـ array عادية بتخلّي الـ dequeue بـ O(n)، عشان كل مرة بتعمل shift لـ size − 1 elements شمال. العدّاد "shifts كانت هتحصل في array عادية" بيجمع الـ shifts دي عشان تقارن.'),
         message('A fixed capacity is the price. When the queue may grow without limit, use a dynamic version that copies into a buffer twice as big when full (O(1) amortized per enqueue), or a linked list with head and tail pointers (O(1) per operation, but more memory per element and worse cache locality).',
-          'التمن هنا إن الـ capacity ثابتة. لو الـ queue ممكن تكبر من غير حد، استخدم نسخة dynamic بتنقل كل حاجة لـ buffer ضعف الحجم لما تتملي (O(1) amortized لكل enqueue)، أو linked list فيها head وtail (O(1) لكل operation، بس كل element بياخد memory أكتر والـ cache مش بيحبّها).'),
+          'التمن هنا إن الـ capacity ثابتة. لو الـ queue ممكن تكبر من غير حد، استخدم نسخة dynamic بتنقل كل حاجة لـ buffer ضعف الحجم لما تتملي (O(1) amortized لكل enqueue)، أو linked list فيها head و tail (O(1) لكل operation، بس كل element بياخد memory أكتر والـ cache مش بيحبّها).'),
         message('Pick a queue when order of arrival matters: BFS, task schedulers, print jobs, network packets, producer/consumer buffers. If you need the newest element first, you want a stack; if you need the smallest first, a priority queue.',
-          'استخدم queue لما ترتيب الوصول يفرق: الـ BFS، الـ task schedulers، الطباعة، الـ network packets، والـ buffers بين producer وconsumer. لو عايز أحدث element الأول يبقى محتاج stack، ولو عايز الأصغر الأول يبقى محتاج priority queue.'),
+          'استخدم queue لما ترتيب الوصول يفرق: الـ BFS، الـ task schedulers، الطباعة، الـ network packets، والـ buffers بين producer و consumer. لو عايز أحدث element الأول يبقى محتاج stack، ولو عايز الأصغر الأول يبقى محتاج priority queue.'),
         message('Overflow and underflow here return a status and leave the queue unchanged so the trace can continue. Real code usually throws an error or returns a flag the caller must check.',
           'الـ overflow والـ underflow هنا بيرجّعوا status ومش بيغيّروا الـ queue، عشان الـ trace يكمّل. في الـ code الحقيقي غالبًا بنعمل throw لـ error أو بنرجّع flag لازم اللي نادى يشيك عليه.'),
       ],

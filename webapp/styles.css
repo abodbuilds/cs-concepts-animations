@@ -58,3 +58,5 @@ html[dir=rtl] .sidebar-note,html[dir=rtl] .sidebar-heading,html[dir=rtl] main,ht
 html[dir=rtl] .sidebar{direction:rtl;border-right:0;border-left:1px solid var(--border);padding-right:0;padding-left:24px}html[dir=rtl] .algorithm-option,html[dir=rtl] .nav-group-title{text-align:right}html[dir=rtl] .algorithm-option.selected:before{left:auto;right:-1px}
 @media(max-width:1250px){html[dir=rtl] .sidebar{padding-left:16px}}
 @media(max-width:1050px){html[dir=rtl] .sidebar{border:0;padding-left:0}}
+.theory-when{margin-bottom:18px}.when-columns{display:grid;grid-template-columns:1fr 1fr;gap:28px}.theory-when h4{margin:0 0 8px;font-size:12px;font-weight:600;color:var(--foreground)}
+@media(max-width:760px){.when-columns{grid-template-columns:1fr;gap:14px}}

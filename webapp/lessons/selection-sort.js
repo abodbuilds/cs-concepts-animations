@@ -185,7 +185,7 @@
         state.condition = candidate < minimum;
         state.comparisons++;
         emit('compare', [6], message(state.condition ? 'A smaller value was found' : 'Keep the current minimum',
-          state.condition ? 'لقينا رقم أصغر' : 'الأصغر زي ما هو'),
+          state.condition ? 'لقينا رقم أصغر' : 'الأصغر زي ما هو '),
         message(state.condition
           ? `The value at index ${scan} is smaller. Update minIndex next; no card moves yet.`
           : candidate === minimum ? 'The values are equal, so the strict less-than test fails. Keep the earlier candidate; later swaps can still break stability.'
@@ -212,7 +212,7 @@
         ? `Swap indices ${start} and ${state.minIndex} to extend the fixed prefix.`
         : `Skip a self-swap. Index ${start} is now final, but the full suffix still had to be scanned.`,
       state.condition
-        ? `هنعمل swap بين index ${start} وindex ${state.minIndex}، كده الجزء المترتّب يكبر برقم.`
+        ? `هنعمل swap بين index ${start} و index ${state.minIndex}، كده الجزء المترتّب يكبر برقم.`
         : `مش هنعمل swap للرقم مع نفسه. index ${start} خلاص في مكانه النهائي، بس برضه كان لازم نلف على الجزء كله الأول.`),
       `${state.minIndex} != ${start} → ${state.condition}`);
 
@@ -303,13 +303,13 @@
       ],
       notes: [
         message('Instability: in the equal-card preset, A and B both hold 2, with A first. Selecting the smaller card C swaps it with A, leaving B before A. Keeping the earlier equal minimum does not prevent this reversal.',
-          'ليه مش stable: في مثال الأرقام المتساوية، A وB الاتنين قيمتهم 2، وA الأول. لما نختار الرقم الأصغر C ونعمل swap بينه وبين A، الـ B بيبقى قبل A. وإننا بنفضل على أول رقم مساوي مش بيمنع الترتيب إنه يتقلب.'),
+          'ليه مش stable: في مثال الأرقام المتساوية، A و B الاتنين قيمتهم 2، و A الأول. لما نختار الرقم الأصغر C ونعمل swap بينه وبين A، الـ B بيبقى قبل A. وإننا بنفضل على أول رقم مساوي مش بيمنع الترتيب إنه يتقلب.'),
         message('Even sorted and all-equal inputs need (n−1) + (n−2) + … + 1 = n(n−1)/2 value comparisons. This version has no early exit. The metric excludes loop-boundary and index checks.',
           'حتى لو الـ array sorted أو كل أرقامها زي بعض، محتاجين (n−1) + (n−2) + … + 1 = n(n−1)/2 مقارنة. النسخة دي مفيهاش خروج بدري. والعداد بيحسب مقارنات الأرقام بس، مش الـ conditions بتاعة الـ loops ولا مقارنة الـ index.'),
         message('Selection sort uses few swaps and can suit tiny inputs when moving records is expensive. It is a poor choice for large or nearly sorted arrays: insertion sort can exploit existing order, while selection sort still scans every suffix.',
           'Selection Sort بتعمل swaps قليلة، فممكن تنفع مع input صغير لو نقل البيانات تقيل. بس مش اختيار كويس لـ array كبيرة أو شبه sorted: Insertion Sort بتستفيد من الترتيب اللي موجود، لكن Selection Sort برضه بتلف على كل الجزء اللي فاضل.'),
         message('Complexity assumes constant-time comparisons and swaps. The algorithm itself is in-place with O(1) extra space.',
-          'الـ complexity هنا على أساس إن المقارنة والـ swap بياخدوا وقت ثابت. وSelection Sort نفسها in-place، ومحتاجة مساحة زيادة O(1) بس.'),
+          'الـ complexity هنا على أساس إن المقارنة والـ swap بياخدوا وقت ثابت. و Selection Sort نفسها in-place، ومحتاجة مساحة زيادة O(1) بس.'),
       ],
       costs: [
         { label: message('Best / average / worst time', 'الوقت في الـ best / average / worst case'), value: 'Θ(n²)' },

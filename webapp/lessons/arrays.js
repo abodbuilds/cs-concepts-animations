@@ -573,6 +573,17 @@
         `capacity ${input.capacity} · عدد الأرقام في الأول: ${input.initial.length} · عدد الـ operations: ${input.operations.length}`);
     },
     theory: {
+      whenToUse: {
+        use: [
+          { en: "You read by position a lot: items[i] is one step, wherever i is.", ar: "بتقرا بالـ index كتير: items[i] خطوة واحدة مهما كان i فين." },
+          { en: "The size is known up front, or you mostly add at the end.", ar: "الحجم معروف من الأول، أو أغلب الإضافة بتبقى في الآخر." },
+          { en: "You loop over everything in order: slots next to each other are fast to scan.", ar: "بتلف على كل الـ elements بالترتيب: الخانات اللي جنب بعض بتتقري بسرعة." },
+        ],
+        avoid: [
+          { en: "You often insert or delete near the front → each one shifts the rest; use a linked list or a deque.", ar: "بتعمل insert أو delete قريب من الأول كتير ← كل مرة بنعمل shift للباقي؛ استخدم linked list أو deque." },
+          { en: "You often search by value → that is a full scan; use a hash table, or keep the array sorted and use binary search.", ar: "بتدوّر بالـ value كتير ← ده scan على الـ array كلها؛ استخدم hash table، أو خليها sorted واعمل binary search." },
+        ],
+      },
       title: message('One block of memory, one formula', 'حتة memory واحدة ومعادلة واحدة'),
       idea: message('An array keeps its elements side by side in one block of memory, so a[i] is one calculation away. The price is that inserting or deleting in the middle has to slide every element after it.',
         'الـ array بتحط الـ elements ورا بعض في حتة memory واحدة، فـ a[i] بيوصله حسبة واحدة. التمن إن أي insert أو delete في النص لازم يزحزح كل الـ elements اللي بعده.'),

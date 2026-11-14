@@ -624,6 +624,17 @@
         `عدد الـ nodes في الأول ${data.values.length} · عدد الـ operations ${data.operations.length} · head بس من غير tail pointer`);
     },
     theory: {
+      whenToUse: {
+        use: [
+          { en: "You add or remove at the front a lot: moving head is O(1).", ar: "بتضيف أو بتشيل من الأول كتير: تغيير الـ head بياخد O(1)." },
+          { en: "You already hold a pointer to the spot: insert or delete after it without shifting anything.", ar: "معاك pointer على المكان: بتعمل insert أو delete بعده من غير shift لأي حاجة." },
+          { en: "The size changes a lot and you cannot reserve space up front.", ar: "الحجم بيتغيّر كتير ومش عارف تحجز مساحة من الأول." },
+        ],
+        avoid: [
+          { en: "You need items[i] → reaching node i walks i links; use an array.", ar: "محتاج items[i] ← عشان توصل للـ node رقم i لازم تمشي i خطوات؛ استخدم array." },
+          { en: "Plain scanning speed matters → nodes are scattered in memory, so the cache helps little; an array is usually faster in practice.", ar: "سرعة اللف على الـ elements مهمة ← الـ nodes متفرّقة في الـ memory فالـ cache مش بيساعد كتير؛ الـ array غالبًا أسرع في الحقيقة." },
+        ],
+      },
       title: message('Linked list: nodes held together by pointers', 'الـ linked list: nodes ماسكة في بعض بـ pointers'),
       idea: message('Each node holds a value and a pointer to the next node; the list itself is only a pointer to the first one, called head. To reach any node you follow the pointers from head, one node at a time.',
         'كل node فيها رقم و pointer على الـ node اللي بعدها، والـ list نفسها مجرد pointer على أول node اسمه head. عشان توصل لأي node لازم تمشي ورا الـ pointers من الـ head، node ورا node.'),

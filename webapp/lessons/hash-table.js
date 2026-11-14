@@ -90,7 +90,7 @@
     }
     if (rawInput.operations.length > MAX_LENGTH) {
       fail(`Keep the script within ${MAX_LENGTH} characters and ${MAX_OPS} operations.`,
-        `خلّي الـ operations في حدود ${MAX_LENGTH} حرف و${MAX_OPS} operations.`);
+        `خلّي الـ operations في حدود ${MAX_LENGTH} حرف و ${MAX_OPS} operations.`);
     }
     const text = rawInput.operations
       .replace(/[٠-٩]/g, digit => String(digit.charCodeAt(0) - 1632))
@@ -321,7 +321,7 @@
     description: message('Hash each key to one of 7 buckets, then search only that bucket’s chain to put, get or delete.',
       'بنحسب الـ hash بتاع كل key عشان نعرف هو في أنهي bucket من الـ 7، وبعدين بندوّر في الـ chain بتاعة الـ bucket ده بس.'),
     note: message('Separate chaining, fixed 7 buckets, hash = sum of character codes mod 7. Average O(1) per operation; O(n) if every key collides.',
-      'separate chaining بـ 7 buckets ثابتين، والـ hash = مجموع الـ character codes mod 7. كل operation في المتوسط O(1)، وO(n) لو كل الـ keys عملت collision.'),
+      'separate chaining بـ 7 buckets ثابتين، والـ hash = مجموع الـ character codes mod 7. كل operation في المتوسط O(1)، و O(n) لو كل الـ keys عملت collision.'),
     code,
     keySteps: ['ready', 'bucket', 'compare', 'update', 'append', 'found', 'remove', 'missing', 'done'],
     fields: [{
@@ -331,7 +331,7 @@
     }],
     defaults,
     presets: [
-      { id: 'default', label: message('Insert, collide, update, delete', 'insert وcollision وupdate وdelete'), input: { ...defaults } },
+      { id: 'default', label: message('Insert, collide, update, delete', 'insert و collision و update و delete'), input: { ...defaults } },
       { id: 'anagrams', label: message('Anagrams · one long chain', 'نفس الحروف · chain واحدة طويلة'), input: { operations: 'put stop 1, put pots 2, put tops 3, put spot 4, get spot, get post' } },
       { id: 'spread', label: message('No collisions · load factor 1', 'من غير collisions · load factor 1'), input: { operations: 'put a 1, put b 2, put c 3, put d 4, put e 5, put f 6, put g 7, get d' } },
       { id: 'update', label: message('Same key again · update', 'نفس الـ key تاني · update'), input: { operations: 'put x 1, put x 2, put x -3, get x' } },
@@ -348,11 +348,22 @@
         `عدد الـ operations ${operations.length} (put: ${count('put')} · get: ${count('get')} · delete: ${count('delete')}) · ${BUCKETS} buckets · separate chaining`);
     },
     theory: {
+      whenToUse: {
+        use: [
+          { en: "You look things up by key: usernames, ids, caches, word counts.", ar: "بتدوّر على حاجة بالـ key: usernames، ids، cache، عدّ الكلمات." },
+          { en: "You need a fast \"have I seen this before?\" check, like removing duplicates.", ar: "محتاج تعرف بسرعة \"شفت ده قبل كده؟\"، زي إنك تشيل التكرار." },
+          { en: "Average O(1) matters more to you than order.", ar: "الـ O(1) في المتوسط أهم عندك من الترتيب." },
+        ],
+        avoid: [
+          { en: "You need keys in sorted order, or ranges like every key from a to m → use a balanced search tree.", ar: "محتاج الـ keys مترتّبة، أو range زي كل الـ keys من a لـ m ← استخدم balanced search tree." },
+          { en: "Every lookup needs a guaranteed worst case → collisions can make one lookup O(n).", ar: "محتاج كل lookup يبقى مضمون في الـ worst case ← الـ collisions ممكن تخلّي lookup واحد O(n)." },
+        ],
+      },
       idea: message('A hash function turns each key into a bucket number, so put, get and delete look in one small bucket instead of the whole table. Keys that land in the same bucket share a chain and are told apart by comparing the keys.',
         'الـ hash function بتحوّل كل key لرقم bucket، فالـ put والـ get والـ delete بيدوّروا في bucket واحد صغير بدل الـ table كله. ولو كذا key وقعوا في نفس الـ bucket، بيتحطّوا في chain واحدة، وبنفرّق بينهم بإننا نقارن الـ keys.'),
       title: message('Jump straight to one bucket', 'بنروح على bucket واحد على طول'),
       intro: message(`You need arrays, lists, and the remainder operator mod. A hash table stores key–value entries in an array of m buckets. This lab uses m = ${BUCKETS} and separate chaining: each bucket points to a list (chain) of the entries that hash there. The hash is deliberately simple so you can check it by hand: add the character codes (a = 97 … z = 122) and take the sum mod ${BUCKETS}. The table never resizes here, so you can watch chains grow.`,
-        `محتاج تعرف الـ arrays والـ lists والـ mod (باقي القسمة). الـ hash table بيخزّن entries كل واحد فيه key وvalue، جوّه array فيها m buckets. هنا m = ${BUCKETS}، وبنستخدم separate chaining: كل bucket بيشاور على list (chain) فيها الـ entries اللي الـ hash بتاعها طلع الرقم ده. الـ hash بسيط عن قصد عشان تقدر تحسبه بإيدك: بنجمع الـ character codes (a = 97 … z = 122) وناخد الـ mod ${BUCKETS}. الـ table هنا مش بيكبر خالص، عشان تشوف الـ chains وهي بتطول.`),
+        `محتاج تعرف الـ arrays والـ lists والـ mod (باقي القسمة). الـ hash table بيخزّن entries كل واحد فيه key و value، جوّه array فيها m buckets. هنا m = ${BUCKETS}، وبنستخدم separate chaining: كل bucket بيشاور على list (chain) فيها الـ entries اللي الـ hash بتاعها طلع الرقم ده. الـ hash بسيط عن قصد عشان تقدر تحسبه بإيدك: بنجمع الـ character codes (a = 97 … z = 122) وناخد الـ mod ${BUCKETS}. الـ table هنا مش بيكبر خالص، عشان تشوف الـ chains وهي بتطول.`),
       invariant: message('Every entry with key k sits in buckets[hash(k)], and each key appears at most once in the whole table. That is why searching one bucket is enough: if k is not in its own bucket, it is not anywhere. size always equals the total number of entries.',
         'أي entry الـ key بتاعه k موجود في buckets[hash(k)]، وكل key بيظهر مرة واحدة بالكتير في الـ table كله. عشان كده كفاية ندوّر في bucket واحد: لو k مش في الـ bucket بتاعه، يبقى مش موجود خالص. والـ size دايمًا بيساوي عدد الـ entries كلها.'),
       steps: [
@@ -385,7 +396,7 @@
       costs: [
         { label: message('put / get / delete · average, good hash, bounded α', 'put / get / delete · في المتوسط، مع hash كويس وα صغير'), value: 'O(1)' },
         { label: message('put / get / delete · worst case, every key in one bucket', 'put / get / delete · الـ worst case، كل الـ keys في bucket واحد'), value: 'O(n)' },
-        { label: message('Space for m buckets and n entries', 'المساحة لـ m buckets وn entries'), value: 'O(m + n)' },
+        { label: message('Space for m buckets and n entries', 'المساحة لـ m buckets و n entries'), value: 'O(m + n)' },
         { label: message('Resize and rehash (not done here)', 'الـ resize والـ rehash (مش موجودين هنا)'), value: 'O(n) · amortized O(1)' },
       ],
     },

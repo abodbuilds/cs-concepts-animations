@@ -222,7 +222,7 @@
             : `Swap indices ${from} and ${to}. The pivot now separates values <= ${state.value} on its left from values > ${state.value} on its right.`,
           from === to
             ? `الـ pivot أصلًا في index ${from}. كل الأرقام اللي شفناها <= ${state.value}، فاليمين هيفضل فاضي.`
-            : `بنعمل swap بين index ${from} وindex ${to}. دلوقتي الأرقام <= ${state.value} على شمال الـ pivot، والأرقام > ${state.value} على يمينه.`
+            : `بنعمل swap بين index ${from} و index ${to}. دلوقتي الأرقام <= ${state.value} على شمال الـ pivot، والأرقام > ${state.value} على يمينه.`
         );
       } else {
         explanation = message(
@@ -230,8 +230,8 @@
             ? `boundary and scan both equal ${from}. This card is already in the <= ${state.value} region; the swap instruction changes nothing.`
             : `Exchange indices ${from} and ${to}. The accepted card joins the <= ${state.value} region; the displaced larger card stays in the scanned region.`,
           from === to
-            ? `boundary وscan الاتنين = ${from}. الرقم ده أصلًا في جزء الـ <= ${state.value}، فالـ swap مش هيغيّر حاجة.`
-            : `بنعمل swap بين index ${from} وindex ${to}. الرقم اللي قبلناه دخل جزء الـ <= ${state.value}، والرقم الأكبر اللي اتشال لسه في الجزء اللي عدّينا عليه.`
+            ? `boundary و scan الاتنين = ${from}. الرقم ده أصلًا في جزء الـ <= ${state.value}، فالـ swap مش هيغيّر حاجة.`
+            : `بنعمل swap بين index ${from} و index ${to}. الرقم اللي قبلناه دخل جزء الـ <= ${state.value}، والرقم الأكبر اللي اتشال لسه في الجزء اللي عدّينا عليه.`
         );
       }
       emit(purpose === 'pivot' ? 'pivot-swap' : 'swap', [purpose === 'pivot' ? 20 : 18],
@@ -282,7 +282,7 @@
           : `At index ${state.scan}, ${scanned} > ${state.value}. Leave this card in place and keep boundary at ${state.boundary}.`,
         state.condition
           ? `في index ${state.scan}: ${scanned} <= ${state.value}. هنكبّر جزء الشمال الأول، وبعدين نعمل swap عشان الرقم ده يدخل فيه.`
-          : `في index ${state.scan}: ${scanned} > ${state.value}. هنسيب الرقم مكانه، وboundary هيفضل ${state.boundary}.`),
+          : `في index ${state.scan}: ${scanned} > ${state.value}. هنسيب الرقم مكانه، و boundary هيفضل ${state.boundary}.`),
         `${scanned} <= ${state.value} → ${state.condition}`);
         if (state.condition) {
           state.boundary++;
@@ -389,7 +389,7 @@
     emit('done', [3], message(numbers.length ? 'The array is sorted' : 'The empty array is sorted',
       numbers.length ? 'الـ array بقت مترتّبة' : 'الـ array الفاضية مترتّبة أصلًا'),
     message(`Return the ascending result after ${state.comparisons} value comparisons and ${state.swaps} swaps between distinct positions. Self-swaps are counted separately.`,
-      `بنعمل return للنتيجة من الصغير للكبير بعد ${state.comparisons} مقارنة و${state.swaps} swap بين أماكن مختلفة. الـ swap في نفس المكان ليه عدّاد لوحده.`),
+      `بنعمل return للنتيجة من الصغير للكبير بعد ${state.comparisons} مقارنة و ${state.swaps} swap بين أماكن مختلفة. الـ swap في نفس المكان ليه عدّاد لوحده.`),
     'return numbers');
     return frames;
   }
@@ -426,9 +426,9 @@
         'بنختار pivot، ونودّي كل رقم أصغر منه على شماله وكل رقم أكبر على يمينه. كده الـ pivot بقى في مكانه النهائي، فبنكرّر نفس الفكرة على كل ناحية.'),
       title: message('Quicksort with Lomuto partitioning', 'Quicksort بالـ Lomuto partition'),
       intro: message('Prerequisites: zero-based array indices, swaps, loops, and recursive calls. This version sorts ascending with inclusive left/right bounds, chooses the last element as pivot, and sends equal values left.',
-        'قبل ما نبدأ لازم تكون فاهم الـ index اللي بيبدأ من 0، والـ swap، والـ loops، والـ recursive calls. النسخة دي بترتّب من الصغير للكبير، وleft وright نفسهم داخلين في الجزء. بتاخد آخر element كـ pivot، والأرقام المساوية ليه بتروح شمال.'),
+        'قبل ما نبدأ لازم تكون فاهم الـ index اللي بيبدأ من 0، والـ swap، والـ loops، والـ recursive calls. النسخة دي بترتّب من الصغير للكبير، و left و right نفسهم داخلين في الجزء. بتاخد آخر element كـ pivot، والأرقام المساوية ليه بتروح شمال.'),
       invariant: message('At every loop guard: [left, boundary] contains values <= value; [boundary + 1, scan - 1] contains values > value; [scan, right - 1] is unexamined; numbers[right] is the pivot. Empty ranges are allowed. After scanning, swapping the pivot into boundary + 1 fixes its position. Recursing on strictly smaller sides sorts the whole range; empty and singleton ranges terminate.',
-        'كل مرة بنشيك على الـ condition بتاع الـ loop: من left لحد boundary الأرقام <= value، ومن boundary + 1 لحد scan - 1 الأرقام > value، ومن scan لحد right - 1 لسه مشفناهاش، وnumbers[right] هو الـ pivot. أي جزء من دول ممكن يبقى فاضي. بعد ما الـ scan يخلص، الـ swap بين الـ pivot وboundary + 1 بيثبّته في مكانه. الـ recursive calls بتشتغل على أجزاء أصغر كل مرة، فالجزء كله بيترتّب، والجزء الفاضي أو اللي فيه element واحد بيقف على طول.'),
+        'كل مرة بنشيك على الـ condition بتاع الـ loop: من left لحد boundary الأرقام <= value، ومن boundary + 1 لحد scan - 1 الأرقام > value، ومن scan لحد right - 1 لسه مشفناهاش، و numbers[right] هو الـ pivot. أي جزء من دول ممكن يبقى فاضي. بعد ما الـ scan يخلص، الـ swap بين الـ pivot و boundary + 1 بيثبّته في مكانه. الـ recursive calls بتشتغل على أجزاء أصغر كل مرة، فالجزء كله بيترتّب، والجزء الفاضي أو اللي فيه element واحد بيقف على طول.'),
       steps: [
         { title: message('1. Stop on small ranges', '1. الجزء الصغير بيقف على طول'),
           body: message('If left >= right, return. A singleton is final; an empty range reads no card. Suspended sort calls remain visible on the stack.',

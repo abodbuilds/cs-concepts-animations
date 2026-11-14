@@ -185,7 +185,7 @@
         if (equal) state.matchedLength = state.j + 1;
         emit('compare', [12], message(equal ? 'These code points match' : 'These code points differ', equal ? 'الـ characters دول زي بعض، يبقى match' : 'الـ characters دول مش زي بعض، يبقى mismatch'),
           message(equal ? `text[${textIndex}] and pattern[${state.j}] both hold ${JSON.stringify(textValue)}. The verified prefix now has ${state.matchedLength} code points.` : `text[${textIndex}] holds ${JSON.stringify(textValue)}, but pattern[${state.j}] needs ${JSON.stringify(patternValue)}. Start ${state.shift} cannot be a full match.`,
-            equal ? `text[${textIndex}] وpattern[${state.j}] الاتنين فيهم ${JSON.stringify(textValue)}. كده اتأكدنا من أول ${state.matchedLength} code points.` : `text[${textIndex}] فيه ${JSON.stringify(textValue)}، بس pattern[${state.j}] محتاج ${JSON.stringify(patternValue)}. يبقى البداية ${state.shift} مش هتدّي match كامل.`),
+            equal ? `text[${textIndex}] و pattern[${state.j}] الاتنين فيهم ${JSON.stringify(textValue)}. كده اتأكدنا من أول ${state.matchedLength} code points.` : `text[${textIndex}] فيه ${JSON.stringify(textValue)}، بس pattern[${state.j}] محتاج ${JSON.stringify(patternValue)}. يبقى البداية ${state.shift} مش هتدّي match كامل.`),
           `text[${textIndex}] ${JSON.stringify(textValue)} != pattern[${state.j}] ${JSON.stringify(patternValue)} → ${!equal}`);
         if (!equal) {
           emit('mismatch', [13], message(`Reject start ${state.shift}`, `بنستبعد البداية ${state.shift}`),
@@ -196,7 +196,7 @@
         state.j++;
         emit('advance', [14], message('Advance within the pattern', 'بنكمّل في الـ pattern'),
           message(`Increase j to ${state.j} because the previous pair matched. Keep shift at ${state.shift}.`,
-            `بنزوّد j لـ ${state.j} عشان المقارنة اللي فاتت طلعت match. وshift بيفضل ${state.shift}.`), `j = ${state.j - 1} + 1 = ${state.j}`);
+            `بنزوّد j لـ ${state.j} عشان المقارنة اللي فاتت طلعت match. و shift بيفضل ${state.shift}.`), `j = ${state.j - 1} + 1 = ${state.j}`);
       }
       state.condition = state.j === state.m;
       emit('match-check', [15], message(state.condition ? 'A full match is confirmed' : 'This candidate stopped early', state.condition ? 'اتأكدنا إن فيه match كامل' : 'المحاولة دي وقفت بدري'),
@@ -263,7 +263,7 @@
         'بنحرّك الـ pattern على الـ text مكان مكان. في كل مكان بنقارن character character، وأول ما نلاقي mismatch بنتحرّك مكان واحد ونبدأ من الأول.'),
       title: message('Naive first-match string search', 'الـ naive string search: أول match'),
       intro: message('You need zero-based indexing, equality tests, and nested loops. No sorting or preprocessing is required. n and m count Unicode code points, not JavaScript UTF-16 code units.',
-        'محتاج تكون فاهم الـ indices اللي بتبدأ من 0، والمقارنة بـ ==، والـ nested loops. مفيش sorting ولا preprocessing. n وm بيعدّوا Unicode code points، مش الـ UTF-16 code units بتاعة JavaScript.'),
+        'محتاج تكون فاهم الـ indices اللي بتبدأ من 0، والمقارنة بـ ==، والـ nested loops. مفيش sorting ولا preprocessing. n و m بيعدّوا Unicode code points، مش الـ UTF-16 code units بتاعة JavaScript.'),
       invariant: message('Before each comparison, pattern[0..j) equals text[shift..shift+j), and every start before shift has failed. A mismatch disproves this start. Increasing shift by exactly one examines every possible start, including overlaps. Reaching j = m proves a match; because starts increase, the first returned index is the earliest.',
         'قبل كل مقارنة، pattern[0..j) زي text[shift..shift+j) بالظبط، وكل البدايات اللي قبل shift فشلت. أي mismatch بيستبعد البداية دي. ولما نزوّد shift بواحد بالظبط، بنجرّب كل البدايات، حتى المتداخلة. لو j وصل لـ m يبقى لقينا match. وعشان البدايات بتزيد بالترتيب، أول index بنرجّعه هو أول match فعلاً.'),
       steps: [
@@ -272,8 +272,8 @@
         { title: message('Reject or return', 'بنستبعد أو بنعمل return'), body: message('On a mismatch, stop that candidate and shift one position. On a full match, return shift immediately. If the last candidate fails, return -1. This finds one match, not all occurrences.', 'لو فيه mismatch بنوقف المحاولة دي ونعمل shift مكان واحد. لو الـ pattern كله عمل match بنعمل return لـ shift على طول. لو آخر بداية فشلت بنعمل return -1. كده بنلاقي match واحد بس، مش كل الأماكن.') },
       ],
       notes: [
-        message('For 1 ≤ m ≤ n, at most n − m + 1 starts each compare m code points. Repeated prefixes can force every comparison, for example a text of a characters against a pattern ending in b. The metric counts character comparisons only, not loop or length checks.', 'لما 1 ≤ m ≤ n، فيه n − m + 1 بداية بالكتير، وكل بداية بتقارن لحد m code points. لو الـ prefix بيتكرّر ممكن نضطر نعمل كل المقارنات دي، زي text كله a وpattern آخره b. العدّاد بيحسب مقارنات الـ characters بس، مش الـ checks بتاعة الـ loop أو الطول.'),
-        message('Empty and longer-pattern shortcuts take O(1) matching work after lengths are known. This module first validates and converts strings to code-point arrays in O(n + m) time and space, even on those shortcuts.', 'حالة الـ pattern الفاضي أو الأطول بتاخد O(1) في الـ matching بعد ما نعرف الأطوال. بس الـ module ده بيعمل validate الأول وبيحوّل الـ strings لـ arrays من code points في O(n + m) time وspace، حتى في الحالات دي.'),
+        message('For 1 ≤ m ≤ n, at most n − m + 1 starts each compare m code points. Repeated prefixes can force every comparison, for example a text of a characters against a pattern ending in b. The metric counts character comparisons only, not loop or length checks.', 'لما 1 ≤ m ≤ n، فيه n − m + 1 بداية بالكتير، وكل بداية بتقارن لحد m code points. لو الـ prefix بيتكرّر ممكن نضطر نعمل كل المقارنات دي، زي text كله a و pattern آخره b. العدّاد بيحسب مقارنات الـ characters بس، مش الـ checks بتاعة الـ loop أو الطول.'),
+        message('Empty and longer-pattern shortcuts take O(1) matching work after lengths are known. This module first validates and converts strings to code-point arrays in O(n + m) time and space, even on those shortcuts.', 'حالة الـ pattern الفاضي أو الأطول بتاخد O(1) في الـ matching بعد ما نعرف الأطوال. بس الـ module ده بيعمل validate الأول وبيحوّل الـ strings لـ arrays من code points في O(n + m) time و space، حتى في الحالات دي.'),
         message('The search itself needs O(1) extra space on code-point arrays.', 'البحث نفسه محتاج O(1) extra space لما الـ code-point arrays تكون جاهزة.'),
         message('This simple approach works well for small inputs, but repeats prefix work after a failure. KMP reuses prefix information to achieve O(n + m) search including preprocessing, with O(m) extra space. This lesson deliberately shows the naive approach.', 'الطريقة دي سهلة وكويسة للـ inputs الصغيرة، بس بعد كل فشل بتعيد شغل الـ prefix من الأول. الـ KMP بيستفيد من معلومات الـ prefix ويوصل لـ O(n + m) شامل الـ preprocessing، بـ O(m) extra space. هنا بنشرح الطريقة الـ naive عن قصد.'),
         message('Matching is exact: no case folding or Unicode normalization. Combining accents and joined emoji can span several cards. Returned indices count code points, so they can differ from String.indexOf indices. Inputs are capped at 24 text and 10 pattern code points to keep playback manageable.', 'الـ match لازم يكون بالظبط: مفيش case folding ولا Unicode normalization. التشكيل والإيموجي المركّب ممكن ياخدوا أكتر من كارت. الـ index اللي بنرجّعه بيعدّ code points، فممكن يختلف عن String.indexOf. الـ text أقصاه 24 code point والـ pattern أقصاه 10، عشان العرض يفضل سهل تتابعه.'),

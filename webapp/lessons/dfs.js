@@ -38,7 +38,7 @@
   // Normalize fresh copies, so callers may provide any node/edge ordering.
   function validate(input) {
     if (!isObject(input) || !Array.isArray(input.nodes) || !Array.isArray(input.edges)) {
-      invalid('Use a graph with nodes, edges, and a start node.', 'لازم الـ graph يبقى فيه nodes وedges وstart node.');
+      invalid('Use a graph with nodes, edges, and a start node.', 'لازم الـ graph يبقى فيه nodes و edges و start node.');
     }
     if (input.nodes.length > 8 || Array.from(input.nodes).some(node => !isNode(node))) {
       invalid('Use at most 8 nodes, each a single uppercase letter A-H.', 'أقصى حاجة 8 nodes، وكل node اسمها حرف capital واحد من A لـ H.');
@@ -55,11 +55,11 @@
       if (!isObject(edge) || !isNode(edge.from) || !isNode(edge.to)
         || !nodes.includes(edge.from) || !nodes.includes(edge.to)
         || ('directed' in edge && edge.directed !== false) || 'weight' in edge) {
-        invalid('Each edge needs existing from/to nodes A-H, with no direction or weight.', 'كل edge لازم يبقى ليه from وto، وهما nodes موجودة من A لـ H. ومن غير اتجاه ولا weight.');
+        invalid('Each edge needs existing from/to nodes A-H, with no direction or weight.', 'كل edge لازم يبقى ليه from و to، وهما nodes موجودة من A لـ H. ومن غير اتجاه ولا weight.');
       }
       const id = edgeId(edge.from, edge.to);
       if (seen.has(id)) {
-        invalid(`Edge ${id} is repeated; A-B and B-A are the same edge.`, `الـ edge ${id} متكرّر. A-B وB-A هما نفس الـ edge.`);
+        invalid(`Edge ${id} is repeated; A-B and B-A are the same edge.`, `الـ edge ${id} متكرّر. A-B و B-A هما نفس الـ edge.`);
       }
       seen.add(id);
       const [from, to] = id.split('-');
@@ -312,7 +312,7 @@
     fields: [
       {
         name: 'graph', label: message('Graph edges and isolated nodes', 'الـ edges والـ nodes اللي لوحدها'), type: 'textarea', maxLength: graphLimit,
-        help: message('Write A-B for an undirected edge or H for a node. Separate entries with commas, semicolons, or newlines; spaces around - and empty separators are allowed. Labels A-H; at most 8 nodes and 20 edges. No duplicate edges (A-B equals B-A). Self-loops are allowed and checked once. Leave both fields blank for an empty graph.', 'اكتب A-B عشان edge من غير اتجاه، أو H لوحدها عشان node. افصل بـ comma أو semicolon أو سطر جديد، والمسافات حوالين الـ - والفواصل الفاضية عادي. الأسماء من A لـ H، وأقصى حاجة 8 nodes و20 edge. متكرّرش أي edge، فـ A-B هو نفسه B-A. الـ self-loop مسموح، وبنشيّك عليه مرة واحدة بس. لو عايز graph فاضي، سيب الخانتين فاضيين.'),
+        help: message('Write A-B for an undirected edge or H for a node. Separate entries with commas, semicolons, or newlines; spaces around - and empty separators are allowed. Labels A-H; at most 8 nodes and 20 edges. No duplicate edges (A-B equals B-A). Self-loops are allowed and checked once. Leave both fields blank for an empty graph.', 'اكتب A-B عشان edge من غير اتجاه، أو H لوحدها عشان node. افصل بـ comma أو semicolon أو سطر جديد، والمسافات حوالين الـ - والفواصل الفاضية عادي. الأسماء من A لـ H، وأقصى حاجة 8 nodes و 20 edge. متكرّرش أي edge، فـ A-B هو نفسه B-A. الـ self-loop مسموح، وبنشيّك عليه مرة واحدة بس. لو عايز graph فاضي، سيب الخانتين فاضيين.'),
       },
       {
         name: 'start', label: message('Start node', 'الـ start node'), type: 'text', maxLength: startLimit,
@@ -321,7 +321,7 @@
     ],
     defaults: { ...defaults },
     presets: [
-      { id: 'default', label: message('Branches, a cycle, and an isolated node', 'فروع وcycle وnode لوحدها'), input: { ...defaults } },
+      { id: 'default', label: message('Branches, a cycle, and an isolated node', 'فروع و cycle و node لوحدها'), input: { ...defaults } },
       { id: 'branching', label: message('Backtracking between branches', 'الـ backtracking بين الفروع'), input: { graph: 'A-B, A-C, B-D, B-E, C-F, C-G', start: 'A' } },
       { id: 'cycle', label: message('A cycle stops at discovered nodes', 'الـ cycle بتقف عند الـ nodes اللي اتكتشفت'), input: { graph: 'A-B, B-C, C-A', start: 'A' } },
       { id: 'disconnected', label: message('Start in a disconnected component', 'بنبدأ في جزء منفصل من الـ graph'), input: { graph: 'A-B, B-C, D-E, F, H', start: 'D' } },
@@ -341,7 +341,7 @@
       idea: message('Follow one path as deep as it goes. Only at a dead end, go back one step and try the next neighbor.',
         'امشي في path واحد لحد آخره. ولما الطريق يتسد، ساعتها بس ارجع خطوة وجرّب الـ neighbor اللي بعده.'),
       title: message('Depth first, then backtrack', 'بننزل للآخر، وبعدين بنعمل backtrack'),
-      intro: message('DFS explores a graph using recursive calls. Know what a node, an undirected edge, an adjacency list, and a last-in-first-out call stack mean. Each call keeps its position while a child explores deeper.', 'الـ DFS بيلف على الـ graph بـ recursive calls. لازم تكون عارف يعني إيه node، وedge من غير اتجاه، وadjacency list، وcall stack بيشتغل LIFO (آخر call يدخل هو أول واحد يطلع). كل call بيفتكر هو واقف فين، لحد ما الـ call اللي جواه يخلص ويرجع.'),
+      intro: message('DFS explores a graph using recursive calls. Know what a node, an undirected edge, an adjacency list, and a last-in-first-out call stack mean. Each call keeps its position while a child explores deeper.', 'الـ DFS بيلف على الـ graph بـ recursive calls. لازم تكون عارف يعني إيه node، و edge من غير اتجاه، و adjacency list، و call stack بيشتغل LIFO (آخر call يدخل هو أول واحد يطلع). كل call بيفتكر هو واقف فين، لحد ما الـ call اللي جواه يخلص ويرجع.'),
       invariant: message('Each node is marked discovered before any outgoing exploration, so it is called at most once. Active calls form a path from the start; each suspended call remembers its next neighbor. A finished node has examined every neighbor and all its child calls have returned. Following any path from the start therefore discovers every reachable node; no call crosses to a disconnected component.', 'كل node بنعلّم عليها discovered قبل ما نشيّك على أي neighbor ليها، فمستحيل نعملّها call أكتر من مرة. الـ calls الشغّالة بتعمل path من الـ start، وكل call واقف فاكر الـ neighbor الجاي. الـ node اللي خلصت تبقى شيّكت على كل الـ neighbors بتوعها، وكل الـ calls اللي طلعت منها رجعت. عشان كده لو مشينا ورا أي path من الـ start، هنكتشف كل node نقدر نوصلها، ومفيش call هيعدّي لجزء منفصل.'),
       steps: [
         { title: message('Enter and discover', 'بندخل ونكتشف'), body: message('Push a call, mark its node discovered, and append it to the order. Marking before recursion prevents cycles and self-loops from repeating work.', 'بنعمل push لـ call، ونعلّم الـ node بتاعته discovered، ونعمل append ليها في الـ order. ولأننا بنعلّم عليها قبل الـ recursion، الـ cycles والـ self-loops مش بيخلّونا نكرّر شغل.') },
@@ -350,7 +350,7 @@
       ],
       notes: [
         message('Only the start component is traversed. An isolated start is visited once; an empty graph requires no start and returns an empty order. To traverse every component, an outer loop over unseen nodes would be needed.', 'بنزور بس الجزء اللي متوصّل بالـ start. لو الـ start node لوحدها، هنزورها مرة واحدة. والـ graph الفاضي مش محتاج start، وبيرجّع order فاضي. لو عايزين نزور كل الأجزاء، هنحتاج loop برّانية تلف على الـ nodes اللي لسه مشفناهاش.'),
-        message('The graph is undirected and unweighted. A-B and B-A denote one edge; duplicates are rejected. An ordinary edge is examined from both ends, while a self-loop is stored and examined once. An edge to a discovered node does not always prove a cycle: it may simply lead back to the parent.', 'الـ graph هنا undirected ومن غير weights. A-B وB-A هما نفس الـ edge، والتكرار مرفوض. الـ edge العادي بنشيّك عليه من الناحيتين، لكن الـ self-loop بيتخزّن مرة وبنشيّك عليه مرة. ولو edge وصّلنا لـ node discovered، ده مش دايمًا معناه إن فيه cycle. ممكن يكون بيرجّعنا للـ parent وخلاص.'),
+        message('The graph is undirected and unweighted. A-B and B-A denote one edge; duplicates are rejected. An ordinary edge is examined from both ends, while a self-loop is stored and examined once. An edge to a discovered node does not always prove a cycle: it may simply lead back to the parent.', 'الـ graph هنا undirected ومن غير weights. A-B و B-A هما نفس الـ edge، والتكرار مرفوض. الـ edge العادي بنشيّك عليه من الناحيتين، لكن الـ self-loop بيتخزّن مرة وبنشيّك عليه مرة. ولو edge وصّلنا لـ node discovered، ده مش دايمًا معناه إن فيه cycle. ممكن يكون بيرجّعنا للـ parent وخلاص.'),
         message('With adjacency lists already ordered and constant-time discovered-set lookup, the traversal takes O(Vr + Er) for reachable nodes and edges, with O(V + E) as the whole-graph worst case. Input normalization and neighbor sorting happen before traversal; sorting costs O(V log V + E log(E + 1) + Σ deg(v) log(deg(v) + 1)).', 'لو الـ adjacency lists مترتّبة جاهزة، والـ lookup في discovered بياخد O(1)، يبقى الـ traversal بياخد O(Vr + Er) للـ nodes والـ edges اللي نقدر نوصلها. والـ worst case للـ graph كله O(V + E). تجهيز الـ input وترتيب الـ neighbors بيحصلوا قبل الـ traversal، والترتيب بياخد O(V log V + E log(E + 1) + Σ deg(v) log(deg(v) + 1)).'),
         message('The call stack can grow to Vr on a long path. On large graphs recursion may overflow the runtime stack; explicit stack frames with a saved neighbor cursor preserve this exact order. Pushing every neighbor at once with a different marking rule may change the DFS tree.', 'الـ call stack ممكن يكبر لحد Vr لو الـ path طويل. في الـ graphs الكبيرة، الـ recursion ممكن يعمل overflow للـ stack بتاع الـ runtime. لو عملنا stack بإيدينا، وكل frame فيه حافظ الـ neighbor اللي واقف عنده، هنفضل محافظين على نفس الترتيب بالظبط. لكن لو عملنا push لكل الـ neighbors مرة واحدة، وعلّمنا عليهم بطريقة تانية، الـ DFS tree ممكن تتغيّر.'),
         message('DFS is useful for reachability, maze exploration, and as a building block for other graph algorithms. Its parent tree provides a route, but does not guarantee the fewest edges; BFS does for unweighted graphs. Alphabetical order makes this lesson reproducible, not uniquely correct.', 'الـ DFS مفيد عشان نعرف نقدر نوصل لإيه، ولما نلف في متاهة، وكأساس لـ graph algorithms تانية. الـ parent tree بتدّينا path، بس مش شرط يكون بأقل عدد edges. الـ BFS هو اللي بيضمن ده في الـ graph اللي من غير weights. الترتيب الأبجدي هنا عشان الدرس يدّي نفس النتيجة كل مرة، مش عشان هو الترتيب الصح الوحيد.'),

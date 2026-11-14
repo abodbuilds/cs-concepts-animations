@@ -246,3 +246,23 @@ test('no input mutation and independent snapshots', () => {
   bilingual(G.summary(input));
   assert.ok(G.keySteps.every(kind => typeof kind === 'string'));
 });
+
+test('degree badges match the neighbor lists and the final frame says how the graph holds together', () => {
+  for (const preset of G.presets) {
+    const frames = G.build(G.parse({ ...preset.input }));
+    for (const frame of frames) {
+      const degrees = row(frame, 'degree');
+      assert.deepEqual(degrees.cells.map(cell => cell.marker), frame.state.order);
+      assert.deepEqual(degrees.cells.map(cell => cell.value), frame.state.order.map(node => frame.state.adj[node].length));
+    }
+    assert.equal(G.view.nodeBadge, 'degree');
+  }
+  const split = trace('A B C D', 'edge A B\nedge C D').at(-1);
+  assert.equal(split.state.result.components, 2);
+  assert.match(split.explanation.en, /Degrees add up to 4 = 2E/);
+  assert.match(split.explanation.en, /2 connected components/);
+  const joined = trace('A B C', 'edge A B\nedge B C', 'directed').at(-1);
+  assert.equal(joined.state.result.components, 1);
+  assert.match(joined.explanation.en, /Out-degrees add up to 2 = E/);
+  assert.match(joined.explanation.en, /ignore direction/);
+});

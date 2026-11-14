@@ -232,7 +232,7 @@
           message(state.condition ? 'Compare its distance with the best seen in this scan.' : 'Skip this node: its shortest distance is already final.', state.condition ? 'بنقارن الـ distance بتاعتها بأصغر distance شفناها في الـ scan ده.' : 'هنعدّي الـ node دي: أقصر distance ليها اتحسمت خلاص.'), `${node} ∉ settled → ${state.condition}`);
         if (!state.condition) continue;
         state.condition = state.distances[node] < state.best; state.minComparisons++;
-        emit('minimum-compare', [9], message(state.condition ? 'A smaller candidate' : 'Keep the current minimum', state.condition ? 'لقينا candidate أصغر' : 'الـ minimum زي ما هو'),
+        emit('minimum-compare', [9], message(state.condition ? 'A smaller candidate' : 'Keep the current minimum', state.condition ? 'لقينا candidate أصغر' : 'الـ minimum زي ما هو '),
           message(state.condition ? `${node} has a strictly smaller tentative distance, so it becomes the next candidate.` : state.distances[node] === Infinity ? `${node} has no known route yet; ∞ cannot win the minimum scan.` : `${node} is not strictly cheaper. Equal distances keep the alphabetically earlier candidate.`, state.condition ? `الـ distance المؤقتة بتاعة ${node} أصغر بجد، يبقى ${node} بقت الـ candidate.` : state.distances[node] === Infinity ? `لسه مفيش path معروف لـ ${node}، و ∞ مش هتكسب في الـ minimum scan.` : `${node} مش أرخص بجد. لو الـ distances زي بعض، بنسيب الـ candidate اللي حرفه الأول.`),
           `${display(state.distances[node])} < ${display(state.best)} → ${state.condition}`);
         if (state.condition) {
@@ -267,7 +267,7 @@
           emit('predecessor-update', [17], message(`Remember ${current} before ${edge.to}`, `بنسجّل إن ${current} قبل ${edge.to}`),
             message(`Set ${edge.to}'s predecessor to ${current}. Follow these links backwards later to recover a shortest path.`, `الـ predecessor بتاع ${edge.to} بقى ${current}. بعدين هنمشي ورا الـ predecessors دي بالعكس عشان نطلّع أقصر path.`), `prev[${edge.to}] = ${current}`);
         } else {
-          emit('keep-distance', [18], message('Keep the recorded route', 'بنسيب الـ path المتسجّل زي ما هو'),
+          emit('keep-distance', [18], message('Keep the recorded route', 'بنسيب الـ path المتسجّل زي ما هو '),
             message(`${edge.to} keeps distance ${state.distances[edge.to]}. Equal-cost alternatives do not replace the first predecessor.`, `${edge.to} هتفضل الـ distance بتاعتها ${state.distances[edge.to]}. الـ path اللي بنفس التكلفة مش بيغيّر أول predecessor.`), `dist[${edge.to}] stays ${state.distances[edge.to]}`);
         }
       }

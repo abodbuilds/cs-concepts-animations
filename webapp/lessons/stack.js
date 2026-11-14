@@ -37,7 +37,7 @@
 
   function validate(input) {
     if (!input || typeof input !== 'object' || Array.isArray(input)) {
-      fail('Expected an object with capacity, initial, and operations.', 'محتاجين object جواه capacity وinitial وoperations.');
+      fail('Expected an object with capacity, initial, and operations.', 'محتاجين object جواه capacity و initial و operations.');
     }
     const { capacity, initial, operations } = input;
     if (!Number.isSafeInteger(capacity) || capacity < 1 || capacity > MAX_CAPACITY) {
@@ -181,7 +181,7 @@
         ? message(`The stack already holds ${initial.length} values, bottom first, so top = ${state.top}. Every operation will touch only items[top].`,
           `الـ stack فيه ${initial.length} أرقام من الأول، واللي تحت خالص في index 0، فـ top = ${state.top}. كل operation هتلمس items[top] بس.`)
         : message(`An empty stack with room for ${capacity} values: top = -1. Every operation will touch only items[top].`,
-          `stack فاضي وفيه مكان لـ ${capacity} أرقام، وtop = -1. كل operation هتلمس items[top] بس.`));
+          `stack فاضي وفيه مكان لـ ${capacity} أرقام، و top = -1. كل operation هتلمس items[top] بس.`));
 
     for (const op of ops) {
       state.op = opText(op); state.value = null; state.touched = null; state.error = null; state.condition = null;
@@ -276,16 +276,16 @@
     id: 'stack', name: 'Stack', theme: 'data-structures', category: 'structure', number: '13',
     label: 'STACK', cost: 'O(1)',
     description: message('Push and pop at one end only. An array and a top index make every operation O(1).',
-      'بنعمل push وpop من ناحية واحدة بس. array ومعاها index اسمه top بيخلّوا كل operation تاخد O(1).'),
+      'بنعمل push و pop من ناحية واحدة بس. array ومعاها index اسمه top بيخلّوا كل operation تاخد O(1).'),
     note: message('Fixed-capacity array, index 0 is the bottom. Underflow and overflow are reported and the script continues.',
-      'الـ array حجمها ثابت، وindex 0 هو اللي تحت خالص. الـ underflow والـ overflow بيرجعوا error، وبنكمّل باقي الـ operations.'),
+      'الـ array حجمها ثابت، و index 0 هو اللي تحت خالص. الـ underflow والـ overflow بيرجعوا error، وبنكمّل باقي الـ operations.'),
     code,
     keySteps: ['ready', 'push', 'pop', 'peek', 'is-empty', 'underflow', 'overflow', 'done'],
     fields: [
       {
         name: 'operations', label: message('Operations', 'الـ operations'), type: 'textarea', maxLength: OPS_LENGTH,
         help: message('1 to 12 operations, one per line or separated by commas: push 5, pop, peek, isEmpty. push takes an integer from -99 to 999; push(5) and pop() also work.',
-          'من 1 لـ 12 operation، كل واحدة في سطر أو بينهم comma: push 5، pop، peek، isEmpty. الـ push محتاج رقم صحيح من -99 لـ 999، وكمان push(5) وpop() شغالين.'),
+          'من 1 لـ 12 operation، كل واحدة في سطر أو بينهم comma: push 5، pop، peek، isEmpty. الـ push محتاج رقم صحيح من -99 لـ 999، وكمان push(5) و pop() شغالين.'),
       },
       {
         name: 'capacity', label: message('Capacity', 'الـ capacity'), type: 'text', maxLength: CAPACITY_LENGTH,
@@ -300,7 +300,7 @@
     ],
     defaults: { ...defaults },
     presets: [
-      { id: 'default', label: message('Push, peek, and pop', 'push وpeek وpop'), input: { ...defaults } },
+      { id: 'default', label: message('Push, peek, and pop', 'push و peek و pop'), input: { ...defaults } },
       { id: 'reverse', label: message('Pop everything · order reverses', 'pop للكل · الترتيب بيتقلب'), input: { operations: 'pop, pop, pop, pop, isEmpty', capacity: '4', initial: '1, 2, 3, 4' } },
       { id: 'underflow', label: message('Empty stack · underflow', 'stack فاضي · underflow'), input: { operations: 'isEmpty, pop, peek, push 4, pop, pop', capacity: '3', initial: '' } },
       { id: 'overflow', label: message('Full stack · overflow', 'stack مليان · overflow'), input: { operations: 'push 3, push 4, pop, push 4, peek', capacity: '3', initial: '1, 2' } },
@@ -314,13 +314,24 @@
         `${operations.length} operations · capacity = ${capacity} · بنبدأ بـ ${initial.length} أرقام`);
     },
     theory: {
+      whenToUse: {
+        use: [
+          { en: "The last thing in must come out first: undo, the back button, nested function calls.", ar: "آخر حاجة دخلت لازم تطلع الأول: undo، زرار الـ back، الـ function calls اللي جوه بعض." },
+          { en: "You match things that open and close: brackets, HTML tags.", ar: "بتطابق حاجات بتتفتح وتتقفل: الأقواس، الـ HTML tags." },
+          { en: "You go deep and come back: DFS and backtracking keep their path on a stack.", ar: "بتنزل لتحت وترجع: DFS والـ backtracking بيحفظوا الطريق على stack." },
+        ],
+        avoid: [
+          { en: "Items must leave in arrival order → use a queue.", ar: "الـ elements لازم تطلع بنفس ترتيب دخولها ← استخدم queue." },
+          { en: "You need to see or remove items in the middle → a stack only shows its top; use an array or a list.", ar: "محتاج تشوف أو تشيل element من النص ← الـ stack بيوريك الـ top بس؛ استخدم array أو list." },
+        ],
+      },
       idea: message('A stack is a pile: you add to the top and take from the top. The last value pushed is always the first one popped.',
         'الـ stack زي رصّة أطباق: بتحط فوق وبتشيل من فوق. آخر رقم عملناله push هو دايمًا أول واحد يطلع بالـ pop.'),
       title: message('Only the top is ever touched', 'مفيش غير الـ top اللي بنلمسه'),
       intro: message('You only need arrays and indices. This stack stores values in one array, bottom at index 0, and keeps an index top that points at the newest value (-1 when empty). push, pop, peek, and isEmpty all work at top, so none of them looks at the rest of the array.',
         'محتاج بس تعرف الـ array والـ index. الـ stack ده بيخزّن الأرقام في array واحدة، واللي تحت خالص في index 0. ومعاه index اسمه top بيشاور على آخر رقم دخل، ولو الـ stack فاضي top = -1. الـ push والـ pop والـ peek والـ isEmpty كلهم شغالين عند top، فولا واحدة فيهم بتبص على باقي الـ array.'),
       invariant: message('items[0..top] are exactly the stack contents, oldest at index 0 and newest at index top, and -1 ≤ top ≤ capacity - 1. Slots above top may hold old values, but they are never read.',
-        'items[0..top] هي بالظبط اللي في الـ stack، الأقدم في index 0 والأحدث في index top، و-1 ≤ top ≤ capacity - 1. الأماكن اللي فوق top ممكن يكون فيها أرقام قديمة، بس عمرنا ما بنقراها.'),
+        'items[0..top] هي بالظبط اللي في الـ stack، الأقدم في index 0 والأحدث في index top، و -1 ≤ top ≤ capacity - 1. الأماكن اللي فوق top ممكن يكون فيها أرقام قديمة، بس عمرنا ما بنقراها.'),
       steps: [
         { title: message('push: check, move top, write', 'الـ push: بنشيّك، بنطلّع top، بنكتب'), body: message('If top == capacity - 1 the array is full: report overflow. Otherwise increase top and write the value at items[top]. One write, no shifting.',
           'لو top == capacity - 1 يبقى الـ array مليانة، فبنرجّع overflow. غير كده بنزوّد top بواحد ونكتب الرقم في items[top]. كتابة واحدة، ومفيش أي element بيتحرّك.') },
@@ -331,11 +342,11 @@
       ],
       notes: [
         message('LIFO means the order comes out reversed: push 1, 2, 3, 4 and four pops return 4, 3, 2, 1. That is why stacks undo edits, run the call stack, and match brackets: the most recent open thing is the first one to close.',
-          'الـ LIFO معناه إن الترتيب بيطلع مقلوب: لو عملنا push لـ 1 و2 و3 و4، الأربع pops هيرجّعوا 4 و3 و2 و1. وعشان كده الـ stack بيتستخدم في الـ undo، والـ call stack، ومطابقة الأقواس: آخر حاجة اتفتحت هي أول حاجة تتقفل.'),
+          'الـ LIFO معناه إن الترتيب بيطلع مقلوب: لو عملنا push لـ 1 و 2 و 3 و 4، الأربع pops هيرجّعوا 4 و 3 و 2 و 1. وعشان كده الـ stack بيتستخدم في الـ undo، والـ call stack، ومطابقة الأقواس: آخر حاجة اتفتحت هي أول حاجة تتقفل.'),
         message('Underflow is a bug in the caller, not in the stack: check isEmpty before pop or peek when the stack may be empty. Here the error is reported and the script keeps going.',
           'الـ underflow غلطة من اللي بيستخدم الـ stack، مش من الـ stack نفسه: شيّك isEmpty قبل الـ pop أو الـ peek لو ممكن يكون فاضي. هنا بنرجّع الـ error ونكمّل باقي الـ operations.'),
         message('A fixed array gives overflow. A dynamic array (doubling when full) removes the limit: push is then O(1) amortized, with an occasional O(n) copy. A linked list also works, with O(1) push and pop but an extra pointer per value.',
-          'الـ array الثابتة بتجيب overflow. لو استخدمنا dynamic array بتكبر للضعف لما تتملي، مبقاش فيه حد: الـ push بقى O(1) amortized، ومرة كل فين وفين بيحصل copy بـ O(n). والـ linked list كمان تنفع، فيها push وpop بـ O(1)، بس كل رقم محتاج pointer زيادة.'),
+          'الـ array الثابتة بتجيب overflow. لو استخدمنا dynamic array بتكبر للضعف لما تتملي، مبقاش فيه حد: الـ push بقى O(1) amortized، ومرة كل فين وفين بيحصل copy بـ O(n). والـ linked list كمان تنفع، فيها push و pop بـ O(1)، بس كل رقم محتاج pointer زيادة.'),
         message('A stack gives up random access on purpose: finding a value in the middle means popping down to it, O(n). Pick a stack when you only ever need the newest item; use a queue when you need the oldest first.',
           'الـ stack بيتنازل عن إنك توصل لأي مكان: لو عايز رقم في النص لازم تعمل pop لحد ما توصله، وده O(n). اختار stack لما تكون محتاج آخر حاجة دخلت بس، واستخدم queue لما تكون محتاج أقدم حاجة الأول.'),
         message('The reads + writes counter covers items[] only; comparisons of top are not counted. Slots marked old are values left above top after a pop.',

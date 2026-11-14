@@ -67,7 +67,7 @@
 
   function validate(input) {
     if (!input || typeof input !== 'object' || Array.isArray(input) || !Array.isArray(input.start) || !Array.isArray(input.ops)) {
-      fail('Expected an object with start and ops arrays.', 'محتاجين object جواه start وops، والاتنين arrays.');
+      fail('Expected an object with start and ops arrays.', 'محتاجين object جواه start و ops، والاتنين arrays.');
     }
     if (input.start.length > MAX_START) fail('Start with at most 8 values.', 'ابدأ بـ 8 values بالكتير.');
     if (input.ops.length > MAX_OPS) fail('Use at most 12 operations.', 'اكتب 12 operation بالكتير.');
@@ -437,7 +437,7 @@
           state.path.push(id); state.parent = id; state.node = null;
           emit('descend', [25, 26], message(`The ${side} child is null`, `الـ ${side} child طلع null`),
             message(`parent = ${nodes[id].value}, and node = node.${side}, which is null.`,
-              `parent بقى ${nodes[id].value}، وnode = node.${side}، وده null.`),
+              `parent بقى ${nodes[id].value}، و node = node.${side}، وده null.`),
             `node = node.${side} → null`);
           id = null;
           continue;
@@ -564,7 +564,7 @@
     description: message('A tree where every left subtree is smaller and every right subtree is larger, so each comparison throws away one side.',
       'tree كل left subtree فيها أصغر وكل right subtree أكبر، فكل مقارنة بترمي ناحية كاملة.'),
     note: message('Insert, search and delete walk one root-to-leaf path: O(h). Balanced, h ≈ log n; inserting sorted values makes a chain with h = n − 1.',
-      'الـ insert والـ search والـ delete بيمشوا على path واحد من الـ root: O(h). لو الـ tree متوازنة h تقريبًا log n، ولو دخّلنا أرقام مترتّبة هتبقى خط واحد وh = n − 1.'),
+      'الـ insert والـ search والـ delete بيمشوا على path واحد من الـ root: O(h). لو الـ tree متوازنة h تقريبًا log n، ولو دخّلنا أرقام مترتّبة هتبقى خط واحد و h = n − 1.'),
     code,
     keySteps: ['ready', 'op', 'insert-root', 'compare', 'attach', 'duplicate', 'found', 'not-found',
       'visit', 'inorder-done', 'inorder-empty', 'two-children', 'successor', 'copy', 'unlink', 'done'],
@@ -589,12 +589,12 @@
     ],
     defaults,
     presets: [
-      { id: 'default', label: message('Insert, search, duplicate', 'insert وsearch ورقم مكرّر'), input: { ...defaults } },
+      { id: 'default', label: message('Insert, search, duplicate', 'insert و search ورقم مكرّر'), input: { ...defaults } },
       { id: 'balanced', label: message('Build a balanced tree · h = 2', 'بنبني tree متوازنة · h = 2'),
         input: { start: '', operations: 'insert 50, insert 30, insert 70, insert 20, insert 40, insert 60, insert 80, search 80' } },
       { id: 'degenerate', label: message('Sorted inserts · a chain, O(n)', 'insert لأرقام مترتّبة · خط واحد، O(n)'),
         input: { start: '', operations: 'insert 10, insert 20, insert 30, insert 40, insert 50, insert 60, insert 70, search 70, search 75' } },
-      { id: 'delete-cases', label: message('Delete: leaf, one child, two children', 'delete: leaf وchild واحد و2 children'),
+      { id: 'delete-cases', label: message('Delete: leaf, one child, two children', 'delete: leaf و child واحد و 2 children'),
         input: { start: '50, 30, 70, 20, 40, 60, 80, 65', operations: 'delete 20, delete 30, delete 50, inorder' } },
       { id: 'not-found', label: message('Missing values', 'أرقام مش موجودة'),
         input: { start: '50, 30, 70', operations: 'search 45, delete 99, search 50' } },
@@ -612,11 +612,22 @@
         `${input.start.length} values في الأول · ${input.ops.length} operations · 8 nodes بالكتير`);
     },
     theory: {
+      whenToUse: {
+        use: [
+          { en: "You need fast search and keys kept in order: in-order traversal returns them sorted.", ar: "محتاج search سريع والـ keys تفضل مترتّبة: الـ in-order traversal بيطلّعهم sorted." },
+          { en: "You ask range or nearest-value questions: the smallest key ≥ 40, everything between 20 and 60.", ar: "بتسأل عن range أو أقرب قيمة: أصغر key أكبر من أو يساوي 40، أو كل اللي بين 20 و 60." },
+          { en: "The data changes often, so sorting an array again after every insert would be slow.", ar: "الداتا بتتغيّر كتير، وإنك تعمل sort للـ array بعد كل insert هيبقى بطيء." },
+        ],
+        avoid: [
+          { en: "Inserts may arrive sorted and nothing rebalances → the tree turns into a chain, O(n); use a self-balancing tree such as AVL or red-black.", ar: "الـ inserts ممكن تيجي sorted ومفيش rebalance ← الـ tree هتبقى سلسلة، O(n)؛ استخدم self-balancing tree زي AVL أو red-black." },
+          { en: "You only need exact lookups → a hash table is O(1) on average.", ar: "محتاج تدوّر على قيمة بالظبط وبس ← الـ hash table بياخد O(1) في المتوسط." },
+        ],
+      },
       idea: message('Every node keeps smaller values on its left and larger values on its right. So one comparison tells you which half to ignore, and you only walk one path down the tree.',
         'كل node بتحط الأصغر منها على الشمال والأكبر على اليمين. فمقارنة واحدة بتقولك أنهي ناحية تسيبها، وبتمشي في path واحد بس لتحت.'),
       title: message('One comparison per level', 'مقارنة واحدة في كل level'),
       intro: message('A tree is nodes joined by parent → child links with no cycles. The top node is the root; a node with no children is a leaf; depth counts edges from the root, and the height is the largest depth (one node: 0, empty: −1). In a binary tree each node has at most a left and a right child, and each child starts its own subtree. Every node is a separate object with two pointers, so unlike an array the values are not stored side by side.',
-        'الـ tree عبارة عن nodes مربوطة بـ links من parent لـ child، ومفيش cycles. أول node فوق اسمها الـ root، والـ node اللي ملهاش children اسمها leaf. الـ depth هو عدد الـ edges من الـ root، والـ height هو أكبر depth (node واحدة: 0، فاضية: −1). في الـ binary tree كل node ليها left child وright child بالكتير، وكل child بيبدأ subtree لوحده. كل node object لوحده وفيه 2 pointers، فالأرقام مش جنب بعض في الـ memory زي الـ array.'),
+        'الـ tree عبارة عن nodes مربوطة بـ links من parent لـ child، ومفيش cycles. أول node فوق اسمها الـ root، والـ node اللي ملهاش children اسمها leaf. الـ depth هو عدد الـ edges من الـ root، والـ height هو أكبر depth (node واحدة: 0، فاضية: −1). في الـ binary tree كل node ليها left child و right child بالكتير، وكل child بيبدأ subtree لوحده. كل node object لوحده وفيه 2 pointers، فالأرقام مش جنب بعض في الـ memory زي الـ array.'),
       invariant: message('For every node, all values in its left subtree are smaller and all values in its right subtree are larger. Values are distinct. Insert keeps it by hanging new values where a search for them would end; delete keeps it by moving up a child or the in-order successor.',
         'عند كل node، كل الأرقام في الـ left subtree بتاعها أصغر منها، وكل اللي في الـ right subtree أكبر. ومفيش رقم متكرّر. الـ insert بيحافظ عليه لأنه بيعلّق الرقم الجديد في نفس المكان اللي الـ search كان هيخلص فيه. والـ delete بيحافظ عليه لأنه بيطلّع child أو الـ successor مكان الـ node.'),
       steps: [
@@ -637,11 +648,11 @@
         message('Cost depends on the height, not directly on n. A balanced tree with n nodes has h ≈ log₂ n, so 1,000,000 values need about 20 comparisons.',
           'التكلفة على حسب الـ height، مش على n على طول. الـ tree المتوازنة اللي فيها n nodes الـ height بتاعها تقريبًا log₂ n، يعني مليون رقم محتاجين حوالي 20 مقارنة بس.'),
         message('The degenerate case: inserting values in sorted order gives every node only a right child. The tree becomes a linked list with h = n − 1, and search, insert and delete all fall to O(n). Try the sorted-inserts preset.',
-          'الحالة الوحشة: لو دخّلنا الأرقام مترتّبة، كل node هيبقى ليها right child بس. الـ tree بتبقى linked list وh = n − 1، والـ search والـ insert والـ delete كلهم بيبقوا O(n). جرّب الـ preset بتاع الأرقام المترتّبة.'),
+          'الحالة الوحشة: لو دخّلنا الأرقام مترتّبة، كل node هيبقى ليها right child بس. الـ tree بتبقى linked list و h = n − 1، والـ search والـ insert والـ delete كلهم بيبقوا O(n). جرّب الـ preset بتاع الأرقام المترتّبة.'),
         message('This plain BST never rebalances. Self-balancing versions (AVL, red-black trees) rotate nodes after updates to keep h = O(log n) in the worst case; that is what TreeMap in Java and std::map in C++ use.',
-          'الـ BST العادي ده عمره ما بيعيد توازنه. فيه نسخ بتوازن نفسها (AVL، red-black trees) بتعمل rotations بعد كل تعديل عشان h تفضل O(log n) حتى في الـ worst case. ودي اللي TreeMap في Java وstd::map في C++ بيستخدموها.'),
+          'الـ BST العادي ده عمره ما بيعيد توازنه. فيه نسخ بتوازن نفسها (AVL، red-black trees) بتعمل rotations بعد كل تعديل عشان h تفضل O(log n) حتى في الـ worst case. ودي اللي TreeMap في Java و std::map في C++ بيستخدموها.'),
         message('When to pick it: a BST keeps data ordered while it changes, so it answers min, max, next larger value and range queries. A sorted array also searches in O(log n) but inserts in O(n) because it must shift elements. A hash table finds values in O(1) on average but has no order.',
-          'إمتى تختاره؟ الـ BST بيخلّي الـ data مترتّبة وهي بتتغيّر، فيقدر يجاوب على min وmax وأول رقم أكبر وrange queries. الـ sorted array برضه بتعمل search في O(log n)، بس الـ insert فيها O(n) عشان لازم تزحّزح الـ elements. والـ hash table بتلاقي الرقم في O(1) في المتوسط، بس مفيهاش ترتيب.'),
+          'إمتى تختاره؟ الـ BST بيخلّي الـ data مترتّبة وهي بتتغيّر، فيقدر يجاوب على min و max وأول رقم أكبر و range queries. الـ sorted array برضه بتعمل search في O(log n)، بس الـ insert فيها O(n) عشان لازم تزحّزح الـ elements. والـ hash table بتلاقي الرقم في O(1) في المتوسط، بس مفيهاش ترتيب.'),
         message('This lesson stores distinct integers and ignores duplicates. Comparisons count one three-way check (equal, smaller or larger) per node visited. The view draws at most 8 nodes, so scripts that would grow past 8 are rejected.',
           'الدرس ده بيشيل أرقام صحيحة مختلفة وبيتجاهل المكرّر. المقارنات بنعدّها مقارنة واحدة لكل node بنزورها (زيه، أصغر، ولا أكبر). الشاشة بترسم 8 nodes بالكتير، فأي operations هتكبّر الـ tree عن 8 بنرفضها.'),
       ],

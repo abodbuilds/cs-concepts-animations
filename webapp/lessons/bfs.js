@@ -20,11 +20,11 @@
     if (!input || typeof input !== 'object' || Array.isArray(input) ||
         !Array.isArray(input.nodes) || !Array.isArray(input.edges)) {
       fail('Use a graph with nodes, edges and a start node.',
-        'محتاجين graph فيه nodes وedges وstart node.');
+        'محتاجين graph فيه nodes و edges و start node.');
     }
     if (input.nodes.length > 8 || input.edges.length > 20) {
       fail('Use at most 8 nodes and 20 undirected edges.',
-        'مسموح لحد 8 nodes و20 undirected edge بس.');
+        'مسموح لحد 8 nodes و 20 undirected edge بس.');
     }
     const nodes = [...input.nodes];
     if (nodes.some(node => !isNode(node)) || new Set(nodes).size !== nodes.length) {
@@ -39,12 +39,12 @@
           !isNode(edge.from) || !isNode(edge.to) ||
           !nodes.includes(edge.from) || !nodes.includes(edge.to)) {
         fail('Each edge needs only from and to, both labels present in nodes; no weights or directions.',
-          'كل edge فيه from وto بس، والاتنين لازم يكونوا موجودين في nodes. مفيش weights ولا directions.');
+          'كل edge فيه from و to بس، والاتنين لازم يكونوا موجودين في nodes. مفيش weights ولا directions.');
       }
       const id = edgeId(edge.from, edge.to);
       if (seen.has(id)) {
         fail(`Edge ${id} is repeated. A-B and B-A are the same edge.`,
-          `الـ edge ${id} متكرّر. A-B وB-A هما نفس الـ edge.`);
+          `الـ edge ${id} متكرّر. A-B و B-A هما نفس الـ edge.`);
       }
       seen.add(id);
       const [from, to] = id.split('-');
@@ -60,7 +60,7 @@
 
   function parse(rawInput) {
     if (!rawInput || typeof rawInput.graph !== 'string' || typeof rawInput.start !== 'string') {
-      fail('Provide graph and start as text fields.', 'اكتب graph وstart كـ text fields.');
+      fail('Provide graph and start as text fields.', 'اكتب graph و start كـ text fields.');
     }
     if (rawInput.graph.length > MAX_GRAPH_LENGTH || rawInput.start.length > MAX_START_LENGTH) {
       fail('Keep graph text within 500 characters and start within 16 characters.',
@@ -156,9 +156,9 @@
       ],
       note: state.done ? message(
         `Finished ${state.order.length} reachable nodes; ${state.nodes.length - state.order.length} unreachable. ∞ means no path from start.`,
-        `خلّصنا ${state.order.length} nodes نقدر نوصلها، و${state.nodes.length - state.order.length} مش هنقدر نوصلها. ∞ يعني مفيش path من start.`) :
+        `خلّصنا ${state.order.length} nodes نقدر نوصلها، و ${state.nodes.length - state.order.length} مش هنقدر نوصلها. ∞ يعني مفيش path من start.`) :
         message('Front leaves first. Discovered means already queued; processed means all neighbors checked. ∞ means not reached yet.',
-          'اللي في الـ front بيطلع الأول. Discovered يعني دخلت الـ queue خلاص، وprocessed يعني فحصنا كل الـ neighbors بتوعها. ∞ يعني لسه موصلناش لها.'),
+          'اللي في الـ front بيطلع الأول. Discovered يعني دخلت الـ queue خلاص، و processed يعني فحصنا كل الـ neighbors بتوعها. ∞ يعني لسه موصلناش لها.'),
     };
   }
 
@@ -219,7 +219,7 @@
         'Return an empty order and empty distance and parent maps. No node was enqueued or examined.',
       graph.nodes.length ?
         `بنعمل return لترتيب الزيارة، ولأقصر distance بعدد الـ edges من ${graph.start}. عدد الـ nodes اللي مش هنقدر نوصلها: ${graph.nodes.length - state.order.length}، والـ BFS مش بيبدأ من تاني من node تانية.` :
-        'بنعمل return لـ order فاضي، وdistance وparent فاضيين. معملناش enqueue لأي node، ومفحصناش ولا edge.'),
+        'بنعمل return لـ order فاضي، و distance و parent فاضيين. معملناش enqueue لأي node، ومفحصناش ولا edge.'),
       'return order, distance, parent');
       return frames;
     }
@@ -229,19 +229,19 @@
         `Start at ${graph.start}. This undirected, unweighted graph has ${graph.nodes.length} nodes and ${graph.edges.length} edges; only the reachable component will be visited. Neighbors are checked A to H.` :
         'Both input fields are blank. Initialize the empty structures, then return without choosing a start node.',
       graph.nodes.length ?
-        `هنبدأ من ${graph.start}. الـ graph ده undirected ومن غير weights، وفيه ${graph.nodes.length} nodes و${graph.edges.length} edges. هنزور بس الـ nodes اللي نقدر نوصلها، وبنفحص الـ neighbors من A لـ H.` :
+        `هنبدأ من ${graph.start}. الـ graph ده undirected ومن غير weights، وفيه ${graph.nodes.length} nodes و ${graph.edges.length} edges. هنزور بس الـ nodes اللي نقدر نوصلها، وبنفحص الـ neighbors من A لـ H.` :
         'الاتنين fields فاضيين. هنجهّز الـ structures فاضية، ونعمل return من غير ما نختار start node.'));
     state.initialized = true;
     for (const node of graph.nodes) { state.distance[node] = '∞'; state.parent[node] = null; }
     emit('initialize', [2, 3], message('Prepare the queue and distance map', 'بنجهّز الـ queue والـ distances'),
       message('The queue, discovered set, processed set and order start empty. Every node starts at ∞ with no parent.',
-        'الـ queue وdiscovered وprocessed وorder كلهم بيبدأوا فاضيين. وكل node الـ distance بتاعتها ∞ ومالهاش parent.'),
+        'الـ queue و discovered و processed و order كلهم بيبدأوا فاضيين. وكل node الـ distance بتاعتها ∞ ومالهاش parent.'),
       'distance[*] = ∞; parent[*] = null');
     state.condition = graph.nodes.length === 0;
     emit('empty-check', [4], message(state.condition ? 'There is no start node' : 'There is a graph to explore',
       state.condition ? 'مفيش start node' : 'فيه graph نمشي فيه'),
     message(state.condition ? 'The graph is empty, so take the early return.' : `The graph is nonempty and ${graph.start} is a valid start. Seed the queue next.`,
-      state.condition ? 'الـ graph فاضي، يبقى هنعمل return بدري.' : `الـ graph مش فاضي، و${graph.start} موجودة فيه. الخطوة الجاية هنعمل لها enqueue.`),
+      state.condition ? 'الـ graph فاضي، يبقى هنعمل return بدري.' : `الـ graph مش فاضي، و ${graph.start} موجودة فيه. الخطوة الجاية هنعمل لها enqueue.`),
     `nodes.length == 0 → ${state.condition}`);
     if (state.condition) return finish(5);
 
@@ -330,7 +330,7 @@
     description: message('A FIFO queue explores the reachable graph one level at a time, finding shortest paths by edge count.',
       'FIFO queue بتمشي في الجزء اللي نقدر نوصله من الـ graph، level ورا level، وبتلاقي أقصر path بعدد الـ edges.'),
     note: message('Undirected and unweighted. Check neighbors A to H, mark discovered on enqueue, and record traversal on dequeue. Only the start component is visited; ∞ means unreachable at the end.',
-      'الـ graph undirected ومن غير weights. بنفحص الـ neighbors من A لـ H، وبنعلّم الـ node discovered وقت الـ enqueue، وبنسجّل الزيارة وقت الـ dequeue. بنزور بس الـ component بتاع الـ start، و∞ في الآخر يعني مش هنقدر نوصلها.'),
+      'الـ graph undirected ومن غير weights. بنفحص الـ neighbors من A لـ H، وبنعلّم الـ node discovered وقت الـ enqueue، وبنسجّل الزيارة وقت الـ dequeue. بنزور بس الـ component بتاع الـ start، و ∞ في الآخر يعني مش هنقدر نوصلها.'),
     code,
     keySteps: ['ready', 'seed', 'dequeue', 'discovery-check', 'discover', 'done'],
     view: {
@@ -347,7 +347,7 @@
       { name: 'graph', type: 'textarea', maxLength: MAX_GRAPH_LENGTH,
         label: message('Graph · undirected edges', 'الـ graph · undirected edges'),
         help: message('Write A-B for an edge, or D to include a node without an edge. Separate entries with commas, semicolons or newlines. Labels A–H; up to 8 nodes and 20 edges. Spaces around - and repeated node declarations are allowed. A-A is a self-loop; duplicate edges (including B-A after A-B) are rejected. Blank means empty.',
-          'اكتب A-B عشان edge، أو D عشان تضيف node من غير edges. افصل بـ comma أو semicolon أو سطر جديد. الأسماء من A لـ H، ولحد 8 nodes و20 edge. عادي تحط مسافات حوالين الـ -، وعادي تكرّر اسم الـ node. A-A يبقى self-loop. الـ edge المكرّر مرفوض، حتى لو كتبت B-A بعد A-B. لو سبته فاضي يبقى graph فاضي.') },
+          'اكتب A-B عشان edge، أو D عشان تضيف node من غير edges. افصل بـ comma أو semicolon أو سطر جديد. الأسماء من A لـ H، ولحد 8 nodes و 20 edge. عادي تحط مسافات حوالين الـ -، وعادي تكرّر اسم الـ node. A-A يبقى self-loop. الـ edge المكرّر مرفوض، حتى لو كتبت B-A بعد A-B. لو سبته فاضي يبقى graph فاضي.') },
       { name: 'start', type: 'text', maxLength: MAX_START_LENGTH,
         label: message('Start node', 'الـ start node'),
         help: message('One uppercase letter A–H that occurs in the graph. For an empty graph, leave this blank too.',
@@ -375,7 +375,7 @@
         'بنمشي في الـ graph موجة موجة: الأول الـ start node، بعدين كل الـ neighbors بتوعها، بعدين الـ neighbors بتوعهم. الـ queue بتطلّع الـ nodes بنفس الترتيب اللي اكتشفناها بيه.'),
       title: message('Why a queue finds the shortest route', 'ليه الـ queue بتوصّلنا لأقصر path؟'),
       intro: message('BFS explores by distance from one start. You need an unweighted graph, adjacency lists, a FIFO queue and a discovered set. This lesson uses undirected edges; each edge costs one step.',
-        'الـ BFS بيمشي في الـ graph حسب البعد عن start واحدة. محتاج graph من غير weights، وadjacency lists، وFIFO queue، وdiscovered set. في الدرس ده الـ edges undirected، وكل edge بخطوة واحدة.'),
+        'الـ BFS بيمشي في الـ graph حسب البعد عن start واحدة. محتاج graph من غير weights، و adjacency lists، و FIFO queue، و discovered set. في الدرس ده الـ edges undirected، وكل edge بخطوة واحدة.'),
       invariant: message('At each queue check, every discovered node is either pending in the queue exactly once or fully processed. Queue distances never decrease from front to back. Each discovered distance is already the shortest edge count from start.',
         'كل مرة بنفحص الـ queue، أي node discovered يا إمّا مستنية فيها مرة واحدة بالظبط، يا إمّا بقت processed. الـ distances من الـ front للـ back عمرها ما بتقلّ. والـ distance بتاعة أي node discovered هي فعلًا أقل عدد edges من الـ start.'),
       steps: [
@@ -384,7 +384,7 @@
             'كل الـ distances بتبدأ ∞. الـ start بناخد الـ distance بتاعتها 0، ونعمل لها enqueue ونعلّمها discovered في نفس الوقت. لو الـ graph فاضي، بنعمل return لنتيجة فاضية قبل أي enqueue.') },
         { title: message('2. Expand the oldest discovery', '2. بنكمّل من أقدم node اكتشفناها'),
           body: message('Dequeue the front, record its visit, then examine its neighbors alphabetically. For an undiscovered neighbor, save parent and distance[current] + 1, mark it discovered and enqueue it together. Mark current processed after its last neighbor.',
-            'بنعمل dequeue للـ front، ونسجّل زيارتها، ونفحص الـ neighbors بتوعها بالترتيب الأبجدي. لو الـ neighbor مش discovered، بنحفظ الـ parent وdistance[current] + 1، ونعلّمه discovered ونعمل له enqueue في نفس الخطوة. بعد آخر neighbor بنعلّم current إنها processed.') },
+            'بنعمل dequeue للـ front، ونسجّل زيارتها، ونفحص الـ neighbors بتوعها بالترتيب الأبجدي. لو الـ neighbor مش discovered، بنحفظ الـ parent و distance[current] + 1، ونعلّمه discovered ونعمل له enqueue في نفس الخطوة. بعد آخر neighbor بنعلّم current إنها processed.') },
         { title: message('3. Why the first distance is shortest', '3. ليه أول distance هي الأقصر؟'),
           body: message('FIFO processes all nodes at distance d before any at d + 1. A newly discovered neighbor therefore has distance d + 1; a shorter route would have discovered it from an earlier level already. Marking on enqueue prevents two parents or a cycle from adding it twice.',
             'الـ FIFO بيخلّص كل الـ nodes اللي على distance d قبل أي node على d + 1. يبقى أي neighbor جديد الـ distance بتاعته d + 1. لو كان فيه path أقصر، كنا اكتشفناه من level قبله. وعشان بنعلّم وقت الـ enqueue، مفيش parent تاني ولا cycle يقدر يدخّله الـ queue مرتين.') },
@@ -394,15 +394,15 @@
       ],
       notes: [
         message('Traversal order means dequeue order. Discovered means enqueued at least once; processed means all neighbors examined. Parent links describe one shortest-path tree, not every possible shortest route.',
-          'ترتيب الزيارة هو ترتيب الـ dequeue. Discovered يعني دخلت الـ queue مرة على الأقل، وprocessed يعني فحصنا كل الـ neighbors بتوعها. الـ parent links بترسم shortest-path tree واحدة، مش كل الـ shortest paths الممكنة.'),
+          'ترتيب الزيارة هو ترتيب الـ dequeue. Discovered يعني دخلت الـ queue مرة على الأقل، و processed يعني فحصنا كل الـ neighbors بتوعها. الـ parent links بترسم shortest-path tree واحدة، مش كل الـ shortest paths الممكنة.'),
         message('Alphabetical neighbor order makes ties deterministic, regardless of input order. Changing that order can change visits and parents, but cannot change shortest distances.',
           'الترتيب الأبجدي للـ neighbors بيحسم التعادل بنفس الطريقة كل مرة، مهما كان ترتيب الـ input. لو غيّرنا الترتيب ده، الزيارات والـ parents ممكن يتغيّروا، بس أقصر distances مش هتتغيّر.'),
         message('With adjacency lists, O(1) FIFO operations and O(1) discovered lookup, BFS takes O(V + E) worst-case time and O(V) extra space. Here all V distances are initialized, but only the reachable component is scanned. An undirected edge is examined once per endpoint; a self-loop once.',
-          'لو عندنا adjacency lists، والـ FIFO operations بـ O(1)، والـ lookup في discovered بـ O(1)، يبقى الـ BFS بياخد O(V + E) في الـ worst case، وO(V) space زيادة. هنا بنجهّز الـ V distances كلها، بس بنفحص بس الـ component بتاع الـ start. الـ undirected edge بيتفحص مرة من كل طرف، والـ self-loop مرة واحدة.'),
+          'لو عندنا adjacency lists، والـ FIFO operations بـ O(1)، والـ lookup في discovered بـ O(1)، يبقى الـ BFS بياخد O(V + E) في الـ worst case، و O(V) space زيادة. هنا بنجهّز الـ V distances كلها، بس بنفحص بس الـ component بتاع الـ start. الـ undirected edge بيتفحص مرة من كل طرف، والـ self-loop مرة واحدة.'),
         message('A broad level can require a large queue. DFS uses a different frontier and does not guarantee shortest paths by first discovery. BFS does not minimize weighted cost; use Dijkstra for nonnegative weights.',
           'لو الـ level واسع، الـ queue ممكن تكبر أوي. الـ DFS بيختار الـ node الجاية بطريقة تانية، ومش بيضمن إن أول ما يكتشف node يبقى لقى أقصر path ليها. الـ BFS مش بيقلّل مجموع الـ weights. لو الـ weights مش سالبة، استخدم Dijkstra.'),
         message('V is all input nodes; E is unique undirected edges.',
-          'V عدد كل الـ nodes في الـ input، وE عدد الـ undirected edges من غير تكرار.'),
+          'V عدد كل الـ nodes في الـ input، و E عدد الـ undirected edges من غير تكرار.'),
       ],
       costs: [
         { label: message('Worst-case BFS time', 'وقت الـ BFS في الـ worst case'), value: 'O(V + E)' },
