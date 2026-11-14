@@ -22,16 +22,16 @@
   // Public parsed input is {numbers: number[]}; never retain the caller's array.
   function validate(input) {
     if (!input || typeof input !== 'object' || Array.isArray(input) || !Array.isArray(input.numbers)) {
-      fail('Use an input object with a numbers array.', 'ابعت object فيه numbers كصف أرقام.');
+      fail('Use an input object with a numbers array.', 'الـ input لازم يكون object فيه array اسمها numbers.');
     }
     const numbers = input.numbers;
     if (numbers.length > MAX_LENGTH) {
-      fail('Use at most 16 integers.', 'اكتب ١٦ رقم صحيح بالكتير.');
+      fail('Use at most 16 integers.', 'اكتب 16 رقم صحيح بالكتير.');
     }
     // An indexed loop also rejects holes in sparse arrays.
     for (let index = 0; index < numbers.length; index++) {
       if (!Number.isSafeInteger(numbers[index]) || Math.abs(numbers[index]) > 999) {
-        fail('Every value must be an integer from -999 to 999.', 'كل value لازم تكون رقم صحيح من -999 لحد 999.');
+        fail('Every value must be an integer from -999 to 999.', 'كل الأرقام لازم تكون صحيحة، من -999 لحد 999.');
       }
     }
     return numbers.slice();
@@ -39,10 +39,10 @@
 
   function parse(rawInput) {
     if (!rawInput || typeof rawInput !== 'object' || Array.isArray(rawInput) || typeof rawInput.numbers !== 'string') {
-      fail('Enter numbers as text.', 'اكتب الأرقام كنص في خانة numbers.');
+      fail('Enter numbers as text.', 'اكتب الأرقام كـ text.');
     }
     if (rawInput.numbers.length > MAX_TEXT_LENGTH) {
-      fail('Keep the input within 256 characters.', 'خلي النص ٢٥٦ حرف بالكتير.');
+      fail('Keep the input within 256 characters.', 'الـ input لازم ميزيدش عن 256 character.');
     }
     const text = rawInput.numbers.trim()
       .replace(/[٠-٩]/g, digit => String(digit.charCodeAt(0) - 1632))
@@ -50,7 +50,7 @@
     if (!text) return { numbers: [] };
     if (!/^[+-]?\d+(?:(?:\s*[,،]\s*|\s+)[+-]?\d+)*$/u.test(text)) {
       fail('Separate whole numbers with spaces or commas; do not leave empty entries.',
-        'افصل الأرقام الصحيحة بمسافات أو فواصل، ومن غير خانات فاضية بين الفواصل.');
+        'افصل بين الأرقام الصحيحة بمسافة أو فاصلة، ومتسيبش حاجة فاضية بين فاصلتين.');
     }
     return { numbers: validate({ numbers: text.split(/[,،\s]+/u).map(Number) }) };
   }
@@ -127,10 +127,10 @@
           marker: markers.join(' · '),
         };
       });
-      const rows = [{ id: 'numbers', label: message('Array · zero-based indices', 'الصف · الأماكن بتبدأ من 0'), layout: 'cards', cells: arrayCells }];
+      const rows = [{ id: 'numbers', label: message('Array · zero-based indices', 'الـ array · الـ index بيبدأ من 0'), layout: 'cards', cells: arrayCells }];
       if (state.auxiliarySlots > 0) {
         rows.push({
-          id: 'buffer', label: message('Auxiliary buffer · reused', 'buffer مساعد · بنستخدمه تاني'), layout: 'cards',
+          id: 'buffer', label: message('Auxiliary buffer · reused', 'الـ buffer المساعد · بنستخدمه كل مرة'), layout: 'cards',
           cells: state.buffer.map((value, index) => ({
             id: state.bufferValid[index] ? `aux-${state.bufferSlots[index]}` : `scratch-${index}`,
             value: value === null ? '·' : value, index,
@@ -145,21 +145,21 @@
       let note;
       if (state.slots.includes(null)) {
         note = message('Copy back one slot at a time. A faded “old copy” is still in memory; its card identity is already represented elsewhere. The buffer keeps the full merge safe.',
-          'بنرجّع خانة كل مرة. القيمة الباهتة «old copy» لسه في الذاكرة، بس هوية كارتها موجودة في مكان تاني. الدمج كامل ومحفوظ في buffer.');
+          'بنرجّع خانة خانة. الكارت الباهت «old copy» ده نسخة قديمة لسه في الـ memory، والكارت الأصلي بتاعه ظاهر في مكان تاني. الـ merge كله محفوظ في الـ buffer.');
       } else if (state.done) {
         note = message('Equal values kept their original card order. Buffer copies have separate IDs; all original cards are back in the array.',
-          'القيم المتساوية فضلت بنفس ترتيب كروتها الأصلي. نُسخ buffer ليها IDs مختلفة، وكل الكروت الأصلية رجعت للصف.');
+          'الأرقام المتساوية فضلت بنفس ترتيبها الأصلي. الكروت اللي في الـ buffer نسخ ليها IDs تانية، وكل الكروت الأصلية رجعت الـ array.');
       } else if (active) {
         note = message(`Active range ${interval(active.left, active.right)} includes left and excludes right. Muted buffer slots are unused or from an older merge.`,
-          `الجزء الحالي ${interval(active.left, active.right)} بيشمل left ومش بيشمل right. خانات buffer الباهتة فاضية أو من دمج فات.`);
+          `الـ range الحالي ${interval(active.left, active.right)} بياخد left ومش بياخد right. الخانات الباهتة في الـ buffer يا فاضية يا من merge قديم.`);
       } else {
         note = message(numbers.length ? 'Indices start at 0. Split ranges, sort each half, then merge into a reusable buffer.' : 'An empty array is already sorted; no values will be read or moved.',
-          numbers.length ? 'الأماكن بتبدأ من 0. نقسّم الأجزاء ونرتّب كل نصّ، وبعدها ندمج في buffer بنستخدمه تاني.' : 'الصف الفاضي مترتّب أصلًا؛ مش هنقرأ أو نحرّك أي قيمة.');
+          numbers.length ? 'الـ index بيبدأ من 0. بنقسّم الـ ranges، ونرتّب كل نص، وبعدين نعمل merge في buffer بنستخدمه كل مرة.' : 'الـ array الفاضية مترتّبة أصلًا. مش هنقرا ولا هنحرّك أي رقم.');
       }
       return {
         rows, graph: null,
         collections: [{
-          label: message('Call stack · outer → current', 'Call stack · من أول نداء للحالي'),
+          label: message('Call stack · outer → current', 'الـ call stack · من أول call للحالي'),
           values: state.stack.map(call => `${call.routine} ${interval(call.left, call.right)}${call.middle === null ? '' : ` · middle=${call.middle}`} · ${call.phase}`),
         }],
         note,
@@ -177,12 +177,12 @@
       frames.push(copy({
         kind, lines, title, explanation, equation, state, variables,
         metrics: [
-          { label: message('Value comparisons', 'مقارنات القيم'), value: state.comparisons },
-          { label: message('Buffer writes', 'كتابات buffer'), value: state.bufferWrites },
-          { label: message('Array writes', 'كتابات الصف'), value: state.copyBacks },
-          { label: message('Completed merges', 'عمليات دمج خلصت'), value: state.merges },
+          { label: message('Value comparisons', 'مقارنات الأرقام'), value: state.comparisons },
+          { label: message('Buffer writes', 'كتابة في الـ buffer'), value: state.bufferWrites },
+          { label: message('Array writes', 'كتابة في الـ array'), value: state.copyBacks },
+          { label: message('Completed merges', 'الـ merges اللي خلصت'), value: state.merges },
           { label: message('Peak call frames', 'أكبر حجم للـ call stack'), value: state.maxDepth },
-          { label: message('Buffer slots', 'خانات buffer'), value: state.auxiliarySlots },
+          { label: message('Buffer slots', 'خانات الـ buffer'), value: state.auxiliarySlots },
         ],
         scene: scene(),
       }));
@@ -194,14 +194,14 @@
       state.maxDepth = Math.max(state.maxDepth, state.stack.length);
       // Validity is display metadata. Old buffer memory is NOT cleared or copied.
       state.bufferValid.fill(false);
-      emit('merge-call', [10], message('Merge two sorted halves', 'ندمج النصّين المترتّبين'),
+      emit('merge-call', [10], message('Merge two sorted halves', 'بنعمل merge للنصين المترتّبين'),
         message(`Both ${interval(left, middle)} and ${interval(middle, right)} are sorted. Reuse the same buffer for this range.`,
-          `الجزئين ${interval(left, middle)} و${interval(middle, right)} مترتّبين. هنستخدم نفس buffer للجزء ده.`),
+          `النصين ${interval(left, middle)} و ${interval(middle, right)} مترتّبين. هنستخدم نفس الـ buffer للـ range ده.`),
         `merge(${left}, ${middle}, ${right})`, { type: 'merge-call', left, middle, right });
       call.i = left; call.j = middle; call.write = left; call.phase = 'compare';
-      emit('merge-init', [13], message('Point to both first candidates', 'نشاور على أول مرشّح في كل نصّ'),
+      emit('merge-init', [13], message('Point to both first candidates', 'بنحط i و j على أول رقم في كل نص'),
         message('i scans the left half, j scans the right half, and write marks the next buffer slot.',
-          'i بيتابع النصّ الشمال، وj بيتابع اليمين، وwrite هو مكان الكتابة الجاي في buffer.'),
+          'i بيمشي على النص الشمال، و j على النص اليمين، و write بيشاور على الخانة الجاية في الـ buffer.'),
         `i = ${left}; j = ${middle}; write = ${left}`);
 
       function write(side, line, remainder) {
@@ -213,20 +213,20 @@
         state.bufferSlots[to] = id;
         state.bufferValid[to] = true;
         state.bufferWrites++;
-        emit('buffer-write', [line], message(`Write the ${side} candidate`, side === 'left' ? 'نكتب مرشّح الشمال' : 'نكتب مرشّح اليمين'),
+        emit('buffer-write', [line], message(`Write the ${side} candidate`, side === 'left' ? 'بنكتب رقم الشمال' : 'بنكتب رقم اليمين'),
           message(remainder ? `The other half is exhausted. Copy the next ${side} value without another value comparison.` :
             `The comparison selected the ${side} candidate. Store value ${value} at buffer index ${to}; the array is unchanged.`,
-          remainder ? `النصّ التاني خلص. ننقل القيمة الجاية من ${side === 'left' ? 'الشمال' : 'اليمين'} من غير مقارنة قيم جديدة.` :
-            `المقارنة اختارت كارت ${side === 'left' ? 'الشمال' : 'اليمين'}. نكتب value ${value} في buffer عند ${to}، والصف لسه زي ما هو.`),
+          remainder ? `النص التاني خلص. بننقل الرقم الجاي من ${side === 'left' ? 'الشمال' : 'اليمين'} من غير ما نقارن تاني.` :
+            `المقارنة اختارت رقم ${side === 'left' ? 'الشمال' : 'اليمين'}. بنكتب الـ ${value} في الـ buffer عند index ${to}، والـ array لسه زي ما هي.`),
           `buffer[${to}] = numbers[${from}] = ${value}`,
           { type: 'buffer-write', from, to, value, id, side, reason: remainder ? 'remainder' : 'comparison' });
       }
 
       while (true) {
         const condition = call.i < middle && call.j < right;
-        emit('merge-check', [14], message(condition ? 'Both halves have a candidate' : 'One half is exhausted', condition ? 'لسه في كارت في كل نصّ' : 'واحد من النصّين خلص'),
+        emit('merge-check', [14], message(condition ? 'Both halves have a candidate' : 'One half is exhausted', condition ? 'لسه فيه رقم في كل نص' : 'واحد من النصين خلص'),
           message(condition ? 'Both indices are in range, so comparing their values is safe.' : 'Stop comparing values. Any remaining half can be copied in order.',
-            condition ? 'المكانين جوّه الحدود، فنقدر نقارن القيم بأمان.' : 'نوقف مقارنة القيم. اللي فاضل من النصّ التاني هيتنقل بترتيبه.'),
+            condition ? 'i و j الاتنين لسه جوّه الحدود، فنقدر نقارن الرقمين من غير مشاكل.' : 'خلاص مفيش مقارنات تاني. اللي فاضل في النص التاني هننقله بترتيبه.'),
           `${call.i} < ${middle} and ${call.j} < ${right} → ${condition}`,
           { type: 'merge-check', left, middle, right, i: call.i, j: call.j }, condition);
         if (!condition) break;
@@ -234,29 +234,29 @@
         const takeLeft = leftValue <= rightValue;
         state.comparisons++;
         emit('compare', [15], message(leftValue === rightValue ? 'Equal values: take the left card' : takeLeft ? 'The left candidate is smaller' : 'The right candidate is smaller',
-          leftValue === rightValue ? 'القيم زي بعض: ناخد كارت الشمال' : takeLeft ? 'مرشّح الشمال أصغر' : 'مرشّح اليمين أصغر'),
+          leftValue === rightValue ? 'الرقمين زي بعض، يبقى هناخد الشمال' : takeLeft ? 'رقم الشمال أصغر' : 'رقم اليمين أصغر'),
         message(leftValue === rightValue ? 'The left card came earlier in the original input. Taking it first preserves the order of equal values.' :
           `Each half is sorted, so the smaller front value is the next value in the merged order. Choose index ${takeLeft ? call.i : call.j}.`,
-        leftValue === rightValue ? 'كارت الشمال كان أسبق في الإدخال الأصلي. لما ناخده الأول، ترتيب القيم المتساوية بيفضل محفوظ.' :
-          `كل نصّ مترتّب، فأصغر قيمة قدّامنا هي الجاية في الدمج. نختار المكان ${takeLeft ? call.i : call.j}.`),
+        leftValue === rightValue ? 'رقم الشمال كان جاي قبل التاني في الـ input الأصلي. لما ناخده الأول، الأرقام المتساوية بتفضل بنفس ترتيبها.' :
+          `كل نص مترتّب، فالأصغر من أول النصين هو الرقم الجاي في الـ merge. هناخد index ${takeLeft ? call.i : call.j}.`),
         `${leftValue} <= ${rightValue} → ${takeLeft}`,
         { type: 'compare', leftIndex: call.i, rightIndex: call.j, leftValue, rightValue, take: takeLeft ? 'left' : 'right' }, takeLeft);
         if (takeLeft) {
           write('left', 16, false);
           call.i++;
-          emit('advance-left', [17], message('Advance the left cursor', 'نقدّم مؤشّر الشمال'),
-            message('The left candidate is safely in the buffer. Point i to its next neighbor.', 'كارت الشمال اتحفظ في buffer. نحرّك i للكارت اللي بعده.'), `i = ${call.i}`);
+          emit('advance-left', [17], message('Advance the left cursor', 'بنحرّك i خطوة'),
+            message('The left candidate is safely in the buffer. Point i to its next neighbor.', 'رقم الشمال اتحفظ في الـ buffer. بنحرّك i على الرقم اللي بعده.'), `i = ${call.i}`);
         } else {
-          emit('take-right', [18], message('Take the right branch', 'نختار فرع اليمين'),
-            message('The <= test was false. Only a strictly smaller right value takes this branch.', 'شرط <= طلع غلط. الفرع ده بيحصل بس لو قيمة اليمين أصغر فعلًا.'));
+          emit('take-right', [18], message('Take the right branch', 'بندخل الـ else ناحية اليمين'),
+            message('The <= test was false. Only a strictly smaller right value takes this branch.', 'الـ condition بتاع <= طلع false. مش بندخل هنا غير لو رقم اليمين أصغر بجد.'));
           write('right', 19, false);
           call.j++;
-          emit('advance-right', [20], message('Advance the right cursor', 'نقدّم مؤشّر اليمين'),
-            message('The right candidate is safely in the buffer. Point j to its next neighbor.', 'كارت اليمين اتحفظ في buffer. نحرّك j للكارت اللي بعده.'), `j = ${call.j}`);
+          emit('advance-right', [20], message('Advance the right cursor', 'بنحرّك j خطوة'),
+            message('The right candidate is safely in the buffer. Point j to its next neighbor.', 'رقم اليمين اتحفظ في الـ buffer. بنحرّك j على الرقم اللي بعده.'), `j = ${call.j}`);
         }
         call.write++;
-        emit('advance-write', [21], message('Advance the buffer cursor', 'نقدّم مؤشّر الكتابة'),
-          message('The buffer prefix is sorted. Move write to its next free slot.', 'الجزء اللي اتكتب في buffer مترتّب. نحرّك write للخانة الجاية.'), `write = ${call.write}`);
+        emit('advance-write', [21], message('Advance the buffer cursor', 'بنحرّك write خطوة'),
+          message('The buffer prefix is sorted. Move write to its next free slot.', 'اللي اتكتب في الـ buffer لحد دلوقتي مترتّب. بنحرّك write على الخانة الفاضية الجاية.'), `write = ${call.write}`);
       }
 
       for (const side of ['left', 'right']) {
@@ -266,15 +266,15 @@
         call.phase = `drain-${side}`;
         while (true) {
           const condition = call[cursor] < end;
-          emit(`${side}-check`, [checkLine], message(`Check the ${side} remainder`, isLeft ? 'نشوف باقي الشمال' : 'نشوف باقي اليمين'),
+          emit(`${side}-check`, [checkLine], message(`Check the ${side} remainder`, isLeft ? 'بنشوف فاضل إيه في الشمال' : 'بنشوف فاضل إيه في اليمين'),
             message(condition ? `The ${side} half still has a value. Its remaining order is already correct.` : `The ${side} half has no remaining values; skip the read.`,
-              condition ? `لسه في قيمة في ${isLeft ? 'الشمال' : 'اليمين'}. الباقي مترتّب أصلًا.` : `مفيش قيم فاضلة في ${isLeft ? 'الشمال' : 'اليمين'}؛ مش هنقرأ برّه الحدود.`),
+              condition ? `لسه فيه أرقام في النص ${isLeft ? 'الشمال' : 'اليمين'}، وترتيبها صح أصلًا.` : `النص ${isLeft ? 'الشمال' : 'اليمين'} مفيهوش أرقام فاضلة، فمش هنقرا حاجة.`),
             `${call[cursor]} < ${end} → ${condition}`, { type: `${side}-check`, cursor: call[cursor], end }, condition);
           if (!condition) break;
           write(side, writeLine, true);
           call[cursor]++; call.write++;
-          emit(`advance-${side}-remainder`, [advanceLine], message('Advance after the remainder write', 'نقدّم المؤشّرات بعد النقل'),
-            message(`Advance ${cursor} and write together; one remaining value has been copied.`, `نزوّد ${cursor} وwrite بواحد؛ نقلنا قيمة من الباقي.`),
+          emit(`advance-${side}-remainder`, [advanceLine], message('Advance after the remainder write', `بنحرّك ${cursor} و write خطوة`),
+            message(`Advance ${cursor} and write together; one remaining value has been copied.`, `بنزوّد ${cursor} و write بواحد، عشان نقلنا رقم من اللي فاضل.`),
             `${cursor} = ${call[cursor]}; write = ${call.write}`);
         }
       }
@@ -283,9 +283,9 @@
       for (let index = left; ; index++) {
         call.index = index;
         const condition = index < right;
-        emit('copy-index', [28], message(condition ? 'Choose the next copy-back slot' : 'The range is copied back', condition ? 'نختار الخانة اللي هنرجّعها' : 'رجّعنا الجزء كله'),
+        emit('copy-index', [28], message(condition ? 'Choose the next copy-back slot' : 'The range is copied back', condition ? 'بنشوف الخانة الجاية اللي هنرجّعها' : 'رجّعنا الـ range كله'),
           message(condition ? 'The full merged range is safe in the buffer. Copy it back one index at a time.' : 'The loop stops at the exclusive right boundary. No out-of-range read occurs.',
-            condition ? 'الجزء المدموج كامل ومحفوظ في buffer. هنرجّعه خانة خانة.' : 'الحلقة بتقف عند right، وهو خارج الجزء. مش هنقرأ برّه الحدود.'),
+            condition ? 'نتيجة الـ merge كلها محفوظة في الـ buffer. هنرجّعها للـ array خانة خانة.' : 'الـ loop بتقف عند right، لأنه برّه الـ range. فمش هنقرا برّه الحدود.'),
           `${index} < ${right} → ${condition}`, { type: 'copy-index', index, left, right }, condition);
         if (!condition) break;
         const id = state.bufferSlots[index], value = state.buffer[index];
@@ -297,18 +297,18 @@
         state.numbers[index] = value;
         state.slots[index] = id;
         state.copyBacks++;
-        emit('copy-back', [29], message('Copy one value back', 'نرجّع قيمة واحدة للصف'),
+        emit('copy-back', [29], message('Copy one value back', 'بنرجّع رقم واحد للـ array'),
           message(`Write value ${value} from buffer index ${index} to array index ${index}. Unwritten array slots may still contain old copies.`,
-            `نرجّع value ${value} من buffer عند ${index} لنفس المكان في الصف. الخانات اللي لسه مكتبتش فيها ممكن يكون فيها نُسخ قديمة.`),
+            `بننقل الـ ${value} من الـ buffer عند index ${index} للـ array عند نفس الـ index. الخانات اللي لسه مكتبناش فيها ممكن يكون فيها نسخ قديمة.`),
           `numbers[${index}] = buffer[${index}] = ${value}`,
           { type: 'copy-back', from: index, to: index, value, id });
       }
       state.merges++;
       state.stack.pop();
       current().phase = 'merged';
-      emit('merge-return', [30], message('This range is now stably sorted', 'الجزء ده اترتّب بثبات'),
+      emit('merge-return', [30], message('This range is now stably sorted', 'الـ range ده بقى مترتّب (stable)'),
         message(`Range ${interval(left, right)} contains exactly its original cards in sorted order. Equal cards kept their order. Return to sortRange.`,
-          `الجزء ${interval(left, right)} فيه نفس كروته الأصلية بترتيب تصاعدي، والمتساويين فضلوا بنفس ترتيبهم. نرجع لـ sortRange.`),
+          `الـ range ${interval(left, right)} فيه نفس أرقامه الأصلية بالظبط، بس مترتّبة. الأرقام المتساوية فضلت بنفس ترتيبها. بنعمل return ونرجع لـ sortRange.`),
         `return from merge(${left}, ${middle}, ${right})`, { type: 'merge-return', left, middle, right });
     }
 
@@ -316,28 +316,28 @@
       const call = { routine: 'sortRange', left, right, middle: null, phase: 'enter' };
       state.stack.push(call); state.calls++;
       state.maxDepth = Math.max(state.maxDepth, state.stack.length);
-      emit('call', [callLine], message('Enter a subproblem', 'ندخل جزء جديد'),
+      emit('call', [callLine], message('Enter a subproblem', 'بندخل على جزء جديد'),
         message(`Sort range ${interval(left, right)}, containing ${right - left} cards. The caller waits on the stack.`,
-          `هنرتّب الجزء ${interval(left, right)}، وفيه ${right - left} كارت. النداء اللي طلبه مستنّي في call stack.`),
+          `هنرتّب الـ range ${interval(left, right)}، وعدد الأرقام فيه ${right - left}. الـ call اللي نادانا مستني في الـ call stack.`),
         `sortRange(${left}, ${right})`, { type: 'call', left, right });
       const base = right - left <= 1;
       call.phase = 'base-check';
-      emit('base-check', [6], message(base ? 'No merge is needed' : 'This range needs splitting', base ? 'مش محتاجين دمج هنا' : 'الجزء ده محتاج يتقسّم'),
+      emit('base-check', [6], message(base ? 'No merge is needed' : 'This range needs splitting', base ? 'مش محتاجين merge هنا' : 'الـ range ده محتاج يتقسّم'),
         message(base ? 'Zero or one card is already sorted. Return without any value comparison or write.' : 'At least two cards remain. Split the range before doing any merge.',
-          base ? 'صفر أو كارت واحد مترتّب أصلًا. هنرجع من غير مقارنة قيم أو كتابة.' : 'لسه في كارتين أو أكتر. نقسّم الجزء قبل أي دمج.'),
+          base ? 'لو مفيش أرقام أو فيه رقم واحد، يبقى مترتّب أصلًا. هنعمل return من غير مقارنة ولا كتابة.' : 'لسه فيه رقمين أو أكتر. لازم نقسّم الـ range قبل أي merge.'),
         `${right} - ${left} <= 1 → ${base}`, { type: 'base-check', left, right }, base);
       if (base) {
         state.stack.pop();
-        emit('base-return', [6], message('Return the sorted base case', 'نرجع من الحالة البسيطة'),
-          message(`Range ${interval(left, right)} is ready. Resume its caller, if any.`, `الجزء ${interval(left, right)} جاهز. نكمّل النداء اللي طلبه لو موجود.`),
+        emit('base-return', [6], message('Return the sorted base case', 'بنعمل return من الـ base case'),
+          message(`Range ${interval(left, right)} is ready. Resume its caller, if any.`, `الـ range ${interval(left, right)} جاهز. بنكمّل الـ call اللي نادانا، لو فيه.`),
           'return', { type: 'base-return', left, right });
         return;
       }
       const middle = Math.floor((left + right) / 2);
       call.middle = middle; call.phase = 'split';
-      emit('split', [7], message('Split at the midpoint', 'نقسّم عند النصّ'),
+      emit('split', [7], message('Split at the midpoint', 'بنقسّم عند الـ middle'),
         message(`The disjoint halves ${interval(left, middle)} and ${interval(middle, right)} cover this range exactly, even when its length is odd.`,
-          `النصّين ${interval(left, middle)} و${interval(middle, right)} بيغطّوا الجزء كله من غير تداخل، حتى لو العدد فردي.`),
+          `النصين ${interval(left, middle)} و ${interval(middle, right)} مش داخلين في بعض، ومع بعض بيغطّوا الـ range كله بالظبط، حتى لو عدد الأرقام فردي.`),
         `middle = floor((${left} + ${right}) / 2) = ${middle}`, { type: 'split', left, middle, right });
       call.phase = 'wait-left';
       sortRange(left, middle, 8);
@@ -346,27 +346,27 @@
       call.phase = 'wait-merge';
       merge(left, middle, right);
       state.stack.pop();
-      emit('range-return', [11], message('Return this sorted subproblem', 'نرجّع الجزء بعد ما اترتّب'),
-        message(`Sorting ${interval(left, right)} is complete. Its caller can now use this sorted half.`, `ترتيب ${interval(left, right)} خلص. النداء اللي طلبه يقدر يستخدمه كنصّ مترتّب.`),
+      emit('range-return', [11], message('Return this sorted subproblem', 'الجزء ده اترتّب، بنعمل return'),
+        message(`Sorting ${interval(left, right)} is complete. Its caller can now use this sorted half.`, `ترتيب ${interval(left, right)} خلص. دلوقتي الـ call اللي نادانا عنده النص ده مترتّب.`),
         'return', { type: 'range-return', left, right });
     }
 
-    emit('ready', [], message('Split first. Merge in order.', 'نقسّم الأول، وبعدين ندمج بالترتيب.'),
+    emit('ready', [], message('Split first. Merge in order.', 'بنقسّم الأول، وبعدين نعمل merge بالترتيب'),
       message('Sort smaller ranges first, then merge their front candidates. Keep equal cards in their original order by taking the left one first.',
-        'نرتّب الأجزاء الصغيرة الأول، وبعدين ندمج من أول كارت في كل نصّ. لو قيمتين زي بعض، ناخد الشمال الأول عشان نحافظ على ترتيبهم.'));
+        'بنرتّب الـ ranges الصغيرة الأول، وبعدين نعمل merge وناخد من أول كل نص. لو رقمين زي بعض، بناخد اللي في الشمال الأول عشان يفضلوا بنفس ترتيبهم.'));
     state.buffer = Array(numbers.length).fill(null);
     state.bufferSlots = Array(numbers.length).fill(null);
     state.bufferValid = Array(numbers.length).fill(false);
     state.auxiliarySlots = numbers.length;
-    emit('allocate', [2], message('Allocate one reusable buffer', 'نجهّز buffer واحد نستخدمه تاني'),
+    emit('allocate', [2], message('Allocate one reusable buffer', 'بنعمل buffer واحد ونستخدمه كل مرة'),
       message(`Reserve ${numbers.length} auxiliary slots once. Recursive calls share this buffer; they do not allocate new subarrays.`,
-        `نجهّز ${numbers.length} خانة مساعدة مرة واحدة. كل النداءات بتستخدم نفس buffer، من غير صفوف جديدة لكل جزء.`),
+        `بنحجز ${numbers.length} خانة مساعدة مرة واحدة بس. كل الـ recursive calls بتستخدم الـ buffer ده، ومحدش فيهم بيعمل array جديدة.`),
       `length(buffer) = ${numbers.length}`, { type: 'allocate', size: numbers.length });
     sortRange(0, numbers.length, 3);
     state.done = true; state.result = state.numbers.slice();
-    emit('done', [4], message('The array is stably sorted', 'الصف اترتّب وحافظنا على ترتيب المتساويين'),
+    emit('done', [4], message('The array is stably sorted', 'الـ array بقت مترتّبة (stable)'),
       message(`All ${numbers.length} cards are in ascending order. There were ${state.comparisons} value comparisons, ${state.bufferWrites} buffer writes, and ${state.copyBacks} array writes.`,
-        `كل الـ ${numbers.length} كارت مترتّبين تصاعدي. عملنا ${state.comparisons} مقارنة قيم، و${state.bufferWrites} كتابة في buffer، و${state.copyBacks} كتابة في الصف.`),
+        `الأرقام كلها (${numbers.length}) بقت مترتّبة تصاعدي. عملنا ${state.comparisons} مقارنة، و ${state.bufferWrites} كتابة في الـ buffer، و ${state.copyBacks} كتابة في الـ array.`),
       'return numbers', { type: 'done' });
     return frames;
   }
@@ -374,62 +374,62 @@
   const lesson = {
     id: 'merge-sort', name: 'Merge Sort', theme: 'algorithms', category: 'sort', number: '05',
     label: 'MERGE SORT', cost: 'O(n log n)',
-    description: message('Split into smaller ranges, then merge sorted halves with a reusable buffer.', 'نقسّم لأجزاء أصغر، وبعدين ندمج النصّين المترتّبين باستخدام buffer واحد.'),
-    note: message('Stable: take left on equality. Time O(n log n), auxiliary storage O(n), plus O(log n) call frames.', 'ثابت: عند التساوي ناخد الشمال. الوقت O(n log n)، والذاكرة المساعدة O(n)، ومعاها O(log n) نداءات.'),
+    description: message('Split into smaller ranges, then merge sorted halves with a reusable buffer.', 'بنقسّم لـ ranges أصغر، وبعدين نعمل merge للنصين المترتّبين في buffer واحد بنستخدمه كل مرة.'),
+    note: message('Stable: take left on equality. Time O(n log n), auxiliary storage O(n), plus O(log n) call frames.', 'الترتيب stable: لو رقمين زي بعض بناخد الشمال. الوقت O(n log n)، والمساحة الزيادة O(n)، وكمان O(log n) في الـ call stack.'),
     code,
     keySteps: ['ready', 'split', 'compare', 'buffer-write', 'merge-return', 'done'],
     view: { markers: { buffer: ['write'] } },
     fields: [{ name: 'numbers', type: 'text', maxLength: MAX_TEXT_LENGTH,
       label: message('Numbers', 'الأرقام'),
       help: message('Up to 16 integers from -999 to 999. Separate with spaces or commas (including ،). Arabic digits work. Leave blank for an empty array.',
-        '١٦ رقم صحيح بالكتير من -999 لحد 999. افصل بمسافات أو فواصل، ومنها ،. الأرقام العربي شغّالة، وسيبها فاضية لو عايز صف فاضي.') }],
+        'لحد 16 رقم صحيح، من -999 لحد 999. افصل بينهم بمسافة أو فاصلة (، شغّالة برضه). الأرقام العربي شغّالة. سيبها فاضية لو عايز array فاضية.') }],
     defaults: { numbers: '7, 3, 5, 3, -2, 8, 1, 5' },
     presets: [
-      { id: 'default', label: message('Mixed values and ties', 'قيم مختلفة وفيها تساوي'), input: { numbers: '7, 3, 5, 3, -2, 8, 1, 5' } },
-      { id: 'cross-half-ties', label: message('Equal cards across halves', 'قيم متساوية في النصّين'), input: { numbers: '2, 1, 2, 1' } },
-      { id: 'sorted', label: message('Already sorted', 'مترتّب أصلًا'), input: { numbers: '-4, -1, 0, 3, 6, 9' } },
+      { id: 'default', label: message('Mixed values and ties', 'أرقام مختلفة وفيها متساويين'), input: { numbers: '7, 3, 5, 3, -2, 8, 1, 5' } },
+      { id: 'cross-half-ties', label: message('Equal cards across halves', 'أرقام متساوية في النصين'), input: { numbers: '2, 1, 2, 1' } },
+      { id: 'sorted', label: message('Already sorted', 'مترتّبة أصلًا'), input: { numbers: '-4, -1, 0, 3, 6, 9' } },
       { id: 'reverse-odd', label: message('Reversed · odd length', 'بالعكس · عدد فردي'), input: { numbers: '9, 7, 5, 3, 1' } },
       { id: 'equal', label: message('All equal', 'كلهم زي بعض'), input: { numbers: '4, 4, 4, 4' } },
-      { id: 'singleton', label: message('One card', 'كارت واحد'), input: { numbers: '-7' } },
-      { id: 'empty', label: message('Empty array', 'صف فاضي'), input: { numbers: '' } },
+      { id: 'singleton', label: message('One card', 'رقم واحد'), input: { numbers: '-7' } },
+      { id: 'empty', label: message('Empty array', 'array فاضية'), input: { numbers: '' } },
     ],
     parse, build,
     summary(input) {
       const numbers = validate(input), repeated = numbers.length - new Set(numbers).size;
       return message(`${numbers.length} cards · ${repeated} repeated occurrences · stable ascending sort`,
-        `${numbers.length} كارت · ${repeated} تكرار زيادة · ترتيب تصاعدي ثابت`);
+        `${numbers.length} رقم · ${repeated} مكرّر · ترتيب تصاعدي stable`);
     },
     theory: {
       idea: message('Split the array in half until every piece is a single card, then merge the sorted pieces back together by always taking the smaller front card.',
-        'اقسم الصف نصّين لحد ما كل جزء يبقى كارت واحد، وبعدين ادمج الأجزاء المترتّبة مع بعض: كل مرة خُد الكارت الأصغر من أول الجزئين.'),
-      title: message('Small sorted halves make a sorted whole', 'نصّين مترتّبين يعملوا جزء كامل مترتّب'),
+        'بنقسم الـ array نصين نصين لحد ما كل جزء يبقى فيه رقم واحد. بعدين بنعمل merge للأجزاء المترتّبة، وكل مرة بناخد الأصغر من أول الجزئين.'),
+      title: message('Small sorted halves make a sorted whole', 'من أنصاص صغيرة مترتّبة لـ array كلها مترتّبة'),
       intro: message('Start with array indices, loops, and function calls. Recursion pauses a caller while a smaller subproblem runs. No initial sorting is required. This top-down version uses zero-based, half-open ranges [left, right).',
-        'ابدأ بفهم أماكن الصف والحلقات ونداءات الدوال. Recursion بيوقّف النداء لحد ما الجزء الأصغر يخلص. مش محتاجين الإدخال يكون مترتّب. النسخة top-down دي بتبدأ الأماكن من 0 وبتستخدم [left, right)، يعني right مش ضمن الجزء.'),
+        'محتاج تكون فاهم الـ index في الـ array، والـ loops، والـ function calls. الـ recursion بيوقّف الـ call اللي نادى لحد ما الجزء الأصغر يخلص. الـ input مش لازم يكون مترتّب. في النسخة الـ top-down دي الـ index بيبدأ من 0، والـ range بيبقى [left, right)، يعني right مش جوّاه.'),
       invariant: message('Before merging, both halves are sorted and stable. Each buffer write extends a sorted prefix containing exactly the consumed cards, in stable order. The smaller front is the next minimum; taking left on equality keeps earlier equal cards first. Copying the full buffer range back preserves this order. Singleton and empty base cases plus smaller recursive ranges prove correctness and termination.',
-        'قبل الدمج، كل نصّ مترتّب وثابت. كل كتابة بتكبّر جزء مترتّب في buffer فيه بالضبط الكروت اللي خدناها وبنفس ترتيب المتساويين. أصغر كارت قدّامنا هو الجاي؛ ولو في تساوي، الشمال كان أسبق فناخده الأول. لما نرجّع buffer، الترتيب ده بيتحفظ. الأجزاء بتصغر لحد صفر أو كارت واحد، وده بيضمن الصحة وإننا هنخلص.'),
+        'قبل الـ merge، كل نص مترتّب و stable. كل كتابة في الـ buffer بتكبّر جزء مترتّب فيه بالظبط الأرقام اللي خدناها، والمتساويين بنفس ترتيبهم. الأصغر من أول النصين هو أصغر رقم فاضل. ولو رقمين زي بعض بناخد الشمال، فاللي كان قبل بيفضل قبل. لما نرجّع الـ range كله من الـ buffer، الترتيب ده مش بيتغير. والـ base case (range فاضي أو فيه رقم واحد)، مع إن الـ range بيصغر في كل recursive call، بيثبتوا إن النتيجة صح وإننا هنخلص.'),
       steps: [
-        { title: message('Split and pause', 'نقسّم ونستنى'), body: message('Calculate middle, recursively sort the left half, then the right half. The stack records waiting ranges. A range of size at most one returns immediately.',
-          'نحسب middle ونرتّب الشمال بنداء أصغر، وبعده اليمين. Call stack بيحفظ الأجزاء المستنيّة. الجزء اللي فيه كارت واحد أو فاضي بيرجع فورًا.') },
-        { title: message('Compare and buffer', 'نقارن ونكتب في buffer'), body: message('Compare only when both cursors are valid. Copy the smaller front to the buffer and advance that cursor. Use <= to select the left card on a tie. Once a half ends, copy the other remainder without value comparisons.',
-          'نقارن بس لما المؤشّرين جوّه حدودهم. نكتب الأصغر في buffer ونقدّم مؤشّره. شرط <= بيختار الشمال عند التساوي. لو نصّ خلص، ننقل باقي التاني من غير مقارنة قيم.') },
-        { title: message('Copy back and return', 'نرجّع ونكمل'), body: message('Copy every merged value back to the same index in the array before returning. No parent merges until both children return, so the same n-slot buffer can serve every level.',
-          'نرجّع كل قيمة مدموجة لنفس المكان في الصف قبل الرجوع. النداء الأكبر مش بيدمج غير لما النصّين يخلصوا، فعشان كده buffer حجمه n يكفّي كل المستويات.') },
+        { title: message('Split and pause', 'بنقسّم ونستنى'), body: message('Calculate middle, recursively sort the left half, then the right half. The stack records waiting ranges. A range of size at most one returns immediately.',
+          'بنحسب middle، ونرتّب النص الشمال بـ recursive call، وبعده اليمين. الـ call stack بيفتكر الـ ranges اللي مستنية. الـ range اللي فيه رقم واحد أو فاضي بيعمل return على طول.') },
+        { title: message('Compare and buffer', 'بنقارن ونكتب في الـ buffer'), body: message('Compare only when both cursors are valid. Copy the smaller front to the buffer and advance that cursor. Use <= to select the left card on a tie. Once a half ends, copy the other remainder without value comparisons.',
+          'بنقارن بس لما i و j الاتنين جوّه الحدود. بنكتب الأصغر في الـ buffer ونحرّك الـ index بتاعه. الـ <= بيخلّينا ناخد الشمال لو الرقمين زي بعض. لما نص يخلص، بننقل اللي فاضل من التاني من غير مقارنات.') },
+        { title: message('Copy back and return', 'بنرجّع للـ array ونعمل return'), body: message('Copy every merged value back to the same index in the array before returning. No parent merges until both children return, so the same n-slot buffer can serve every level.',
+          'قبل الـ return، بنرجّع كل رقم من نتيجة الـ merge لنفس الـ index في الـ array. مفيش call بيعمل merge قبل ما النصين بتوعه يخلصوا، فنفس الـ buffer اللي فيه n خانة بيكفّي كل المستويات.') },
       ],
       notes: [
         message('Stable identities distinguish equal cards. Scratch copies have separate IDs. During copy back, faded old copies show actual memory without displaying one original card twice.',
-          'كل كارت ليه هوية ثابتة حتى لو قيمته مكرّرة. نُسخ buffer ليها IDs تانية. وإحنا بنرجّع، النُسخ القديمة الباهتة بتوضح الذاكرة من غير ما نرسم نفس الكارت الأصلي مرتين.'),
+          'كل كارت ليه ID ثابت، فنقدر نفرّق بين الأرقام المتساوية. النسخ اللي في الـ buffer ليها IDs تانية. وإحنا بنرجّع، الكروت الباهتة نسخ قديمة بتورّي اللي في الـ memory فعلًا، من غير ما نرسم نفس الكارت الأصلي مرتين.'),
         message('Each level writes every participating card to the buffer and back. Balanced splitting gives O(log n) levels and O(n log n) time for n ≥ 2, assuming constant-time integer comparison and assignment. This version does not skip already ordered merges.',
-          'كل مستوى بيكتب الكروت المشاركة في buffer وبيرجّعها. التقسيم المتوازن بيدي O(log n) مستويات، فالوقت O(n log n) لما n ≥ 2، بافتراض المقارنة والكتابة وقتهم ثابت. النسخة دي مش بتتخطّى الدمج لو النصّين مترتّبين مع بعض أصلًا.'),
+          'في كل مستوى، كل رقم داخل في الـ merge بيتكتب في الـ buffer وبيرجع تاني. التقسيم من النص بيدّينا O(log n) مستوى، فالوقت O(n log n) لما n ≥ 2، على فرض إن المقارنة والكتابة بياخدوا وقت ثابت. النسخة دي بتعمل الـ merge دايمًا، حتى لو النصين مترتّبين مع بعض أصلًا.'),
         message('Compared with in-place sorts, this version needs an n-slot buffer and extra writes. It offers stable ordering and predictable worst-case time, but it is not adaptive on nearly sorted input. Empty and singleton inputs take O(1) time.',
-          'مقارنة بالترتيب in-place، النسخة دي محتاجة buffer بحجم n وكتابات زيادة. مقابل ده بتضمن الثبات ووقت أسوأ حالة واضح، بس مش بتستفيد من إن الإدخال شبه مترتّب. الصف الفاضي والكارت الواحد بياخدوا O(1) وقت.'),
+          'لو قارنّاها بالـ sorts اللي in-place، النسخة دي محتاجة buffer فيه n خانة وكتابات زيادة. في المقابل هي stable، والـ worst case بتاعها معروف من الأول، بس مش بتستفيد لو الـ input شبه مترتّب. الـ array الفاضية أو اللي فيها رقم واحد بتاخد O(1).'),
         message('Metrics count value comparisons and individual writes; loop-bound checks are shown but excluded from the value-comparison count.',
-          'العدادات بتحسب مقارنات القيم وكل كتابة لوحدها؛ فحص حدود الحلقات ظاهر بس مش ضمن عدّاد مقارنات القيم.'),
+          'العدادات بتحسب مقارنات الأرقام وكل كتابة لوحدها. الـ checks بتاعة حدود الـ loops بتظهر، بس مش بتتحسب في عدد المقارنات.'),
       ],
       costs: [
-        { label: message('Best / average / worst time', 'أفضل / متوسط / أسوأ وقت'), value: 'O(n log n) for n ≥ 2' },
-        { label: message('Reusable auxiliary buffer', 'buffer مساعد بنستخدمه تاني'), value: 'O(n)' },
-        { label: message('Call stack', 'مساحة نداءات Call stack'), value: 'O(log n) for n ≥ 2' },
-        { label: message('Stability', 'الثبات'), value: 'Stable: left wins equality (<=)' },
+        { label: message('Best / average / worst time', 'الوقت: best / average / worst'), value: 'O(n log n) for n ≥ 2' },
+        { label: message('Reusable auxiliary buffer', 'الـ buffer المساعد (بنستخدمه كل مرة)'), value: 'O(n)' },
+        { label: message('Call stack', 'مساحة الـ call stack'), value: 'O(log n) for n ≥ 2' },
+        { label: message('Stability', 'هل هو stable؟'), value: 'Stable: left wins equality (<=)' },
       ],
     },
   };

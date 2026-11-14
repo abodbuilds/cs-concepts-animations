@@ -4,10 +4,10 @@
   const text=(value,lang)=>value&&typeof value==='object'?(value[lang]??value.en??''):String(value??'');
   const shortLabel=(value,lang)=>text(value,lang).split(' · ')[0];
   const rowLabels={
-    'bfs-current':{en:'Current',ar:'الحالي'},
-    'bfs-distance':{en:'Distances',ar:'المسافات'},
-    'distances':{en:'Distances',ar:'المسافات'},
-    'predecessors':{en:'Predecessors',ar:'السابق'},
+    'bfs-current':{en:'Current',ar:'الـ current'},
+    'bfs-distance':{en:'Distances',ar:'الـ distances'},
+    'distances':{en:'Distances',ar:'الـ distances'},
+    'predecessors':{en:'Predecessors',ar:'الـ predecessors'},
   };
   const tone=value=>['active','sorted','muted','pivot','found'].includes(value)?value:'default';
   const display=value=>value===null||value===undefined?'—':Array.isArray(value)?value.join(', '):typeof value==='object'?JSON.stringify(value):String(value);
@@ -67,8 +67,8 @@
       const badges=view.nodeBadge?cellsByNode(view.nodeBadge):new Map(),parents=view.treeRow?cellsByNode(view.treeRow):new Map();
       const roles=new Map((view.legend||[]).filter(item=>item.tone).map(item=>[item.tone,item.role]));
       const graphPart=part('graph','lesson-graph');
-      if(!nodes.length)graphPart.innerHTML=`<div class="scene-empty">${lang==='ar'?'الجراف فاضي':'An empty graph'}</div>`;
-      else graphPart.innerHTML=`<svg viewBox="0 0 440 336" role="img" aria-label="${lang==='ar'?'حالة الجراف الحالية':'Current graph state'}"><defs><marker id="edge-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="context-stroke" stroke="none"/></marker></defs>${edges.map(edge=>{
+      if(!nodes.length)graphPart.innerHTML=`<div class="scene-empty">${lang==='ar'?'الـ graph فاضي':'An empty graph'}</div>`;
+      else graphPart.innerHTML=`<svg viewBox="0 0 440 336" role="img" aria-label="${lang==='ar'?'الـ graph دلوقتي':'Current graph state'}"><defs><marker id="edge-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="context-stroke" stroke="none"/></marker></defs>${edges.map(edge=>{
         const a=positions.get(String(edge.from)),b=positions.get(String(edge.to));if(!a||!b)return '';
         const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1,sx=a.x+dx/len*24,sy=a.y+dy/len*24,ex=b.x-dx/len*27,ey=b.y-dy/len*27;
         const loop=String(edge.from)===String(edge.to),reciprocal=edge.directed&&edges.some(other=>other!==edge&&other.from===edge.to&&other.to===edge.from);
@@ -120,7 +120,7 @@
   }
   function renderTheory(panel,lesson,lang,onExplore){
     const c=lesson.theory,tr=v=>escape(text(v,lang));
-    panel.innerHTML=`<div class="theory-intro extension-theory"><div><h2>${tr(c.title)}</h2>${c.idea?`<p class="theory-idea">${tr(c.idea)}</p>`:''}<p>${tr(c.intro)}</p></div><div class="theory-invariant"><span>${lang==='ar'?'الفكرة اللي بنحافظ عليها':'THE INVARIANT'}</span><p>${tr(c.invariant)}</p></div></div><div class="theory-steps">${c.steps.map((step,i)=>`<article class="theory-step"><span class="step-number">${String(i+1).padStart(2,'0')}</span><h3>${tr(step.title)}</h3><p>${tr(step.body)}</p></article>`).join('')}</div><div class="theory-bottom"><article class="theory-card"><h3>${lang==='ar'?'تكلفة الخوارزمية':'Algorithm cost'}</h3>${c.costs.map(cost=>`<div class="complexity-row"><span>${tr(cost.label)}</span><code>${escape(cost.value)}</code></div>`).join('')}</article><article class="theory-card"><h3>${lang==='ar'?'خلي بالك':'Keep in mind'}</h3><ul>${c.notes.map(note=>`<li>${tr(note)}</li>`).join('')}</ul></article></div><div class="theory-cta"><button class="primary-button" id="theory-play">${lang==='ar'?'ارجع للتجربة':'Back to animation'}</button></div>`;
+    panel.innerHTML=`<div class="theory-intro extension-theory"><div><h2>${tr(c.title)}</h2>${c.idea?`<p class="theory-idea">${tr(c.idea)}</p>`:''}<p>${tr(c.intro)}</p></div><div class="theory-invariant"><span>${lang==='ar'?'الـ invariant':'THE INVARIANT'}</span><p>${tr(c.invariant)}</p></div></div><div class="theory-steps">${c.steps.map((step,i)=>`<article class="theory-step"><span class="step-number">${String(i+1).padStart(2,'0')}</span><h3>${tr(step.title)}</h3><p>${tr(step.body)}</p></article>`).join('')}</div><div class="theory-bottom"><article class="theory-card"><h3>${lang==='ar'?'الـ complexity':'Algorithm cost'}</h3>${c.costs.map(cost=>`<div class="complexity-row"><span>${tr(cost.label)}</span><code>${escape(cost.value)}</code></div>`).join('')}</article><article class="theory-card"><h3>${lang==='ar'?'خلي بالك':'Keep in mind'}</h3><ul>${c.notes.map(note=>`<li>${tr(note)}</li>`).join('')}</ul></article></div><div class="theory-cta"><button class="primary-button" id="theory-play">${lang==='ar'?'ارجع للتجربة':'Back to animation'}</button></div>`;
     panel.querySelector('#theory-play').addEventListener('click',onExplore);
   }
   root.LessonView={setActive,renderScene,renderTheory,escape,text,display};

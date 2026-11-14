@@ -299,7 +299,7 @@ test('the instability example visibly reverses equal cards through one distant s
   const swaps = frames.filter(frame => frame.kind === 'swap');
   assert.equal(swaps.length, 1);
   assert.match(swaps[0].explanation.en, /Card A jumps past equal-valued card B/);
-  assert.match(swaps[0].explanation.ar, /الكارت A عدّى الكارت B/);
+  assert.match(swaps[0].explanation.ar, /الـ 2 اللي اسمه A عدّى الـ 2 اللي اسمه B/);
 });
 
 test('frames are deterministic, independent deep snapshots with complete bilingual UI data', () => {

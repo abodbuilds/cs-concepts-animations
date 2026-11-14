@@ -45,6 +45,8 @@ GitHub Actions runs the algorithm and contract tests and builds the app on pushe
 
 ## Interface principles
 
+Arabic copy follows [`ARABIC_STYLE.md`](../ARABIC_STYLE.md).
+
 Keep visible content limited to navigation, controls, the current operation, and meaningful algorithm state. Avoid slogans, repeated headings, category subtitles, decorative badges, and duplicated navigation. Show secondary explanations and counters on demand. Keep input labels, validation messages, and accessible control names.
 
 Playback opens on "Key steps": only the frames a lesson lists in `keySteps`, with the lines passed in between marked softly in the pseudocode. "Every line" restores the full line-by-line trace; the choice is remembered. Graph lessons put per-node state (distance, tree edges, queue/stack membership) on the graph itself and explain the node styles in one legend line. On phones the active pseudocode line is repeated above the animation, because the code panel sits below the fold.
