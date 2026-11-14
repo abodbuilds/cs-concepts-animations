@@ -1,0 +1,38 @@
+# Local secrets written by `elevenlabs onboard`
+/.env.local
+node_modules/
+.DS_Store
+
+# Credentials, local settings and caches
+.env
+.env.*
+!.env.example
+.wrangler/
+.codex/
+.agents/
+*.pem
+*.key
+
+# Generated video/audio output and review exports
+revisions/
+**/output/
+**/review/
+**/publishing/
+*.mp4
+*.mov
+*.wav
+*.mp3
+*.m4a
+*.aiff
+*.pyc
+__pycache__/
+webapp/dist/
+**/audio/
+**/drafts/
+**/source/user-voice-*/
+**/source/timeline.json
+**/source/trace.json
+**/source/voice-options.json
+**/source/narration-*.json
+*.blend1
+*.log

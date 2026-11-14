@@ -1,0 +1,23 @@
+{
+  "id": "002-insertion-sort",
+  "title": "Insertion Sort",
+  "revision": 2,
+  "number": 2,
+  "theme": "Algorithms",
+  "conceptLabel": "Insert Sort",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "duration": 159,
+  "brand": "@abodbuilds",
+  "language": "ar-EG",
+  "values": [
+    7,
+    3,
+    5,
+    2,
+    6
+  ],
+  "timingStatus": "estimated-before-user-recording",
+  "status": "Ready for voice-over recording"
+}

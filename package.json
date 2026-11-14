@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "node --env-file=.env.local production/narrate.mjs",
+    "voices": "node --env-file=.env.local production/inspect-voices.mjs",
+    "prepare": "node production/prepare-timeline.mjs",
+    "stills": "node production/render.mjs stills",
+    "render": "node production/render.mjs",
+    "build": "node production/finalize-voice.mjs && node production/prepare-timeline.mjs && node production/render.mjs",
+    "web": "node webapp/serve.mjs",
+    "build:web": "node webapp/build.mjs",
+    "test:web": "node --test webapp/tests/*.test.cjs"
+  },
+  "dependencies": {
+    "@elevenlabs/elevenlabs-js": "2.77.0",
+    "@napi-rs/canvas": "1.1.0"
+  }
+}

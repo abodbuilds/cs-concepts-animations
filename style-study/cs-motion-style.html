@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS motion style study</title>
+<style>
+:root{color-scheme:light dark;--font-sans:system-ui,sans-serif;--font-mono:ui-monospace,monospace;--foreground:light-dark(#25272b,#eeeef0);--muted-foreground:light-dark(#626671,#a5a8b0);--secondary:light-dark(#eeeff2,#25272c);--border:light-dark(#d8dbe1,#41434a);--primary:light-dark(#25272b,#eeeef0);--primary-foreground:light-dark(#fff,#202127);--radius:12px}
+*{box-sizing:border-box}body{margin:0;font-family:var(--font-sans);color:var(--foreground)}
+#cs-study{display:grid;gap:14px;width:100%;font-size:14px}button,input{font:inherit}button{cursor:pointer;color:var(--foreground);border:1px solid var(--border);background:transparent;border-radius:8px;padding:9px 13px;min-height:40px}button[aria-pressed="true"]{background:var(--primary);color:var(--primary-foreground);border-color:var(--primary)}button:focus-visible,input:focus-visible{outline:2px solid var(--foreground);outline-offset:3px}.choices{display:flex;gap:8px;flex-wrap:wrap}.choices button{flex:1;white-space:nowrap}.film{--paper:#eeede6;--ink:#243239;--secondary-ink:#576465;position:relative;overflow:hidden;background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:20px 20px 16px}.film[data-look="signal"]{--paper:#101c22;--ink:#e0f4ee;--secondary-ink:#9cafb5}.film[data-look="paper"]{--paper:#f1e6ce;--ink:#29392e;--secondary-ink:#6a6653}.film-top{display:flex;justify-content:space-between;align-items:center;font:11px var(--font-mono);letter-spacing:.08em;gap:12px}.film-top span:last-child{white-space:nowrap}.headline{font-size:clamp(25px,5vw,34px);letter-spacing:-.045em;line-height:1.1;font-weight:600;margin:18px 0 5px;min-height:38px}.subline{font-size:13px;color:var(--secondary-ink);min-height:20px}canvas{width:100%;height:285px;display:block}.film-bottom{display:flex;justify-content:space-between;gap:8px;font:11px var(--font-mono);color:var(--secondary-ink);border-top:1px solid color-mix(in srgb,var(--ink) 18%,transparent);padding-top:12px}.film-bottom span:last-child{text-align:right}.controls{display:flex;align-items:center;gap:12px}.controls button{min-width:78px}.controls input{flex:1;min-width:40px;accent-color:var(--foreground)}.controls output{font:12px var(--font-mono);white-space:nowrap}.caption{margin:0;font-size:13px;line-height:1.5;color:var(--muted-foreground)}.arc{display:grid;grid-template-columns:35fr 55fr 70fr;gap:5px}.arc button{border:0;border-top:3px solid var(--border);border-radius:0;padding:9px 3px 0;display:grid;gap:5px;text-align:left;background:transparent;color:var(--muted-foreground);font-size:12px;min-width:0}.arc button.active{border-color:var(--foreground);color:var(--foreground)}.arc strong{font-weight:500;font-size:13px}.arc small{font:11px var(--font-mono)}@media(max-width:440px){.choices{gap:5px}.choices button{font-size:12px;padding:8px 6px}.film{padding:15px 12px}.film-top{font-size:10px;letter-spacing:0}.headline{font-size:27px}.film-bottom{font-size:10px}canvas{height:290px}.controls{gap:8px}.controls output{font-size:11px}.arc strong{font-size:12px}}
+</style>
+</head>
+<body>
+<main id="cs-study">
+  <div class="choices" role="group" aria-label="Visual direction">
+    <button type="button" data-look="workshop" aria-pressed="true">Logic Workshop</button>
+    <button type="button" data-look="signal" aria-pressed="false">Signal Room</button>
+    <button type="button" data-look="paper" aria-pressed="false">Paper Machines</button>
+  </div>
+  <section class="film" data-look="workshop" aria-label="Animated binary-search style study">
+    <div class="film-top"><span id="identity">LOGIC WORKSHOP / STUDY 001</span><span>SEARCH FOR 71</span></div>
+    <h2 class="headline" id="headline">One item. Too many places.</h2>
+    <div class="subline" id="subline">A sorted collection. A painfully ordinary search.</div>
+    <canvas id="stage" role="img" aria-label="Fifteen numbered objects transform into a sorted array. Binary search compares 50, 78, 64, then finds 71, discarding impossible regions after each comparison.">Binary search on the sorted values 4, 9, 14, 21, 28, 35, 43, 50, 57, 64, 71, 78, 85, 92, 99 finds 71 in four midpoint comparisons.</canvas>
+    <div class="film-bottom"><span id="material">MATTE CERAMIC · COBALT · CITRUS</span><span id="phase">01 / THE PROBLEM</span></div>
+  </section>
+  <div class="controls">
+    <button type="button" id="play">Pause</button>
+    <input id="scrub" type="range" min="0" max="22" step="0.01" value="0" aria-label="Motion study time">
+    <output id="clock" for="scrub">00.0 / 22s</output>
+  </div>
+  <p class="caption" id="caption" aria-live="polite">Tactile models unfold into diagrams; the same objects survive every explanation.</p>
+  <div class="arc" role="group" aria-label="Episode structure; select a section to see its motion treatment">
+    <button type="button" data-seek="0" class="active"><strong>Problem / showcase</strong><small>0:00–0:35</small></button>
+    <button type="button" data-seek="6"><strong>Theory / mechanism</strong><small>0:35–1:30</small></button>
+    <button type="button" data-seek="14"><strong>Code / application</strong><small>1:30–2:40</small></button>
+  </div>
+  <p class="caption">22-second motion study · episode timings above are a proposed 2:40 template · silent prototype</p>
+</main>
+<script>
+(()=>{
+const root=document.getElementById('cs-study');
+const canvas=root.querySelector('#stage'),ctx=canvas.getContext('2d');
+const slider=root.querySelector('#scrub'),play=root.querySelector('#play');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const values=[4,9,14,21,28,35,43,50,57,64,71,78,85,92,99];
+const looks={
+workshop:{name:'LOGIC WORKSHOP',bg:'#eeede6',ink:'#243239',muted:'#576465',line:'#d2d3c9',face:'#d9dcd2',side:'#a5b4aa',top:'#fafaf0',active:'#3157d4',activeSide:'#203c98',activeTop:'#6182f3',found:'#d1e55a',foundSide:'#9eb038',foundTop:'#e8f19c',caption:'Tactile models unfold into diagrams; the same objects survive every explanation.',material:'MATTE CERAMIC · COBALT · CITRUS'},
+signal:{name:'SIGNAL ROOM',bg:'#101c22',ink:'#e0f4ee',muted:'#9cafb5',line:'#29434a',face:'#182e35',side:'#16303a',top:'#284d54',active:'#6ce4ca',activeSide:'#286559',activeTop:'#b7f4e6',found:'#f6c66c',foundSide:'#927132',foundTop:'#ffdd9b',caption:'A scanning instrument resolves uncertainty; precise traces replace physical surfaces.',material:'SMOKED GLASS · MINT · AMBER'},
+paper:{name:'PAPER MACHINES',bg:'#f1e6ce',ink:'#29392e',muted:'#6a6653',line:'#d7c9ab',face:'#e7d9b9',side:'#d1c19f',top:'#fff5db',active:'#c15b3d',activeSide:'#953d29',activeTop:'#e68d68',found:'#b7c85c',foundSide:'#86983f',foundTop:'#dbe6a4',caption:'Printed cards and cut-paper masks make each logical operation feel assembled by hand.',material:'CUT PAPER · VERMILION · OLIVE'}
+};
+let look='workshop',t=0,playing=!reduced,last=null,w=660,h=285,phase=-1;
+const clamp=x=>Math.max(0,Math.min(1,x)),ease=x=>{x=clamp(x);return x*x*(3-2*x)},mix=(a,b,x)=>a+(b-a)*x;
+function line(x1,y1,x2,y2,color,width=1){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke()}
+function poly(points,fill,stroke){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}}
+function text(s,x,y,size=12,color=looks[look].ink,align='center'){ctx.fillStyle=color;ctx.textAlign=align;ctx.font=`${size}px ui-monospace,monospace`;ctx.fillText(s,x,y)}
+function round(x,y,width,height,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,width,height,r);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}}
+function state(){
+if(t<8)return{lo:0,hi:14,mid:t<5?Math.min(5,Math.floor(t/0.72)):7,probe:0};
+if(t<11)return{lo:0,hi:14,mid:7,probe:1};
+if(t<14)return{lo:8,hi:14,mid:11,probe:2};
+if(t<17)return{lo:8,hi:10,mid:9,probe:3};
+return{lo:10,hi:10,mid:10,probe:4};
+}
+function draw(){
+const p=looks[look],s=state(),flat=ease((t-5)/2.8),code=ease((t-13.4)/0.6),found=t>=18.8;
+ctx.clearRect(0,0,w,h);
+const step=Math.min(40,(w-12)/15),bh=Math.min(46,step*1.18),bw=step*.79;
+const yLine=mix(142,79,code);
+// A quiet ground plane gives the opening a physical sense of scale.
+ctx.globalAlpha=(1-flat)*.6;
+if(look==='workshop'){
+ for(let j=-3;j<=3;j++){line(w/2-190+j*32,160-j*13,w/2+130+j*32,265-j*13,p.line);line(w/2-130+j*32,265+j*13,w/2+190+j*32,160+j*13,p.line)}
+}else if(look==='signal'){
+ for(let r=1;r<=3;r++){ctx.beginPath();ctx.ellipse(w/2,150,Math.min(w*.36,210)*r/3,90*r/3,0,0,Math.PI*2);ctx.strokeStyle=p.line;ctx.stroke()}
+ line(w/2,32,w/2,267,p.line);line(15,150,w-15,150,p.line);
+}else{
+ for(let j=0;j<8;j++)line(12,35+j*31,w-12,35+j*31,p.line);
+}
+ctx.globalAlpha=1;
+for(let i=0;i<15;i++){
+ const col=i%5,row=Math.floor(i/5),compact=Math.min(1,(w-36)/470);
+ let ix=w/2+(col-2)*62*compact-(row-1)*56*compact,iy=140+(col-2)*21+(row-1)*32;
+ if(look==='signal'){const a=i/15*Math.PI*2-Math.PI/2;ix=w/2+Math.cos(a)*Math.min(w*.37,205);iy=145+Math.sin(a)*91}
+ if(look==='paper'){ix=w/2+(col-2)*Math.min(81,(w-20)/5);iy=72+row*65}
+ const x=mix(ix,w/2+(i-7)*step,flat),y=mix(iy,yLine,flat);
+ const discarded=i<s.lo||i>s.hi,active=i===s.mid,target=found&&i===10;
+ const motion=(1-flat)*Math.sin(t*1.5+i*.31)*2;
+ const depth=look==='workshop'?mix(13,3,flat):look==='paper'?3:0;
+ const size=mix(look==='paper'?Math.min(56,(w-35)/5):36,bw,flat);
+ const high=mix(look==='paper'?40:46,bh,flat);
+ const lift=active?Math.sin(clamp((t%3)/.4)*Math.PI/2)*5:0;
+ const yy=y+motion-lift;
+ ctx.globalAlpha=discarded?.16:1;
+ const face=target?p.found:active?p.active:p.face,side=target?p.foundSide:active?p.activeSide:p.side,top=target?p.foundTop:active?p.activeTop:p.top;
+ if(look==='workshop'){
+ ctx.save();ctx.filter='blur(5px)';ctx.fillStyle='rgba(36,50,57,.12)';ctx.beginPath();ctx.ellipse(x+depth,yy+high/2+16,size*.8,7,0,0,Math.PI*2);ctx.fill();ctx.restore();
+ poly([[x-size/2,yy-high/2],[x-size/2+depth,yy-high/2-depth],[x+size/2+depth,yy-high/2-depth],[x+size/2,yy-high/2]],top);
+ poly([[x+size/2,yy-high/2],[x+size/2+depth,yy-high/2-depth],[x+size/2+depth,yy+high/2-depth],[x+size/2,yy+high/2]],side);
+ round(x-size/2,yy-high/2,size,high,2,face);
+ }else if(look==='signal'){
+ if(active){ctx.shadowColor=face;ctx.shadowBlur=16}round(x-size/2,yy-high/2,size,high,flat>0.5?2:10,p.face,active?face:p.line);ctx.shadowBlur=0;
+ line(x-size/2+3,yy+high/2-4,x+size/2-3,yy+high/2-4,active?face:p.line,2);
+ }else{
+ ctx.save();ctx.translate(x,yy);ctx.rotate((1-flat)*((i%3)-1)*.075);
+ round(-size/2+3,-high/2+4,size,high,1,p.side);
+ round(-size/2,-high/2,size,high,1,face,p.ink);ctx.restore();
+ }
+ const label=look==='signal'?active?face:p.ink:active&&!target&&look!=='paper'?'#ffffff':target?p.ink:look==='paper'&&active?'#fff7e6':p.ink;
+ text(String(values[i]),x,yy+4,flat>.8?Math.max(11,Math.min(14,step*.43)):14,label);
+ if(flat>.8&&active){text(found?'✓':'▼',x,yy-high/2-13,13,p.ink)}
+ ctx.globalAlpha=1;
+}
+if(t<5){
+ text('SCAN →',w/2,270,11,p.muted);
+}else if(t<8){text('SAME OBJECTS. NOW A SORTED ARRAY.',w/2,252,w<400?10:11,p.muted)}
+else{
+ const left=w/2+(s.lo-7)*step-bw/2,right=w/2+(s.hi-7)*step+bw/2,by=yLine+bh/2+20;
+ line(left,by,right,by,p.ink);line(left,by-5,left,by,p.ink);line(right,by-5,right,by,p.ink);
+ text(found?'FOUND AT INDEX 10':`${s.hi-s.lo+1} CANDIDATE${s.lo===s.hi?'':'S'} · CHECK ${s.probe}`,w/2,by+20,11,p.muted);
+ if(t<14){text(s.probe===1?'50 < 71 → keep the right half':'78 > 71 → keep the left half',w/2,242,w<400?12:14,p.ink)}
+}
+if(code>0){
+ ctx.globalAlpha=code;
+ const cx=Math.max(8,w/2-200),cy=178,font=w<400?11:12;
+ const rows=['while lo <= hi:','  mid = lo + floor((hi - lo) / 2)','  if a[mid] == target: return mid','  if a[mid] < target: lo = mid + 1','  else: hi = mid - 1'];
+ const selected=found?2:t>=17?1:3;
+ round(cx-6,cy+selected*19-12,Math.min(w-4,410),18,3,look==='signal'?'#25473f':look==='paper'?'#dfd49f':'#d9dfc0');
+ rows.forEach((row,i)=>text(row,cx,cy+i*19,font,p.ink,'left'));
+ ctx.globalAlpha=1;
+}
+const nextPhase=t<5?0:t<14?1:2;
+if(nextPhase!==phase){
+ phase=nextPhase;
+ root.querySelector('#headline').textContent=['One item. Too many places.','Make half the problem disappear.','The code moves the world.'][phase];
+ root.querySelector('#subline').textContent=['A sorted collection. A painfully ordinary search.','Order tells us which half cannot contain 71.','One comparison. One bound update. One visible consequence.'][phase];
+ root.querySelector('#phase').textContent=['01 / THE PROBLEM','02 / THE MECHANISM','03 / THE APPLICATION'][phase];
+ root.querySelectorAll('[data-seek]').forEach((b,i)=>b.classList.toggle('active',i===phase));
+}
+slider.value=t;root.querySelector('#clock').textContent=`${t.toFixed(1).padStart(4,'0')} / 22s`;
+play.textContent=playing?'Pause':t>=22?'Replay':'Play';
+}
+function resize(){w=canvas.clientWidth;h=canvas.clientHeight;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
+root.querySelectorAll('.choices button').forEach(b=>b.addEventListener('click',()=>{
+look=b.dataset.look;root.querySelector('.film').dataset.look=look;root.querySelector('#identity').textContent=looks[look].name+' / STUDY 001';root.querySelector('#material').textContent=looks[look].material;root.querySelector('#caption').textContent=looks[look].caption;root.querySelectorAll('.choices button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw();
+}));
+play.addEventListener('click',()=>{if(t>=22)t=0;playing=!playing;last=null;draw()});
+slider.addEventListener('input',()=>{t=Number(slider.value);playing=false;draw()});
+root.querySelectorAll('[data-seek]').forEach(b=>b.addEventListener('click',()=>{t=Number(b.dataset.seek);last=null;draw()}));
+function frame(now){if(last!==null&&playing){t=Math.min(22,t+(now-last)/1000);if(t>=22)playing=false}last=now;draw();requestAnimationFrame(frame)}
+document.addEventListener('visibilitychange',()=>{last=null});new ResizeObserver(resize).observe(canvas);resize();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CS Concept Script"
+  short_description: "Script vertical CS explainers for beginners in Egyptian Arabic"
+  default_prompt: "Use $cs-concept-script to write a vertical 9:16 CS explainer under three minutes for beginner programmers, in simple Egyptian Arabic with English technical terms, Logic Workshop animation, and Alexandria typography."
