@@ -1,8 +1,9 @@
 const test=require('node:test');
-const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const ids=['selection-sort','bubble-sort','merge-sort','quick-sort','bfs','dfs','shortest-paths','string-matching'];
+const assert=require('node:assert/strict');
+// Every module in lessons/ must honour the contract, so new lessons are checked without editing this file.
+const ids=fs.readdirSync(path.join(__dirname,'..','lessons')).filter(name=>name.endsWith('.js')).map(name=>name.slice(0,-3)).sort();
 function bilingual(value,where){assert.ok(value&&typeof value.en==='string'&&value.en.length&&typeof value.ar==='string'&&value.ar.length,where+' must have English and Arabic text');}
 for(const id of ids)test(id+' follows the shared lesson contract for every preset',()=>{
  const lesson=require(path.join('..','lessons',id+'.js'));
@@ -36,7 +37,11 @@ for(const id of ids)test(id+' follows the shared lesson contract for every prese
   }
  }
 });
-test('all eight lesson modules are included in the production build',()=>{
+test('every lesson module is included in the production build',()=>{
  const build=fs.readFileSync(path.join(__dirname,'..','build.mjs'),'utf8');assert.match(build,/lessonScripts/);assert.match(build,/readdir/);
- const files=fs.readdirSync(path.join(__dirname,'..','lessons')).filter(name=>name.endsWith('.js')).map(name=>name.slice(0,-3));assert.deepEqual(files.sort(),[...ids].sort());
+ assert.ok(ids.length>=8);
+});
+test('lessons use known themes and unique numbers',()=>{
+ const app=fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8'),numbers=new Set(['01','02']);
+ for(const id of ids){const lesson=require(path.join('..','lessons',id+'.js'));assert.match(app,new RegExp(`id:'${lesson.theme||'algorithms'}'`),id+' theme registered');assert.ok(!numbers.has(lesson.number),id+' number is unique');numbers.add(lesson.number);}
 });

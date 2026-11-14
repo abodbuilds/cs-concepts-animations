@@ -6,7 +6,7 @@ The host owns navigation, inputs, playback, seeking, pseudocode, localization, l
 
 ## Lesson object
 
-- `id`: the assigned slug; `name`: English name; `category`: `sort`, `graph`, or `string`; `number`: assigned two-digit lesson number.
+- `id`: the assigned slug; `name`: English name; `category`: `sort`, `graph`, `string`, or `structure`; `number`: assigned two-digit lesson number.
 - `label`: uppercase concept name; `cost`: concise worst-case time such as `O(n²)`.
 - `description`, `note`: bilingual objects `{en: string, ar: string}`. Use conversational Egyptian Arabic with English identifiers.
 - `code`: an array of English pseudocode lines; line references are one-based. Prefer readable short lines (<60 characters). Use `value`, never `key`, for a saved array value. Match the algorithm actually traced, including helper routines.
@@ -50,7 +50,7 @@ The host owns navigation, inputs, playback, seeking, pseudocode, localization, l
 
 Scene fields are optional. `tone` can be `default`, `active`, `sorted`, `muted`, `pivot`, or `found`. Cell identities must stay stable across movements so the host can animate them; duplicate values need different identities. The same identity must not appear twice within a row. Use distinct row/cell IDs for scratch copies. `index` and `marker` are optional. Rows display empty inputs sensibly. `layout:'aligned'` keeps character cells horizontally aligned in a scrollable viewport (use blank cells to offset a pattern; set a unique cell ID on every blank). All data is plain text, never HTML.
 
-`scene.graph` supports `{nodes:[{id,label,tone,detail?}],edges:[{from,to,weight?,tone?,directed?:boolean}]}`. The host positions nodes evenly on a circle, highlights current and visited nodes/edges, and shows weights and details. Order nodes deterministically. Use at most 8 nodes and 20 edges. For shortest paths use Dijkstra with nonnegative weights, and label it explicitly. Infinity should be displayed as the string `∞` in snapshots, never lost as JSON null. Show priority/frontier selection and successful/unsuccessful relaxation with actual line references.
+`scene.graph` supports `{nodes:[{id,label,tone,detail?}],edges:[{from,to,weight?,tone?,directed?:boolean}]}`. The host positions nodes evenly on a circle unless every node carries numeric `x`,`y` (canvas 440×336, keep nodes ≥ 50 apart and 22 from the edges), which trees, heaps and chains should use; highlights current and visited nodes/edges, and shows weights and details. Order nodes deterministically. Use at most 8 nodes and 20 edges. For shortest paths use Dijkstra with nonnegative weights, and label it explicitly. Infinity should be displayed as the string `∞` in snapshots, never lost as JSON null. Show priority/frontier selection and successful/unsuccessful relaxation with actual line references.
 
 String matching: implement the naive first-match algorithm; label the implementation and explain its worst-case behavior. Text is at most 24 Unicode code points and pattern at most 10. Define empty-pattern behavior and match indices consistently (code points). Include overlapping candidate alignments and not-found input.
 

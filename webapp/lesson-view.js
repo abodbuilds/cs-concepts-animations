@@ -60,7 +60,10 @@
     if(scene.graph){
       const graph=scene.graph,nodes=graph.nodes||[],edges=graph.edges||[],positions=new Map();
       const n=nodes.length,centerX=220,centerY=168,radius=n>5?124:n>2?108:70;
-      circleOrder(nodes,edges).forEach((id,i)=>{const angle=-Math.PI/2+i*2*Math.PI/Math.max(1,n);positions.set(id,{x:n===1?centerX:centerX+radius*Math.cos(angle),y:n===1?centerY:centerY+radius*Math.sin(angle)});});
+      const placed=n>0&&nodes.every(node=>Number.isFinite(node.x)&&Number.isFinite(node.y));
+      // Structures with a shape of their own (trees, heaps, chains) place nodes themselves on the 440×336 canvas.
+      if(placed)nodes.forEach(node=>positions.set(String(node.id),{x:Math.min(418,Math.max(22,node.x)),y:Math.min(314,Math.max(22,node.y))}));
+      else circleOrder(nodes,edges).forEach((id,i)=>{const angle=-Math.PI/2+i*2*Math.PI/Math.max(1,n);positions.set(id,{x:n===1?centerX:centerX+radius*Math.cos(angle),y:n===1?centerY:centerY+radius*Math.sin(angle)});});
       // Lessons can move per-node tables onto the picture: a badge beside each node and the
       // "came from" links drawn as tree edges, instead of separate rows the student has to cross-reference.
       const cellsByNode=id=>new Map((rowById(id)?.cells||[]).map(cell=>[String(cell.marker),cell.value]));
@@ -81,7 +84,7 @@
         return `<g class="graph-edge tone-${tone(edge.tone)}${tree?' edge-tree':''}"><path d="${path}"${edge.directed?' marker-end="url(#edge-arrow)"':''}/>${w}</g>`;
       }).join('')}${nodes.map(node=>{
         const p=positions.get(String(node.id)),role=roles.get(tone(node.tone)),badge=badges.get(String(node.id));
-        const ox=n===1?0:(p.x-centerX)/radius,oy=n===1?-1:(p.y-centerY)/radius;
+        const ox=placed?0:n===1?0:(p.x-centerX)/radius,oy=placed?-1:n===1?-1:(p.y-centerY)/radius;
         const badgeMark=badge===undefined||badge===null?'':`<g class="node-badge${badge==='—'||badge==='∞'?' unset':''}" transform="translate(${ox*39},${oy*39})"><rect x="-13" y="-10" width="26" height="20" rx="10"/><text y="4">${escape(display(badge))}</text></g>`;
         return `<g class="graph-node tone-${tone(node.tone)}${role?' role-'+escape(role):''}" transform="translate(${p.x},${p.y})" data-node="${escape(node.id)}"><circle r="22"/><text y="5" class="node-label">${escape(node.label??node.id)}</text>${badgeMark}${node.detail!==undefined?`<title>${escape(text(node.detail,lang))}</title>`:''}</g>`;
       }).join('')}</svg>`;
