@@ -1,6 +1,6 @@
 # CS Concept Lab
 
-A computer-science learning library organized by theme. The Algorithms theme currently covers Binary Search, Insertion Sort, Selection Sort, Bubble Sort, Merge Sort, Quicksort, BFS, DFS, Dijkstra shortest paths, and naive string matching. The Data Structures theme covers Arrays, Linked List, Stack, Queue, Hash Table, Binary Search Tree, Binary Heap, and Graph, each driven by an editable script of operations. It uses the existing Logic Workshop palette and Alexandria font, with Egyptian Arabic explanations, an English toggle, and English pseudocode.
+A computer-science learning library organized by theme. The Algorithms theme currently covers Binary Search, Selection Sort, Insertion Sort, Bubble Sort, Merge Sort, Quicksort, BFS, DFS, Dijkstra shortest paths, and naive string matching. The Data Structures theme covers Arrays, Linked List, Stack, Queue, Hash Table, Binary Search Tree, Binary Heap, and Graph, each driven by an editable script of operations. It uses the existing Logic Workshop palette and Alexandria font, with Egyptian Arabic explanations, an English toggle, and English pseudocode.
 
 Open **[dist/index.html](dist/index.html)** in a browser. The built file contains the font, styles, code, and all lessons; it works offline and needs no backend or account. When online, the page loads Plausible's cookieless analytics script.
 

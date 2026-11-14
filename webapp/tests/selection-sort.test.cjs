@@ -47,7 +47,7 @@ test('exports the full contract and registers without a host or other lessons', 
   assert.equal(lesson.id, 'selection-sort');
   assert.equal(lesson.name, 'Selection Sort');
   assert.equal(lesson.category, 'sort');
-  assert.equal(lesson.number, '03');
+  assert.equal(lesson.number, '02');
   assert.equal(lesson.label, 'SELECTION SORT');
   assert.equal(lesson.cost, 'O(n²)');
   assert.equal(globalThis.AlgorithmLessons[lesson.id], lesson);

@@ -256,7 +256,7 @@
   }
 
   const lesson = {
-    id: 'selection-sort', name: 'Selection Sort', theme: 'algorithms', category: 'sort', number: '03',
+    id: 'selection-sort', name: 'Selection Sort', theme: 'algorithms', category: 'sort', number: '02',
     label: 'SELECTION SORT', cost: 'O(n²)',
     description: message('Scan for the minimum, swap it into place, and grow a fixed prefix.',
       'بندوّر على أصغر رقم، بنعمله swap لمكانه، والجزء المترتّب في أول الـ array بيكبر.'),

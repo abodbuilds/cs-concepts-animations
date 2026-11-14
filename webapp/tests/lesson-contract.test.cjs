@@ -42,6 +42,6 @@ test('every lesson module is included in the production build',()=>{
  assert.ok(ids.length>=8);
 });
 test('lessons use known themes and unique numbers',()=>{
- const app=fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8'),numbers=new Set(['01','02']);
+ const app=fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8'),numbers=new Set(['01','03']);
  for(const id of ids){const lesson=require(path.join('..','lessons',id+'.js'));assert.match(app,new RegExp(`id:'${lesson.theme||'algorithms'}'`),id+' theme registered');assert.ok(!numbers.has(lesson.number),id+' number is unique');numbers.add(lesson.number);}
 });
