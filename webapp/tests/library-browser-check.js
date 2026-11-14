@@ -30,9 +30,9 @@
         const active=document.querySelector('.code-line.active');if(active){const line=active.getBoundingClientRect(),viewport=$('code-scroll').getBoundingClientRect();check(line.top>=viewport.top-1&&line.bottom<=viewport.bottom+1,'active line stays in code viewport');}
         click('theory-tab');check(!$('theory-panel').hidden&&$('theory-panel').textContent.includes(lesson.theory.title.en),'theory');
         click('explore-tab');check(Number($('timeline').value)===midpoint,'theory preserves playback');
-        seek(frames.length-1);check($('phase-badge').textContent==='Complete','completed state');
+        seek(frames.length-1);check($('stage').dataset.done==='true','completed state');
         check($('next').disabled,'next disabled at end');check($('play-label').textContent==='Replay','replay available');
-        const cells=(frames.at(-1).scene.rows||[]).reduce((sum,row)=>sum+row.cells.length,0);
+        const endScene=frames.at(-1).scene;const cells=(endScene.rows||[]).filter(row=>!endScene.graph||row.cells.some(cell=>cell.value!==null&&cell.value!==undefined&&cell.value!=='—')).reduce((sum,row)=>sum+row.cells.length,0);
         check(document.querySelectorAll('#lesson-scene .scene-cell').length===cells,'complete scene cells');
         click('previous');check(Number($('timeline').value)===frames.length-2,'previous step');
         language('ar');check(document.documentElement.dir==='rtl','Arabic direction');check($('step-title').textContent===frames[frames.length-2].title.ar,'Arabic explanation');language('en');

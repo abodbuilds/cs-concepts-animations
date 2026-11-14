@@ -6,42 +6,98 @@
     const $ = id => document.getElementById(id);
     const dictionaries = {
       ar: {
-        visited:'اتزار',matched:'مطابق',chooseLesson:'اختار المفهوم',graphCategory:'خوارزميات الجراف',stringCategory:'البحث في النصوص',skip:'انتقل للتجربة',library:'المكتبة',searchCategory:'خوارزميات البحث',sortCategory:'خوارزميات الترتيب',
-        sideNote:'الفكرة بتوضح لما تشوف كل خطوة.',sideDescription:'غيّر المدخلات. امشي مع الكود. وشوف اللي بيحصل.',local:'التجربة كلها على جهازك',
-        interactive:'تجربة تفاعلية',explore:'جرّب بنفسك',theory:'افهم الفكرة',tabsNote:'خطوة واحدة. تغيير واضح.',newExample:'مثال جديد',editInput:'غيّر المدخلات',
-        arrayLabel:'الأرقام',targetLabel:'المطلوب · target',inputHelp:'لحد 16 عدد صحيح من -999 لـ 999، بينهم فاصلة. سيبها فاضية لتجربة الصف الفاضي.',
-        try:'جرّب:',presetDefault:'مثال الحلقة',duplicates:'قيم مكرّرة',empty:'صف فاضي',cancel:'إلغاء',sortApply:'رتّب وطبّق',apply:'طبّق',
-        liveState:'الحالة دلوقتي',visualization:'شوف الفكرة بتتحرّك',available:'متاح',active:'الخطوة الحالية',savedValue:'القيمة المحفوظة',
-        emptyArray:'الصف فاضي',emptyHint:'شغّل الكود وشوف بيتعامل مع الحالة دي إزاي.',behindScenes:'ورا الحركة',codeFollows:'السطر المضيء هو اللي بيتنفّذ',
-        execution:'خطوات التنفيذ',speed:'السرعة',keyboard:'Space تشغيل / إيقاف · ← → خطوة بخطوة',whyWorks:'ليه الطريقة دي بتشتغل؟',footer:'الفهم الأول. الكود بعده.',
-        play:'شغّل',pause:'إيقاف',replay:'من الأول',reset:'إعادة البداية',previous:'الخطوة السابقة',next:'الخطوة التالية',copy:'انسخ الكود',copied:'اتنسخ الكود',copyFailed:'حدّد الكود وانسخه يدويًا.',
-        ready:'جاهز',running:'بيتنفّذ',complete:'اكتمل',notFound:'مش موجود',sorted:'مترتّب',discarded:'مستبعد',reverse:'ترتيب عكسي',
-        comparisons:'مقارنات القيم',probes:'أماكن فحصناها',shifts:'نقلات لليمين',writeHere:'هنكتب هنا',remaining:'أماكن ممكنة',sortedPart:'كروت في الجزء المترتّب',
-        invalid:'استخدم أعداد صحيحة من -999 لـ 999، وافصل بينها بفاصلة.',tooMany:'ممكن نعرض لحد 16 رقم عشان الخطوات تفضل واضحة.',invalidTarget:'اكتب target كعدد صحيح من -999 لـ 999.',
-        unsorted:'Binary Search محتاجة أرقام مترتّبة من الصغير للكبير. رتّبها بنفسك، أو اختار «رتّب وطبّق».',
-        cost:'تكلفة الخوارزمية',watchFor:'خلي بالك',best:'أفضل حالة',worst:'أسوأ حالة',average:'المتوسط',space:'مساحة إضافية',backToLab:'جرّب الفكرة',theoryCta:'جاهز تشوف الفكرة وهي بتشتغل؟',
-        binaryDescription:'استغل الترتيب، واستبعد الجزء اللي مش ممكن يكون فيه المطلوب.',insertionDescription:'جزء مترتّب بيكبر كل مرة. كارت جديد، ومكان مناسب.',
-        binaryNote:'الـ index بيبدأ من صفر. بنرجّع مكان القيمة؛ ولو مش موجودة، نرجّع NOT_FOUND.',
-        insertionNote:'الخانة المعلّمة مكان للكتابة، مش حذف من الذاكرة. الرقم الباهت يفضل موجود لحد ما نكتب فوقه.',
+        skip:"انتقل للتجربة",
+        explanation:"تفسير الخطوة",
+        operationCounts:"عدادات التنفيذ",
+        explore:"التجربة",
+        theory:"الشرح",
+        newExample:"مثال جديد",
+        editInput:"المدخلات",
+        arrayLabel:"الأرقام",
+        targetLabel:"المطلوب · target",
+        inputHelp:"لحد 16 عدد صحيح من -999 لـ 999، بينهم فاصلة. سيبها فاضية لتجربة الصف الفاضي.",
+        presetDefault:"المثال الأصلي",
+        duplicates:"قيم مكرّرة",
+        empty:"صف فاضي",
+        cancel:"إلغاء",
+        sortApply:"رتّب وطبّق",
+        apply:"طبّق",
+        emptyArray:"الصف فاضي",
+        execution:"خطوات التنفيذ",
+        speed:"السرعة",
+        play:"شغّل",
+        pause:"إيقاف",
+        replay:"من الأول",
+        reset:"إعادة البداية",
+        previous:"الخطوة السابقة",
+        next:"الخطوة التالية",
+        copy:"انسخ الكود",
+        copied:"اتنسخ الكود",
+        copyFailed:"حدّد الكود وانسخه يدويًا.",
+        notFound:"مش موجود",
+        reverse:"ترتيب عكسي",
+        comparisons:"مقارنات القيم",
+        probes:"أماكن فحصناها",
+        shifts:"نقلات لليمين",
+        writeHere:"هنكتب هنا",
+        invalid:"استخدم أعداد صحيحة من -999 لـ 999، وافصل بينها بفاصلة.",
+        tooMany:"ممكن نعرض لحد 16 رقم عشان الخطوات تفضل واضحة.",
+        invalidTarget:"اكتب target كعدد صحيح من -999 لـ 999.",
+        unsorted:"Binary Search محتاجة أرقام مترتّبة من الصغير للكبير. رتّبها بنفسك، أو اختار «رتّب وطبّق».",
+        cost:"تكلفة الخوارزمية",
+        watchFor:"خلي بالك",
+        best:"أفضل حالة",
+        worst:"أسوأ حالة",
+        average:"المتوسط",
+        space:"مساحة إضافية",
+        backToLab:"ارجع للتجربة",
       },
       en: {
-        visited:'Visited',matched:'Matched',chooseLesson:'Choose a concept',graphCategory:'Graph algorithms',stringCategory:'String algorithms',skip:'Skip to the lab',library:'THE LIBRARY',searchCategory:'Search algorithms',sortCategory:'Sorting algorithms',
-        sideNote:'A little movement. A lot more clarity.',sideDescription:'Change the input. Follow the code. See what happens.',local:'Runs entirely on your device',
-        interactive:'Interactive lesson',explore:'Explore',theory:'The idea',tabsNote:'One step. One clear change.',newExample:'New example',editInput:'Edit input',
-        arrayLabel:'Array',targetLabel:'Search target',inputHelp:'Up to 16 integers from -999 to 999, separated by commas. Leave blank to try an empty array.',
-        try:'Try:',presetDefault:'Episode example',duplicates:'Duplicates',empty:'Empty array',cancel:'Cancel',sortApply:'Sort & apply',apply:'Apply',
-        liveState:'THE LIVE STATE',visualization:'Watch the idea move',available:'Available',active:'Current operation',savedValue:'Saved value',
-        emptyArray:'An empty array',emptyHint:'Run the code to see how this case is handled.',behindScenes:'BEHIND THE MOVEMENT',codeFollows:'The highlighted line is executing',
-        execution:'Execution steps',speed:'Speed',keyboard:'Space to play / pause · ← → to step',whyWorks:'Why does this work?',footer:'Understand it. Then write it.',
-        play:'Play',pause:'Pause',replay:'Replay',reset:'Reset',previous:'Previous step',next:'Next step',copy:'Copy pseudocode',copied:'Pseudocode copied',copyFailed:'Select the code to copy it manually.',
-        ready:'Ready',running:'In progress',complete:'Complete',notFound:'Not found',sorted:'Sorted',discarded:'Discarded',reverse:'Reverse order',
-        comparisons:'Value comparisons',probes:'Midpoint probes',shifts:'Right shifts',writeHere:'write here',remaining:'possible positions',sortedPart:'cards in the sorted part',
-        invalid:'Use integers from -999 to 999, separated by commas.',tooMany:'Use up to 16 numbers so every operation stays visible.',invalidTarget:'Enter an integer target from -999 to 999.',
-        unsorted:'Binary Search needs ascending order. Reorder your input, or choose “Sort & apply”.',
-        cost:'Algorithm cost',watchFor:'Keep in mind',best:'Best case',worst:'Worst case',average:'Average case',space:'Extra space',backToLab:'Try it in the lab',theoryCta:'Ready to put the idea in motion?',
-        binaryDescription:'Use sorted order to rule out the half that cannot contain your target.',insertionDescription:'Grow a sorted part, one card at a time. Make room, then insert.',
-        binaryNote:'Indices start at zero. Return the position of the value, or NOT_FOUND when it is absent.',
-        insertionNote:'The outlined slot marks a future write, not a memory deletion. Its faint value remains until it is overwritten.',
+        skip:"Skip to the lab",
+        explanation:"Explain this step",
+        operationCounts:"Operation counts",
+        explore:"Animation",
+        theory:"Theory",
+        newExample:"New example",
+        editInput:"Edit input",
+        arrayLabel:"Array",
+        targetLabel:"Search target",
+        inputHelp:"Up to 16 integers from -999 to 999, separated by commas. Leave blank to try an empty array.",
+        presetDefault:"Default",
+        duplicates:"Duplicates",
+        empty:"Empty array",
+        cancel:"Cancel",
+        sortApply:"Sort & apply",
+        apply:"Apply",
+        emptyArray:"An empty array",
+        execution:"Execution steps",
+        speed:"Speed",
+        play:"Play",
+        pause:"Pause",
+        replay:"Replay",
+        reset:"Reset",
+        previous:"Previous step",
+        next:"Next step",
+        copy:"Copy pseudocode",
+        copied:"Pseudocode copied",
+        copyFailed:"Select the code to copy it manually.",
+        notFound:"Not found",
+        reverse:"Reverse order",
+        comparisons:"Value comparisons",
+        probes:"Midpoint probes",
+        shifts:"Right shifts",
+        writeHere:"write here",
+        invalid:"Use integers from -999 to 999, separated by commas.",
+        tooMany:"Use up to 16 numbers so every operation stays visible.",
+        invalidTarget:"Enter an integer target from -999 to 999.",
+        unsorted:"Binary Search needs ascending order. Reorder your input, or choose “Sort & apply”.",
+        cost:"Algorithm cost",
+        watchFor:"Keep in mind",
+        best:"Best case",
+        worst:"Worst case",
+        average:"Average case",
+        space:"Extra space",
+        backToLab:"Back to animation",
       },
     };
     const episodeValues = [4,9,14,21,28,35,43,50,57,64,71,78,85,92,99];
@@ -52,11 +108,8 @@
     Object.values(lessons).sort((a,b)=>Number(a.number)-Number(b.number)).forEach(lesson=>{
       configs[lesson.id]=lesson;
       const button=document.createElement('button');button.className='algorithm-option';button.dataset.algorithm=lesson.id;button.setAttribute('aria-pressed','false');
-      const category=lesson.category==='sort'?'sortCategory':lesson.category==='graph'?'graphCategory':'stringCategory';
-      button.innerHTML=`<span class="nav-icon" aria-hidden="true">${lesson.category==='graph'?'⌘':lesson.category==='string'?'≋':'▤'}</span><span><b></b><small data-i18n="${category}"></small></span><span class="nav-arrow" aria-hidden="true">↗</span>`;
-      button.querySelector('b').textContent=lesson.name;document.querySelector('.algorithm-nav').append(button);
+      button.textContent=lesson.name;document.querySelector('.algorithm-nav').append(button);
     });
-    document.querySelector('.library-count').textContent=String(Object.keys(configs).length).padStart(2,'0');
     Object.entries(configs).forEach(([id,c])=>{const option=document.createElement('option');option.value=id;option.textContent=c.name;$('algorithm-select').append(option);});
     let lang = 'ar'; try { const stored=localStorage.getItem('algorithm-lab-language'); if(stored==='en'||stored==='ar')lang=stored; } catch {}
     let algorithm = configs[location.hash.slice(1)] ? location.hash.slice(1) : 'binary-search';
@@ -125,7 +178,7 @@
       if(!frames.length||view!=='explore')return;
       const stage=$('stage'),width=stage.clientWidth;if(!width)return;
       lastWidth=width;
-      if(lesson()){V.renderScene(stage,frame().scene||{},lang,algorithm);return;}
+      if(lesson()){V.renderScene(stage,frame().scene||{},lang,algorithm,frame().kind);return;}
       V.setActive(stage,false);
       const s=frame().state,n=s.numbers.length,binary=isBinary();
       const maxCols=Math.max(5,Math.floor((width-12)/(width>=420?57:77)));
@@ -162,21 +215,18 @@
         const lift=active&&!held?5:0;
         Object.assign(card.style,{width:`${cw}px`,height:`${ch}px`,transform:`translate(${p.x}px, ${p.y-lift}px)`,fontSize:`${String(inputs[algorithm].numbers[id]).length>=3?Math.max(15,cw*.31):Math.max(21,cw*.43)}px`});
       });
-      if(binary){
-        const remaining=s.left===null||s.right===null?n:Math.max(0,s.right-s.left+1);
-        $('range-note').innerHTML=s.done?(s.found!==null?rich(frame().title[lang]):t('notFound')):`<b>${remaining}</b> ${t('remaining')}`;
-      }else $('range-note').innerHTML=s.heldId!==null?(lang==='ar'?'الخانة المعلّمة هي مكان الإدخال':'The outlined slot is the insertion gap'):`<b>${s.sortedCount}</b> ${t('sortedPart')}`;
+
     }
     function renderState(){
       const f=frame(),s=f.state;
-      $('workbench').dataset.algorithm=algorithm;$('stage').dataset.step=index;$('stage').dataset.kind=f.kind;
+      $('workbench').dataset.algorithm=algorithm;$('stage').dataset.step=index;$('stage').dataset.kind=f.kind;$('stage').dataset.done=String(s.done);
       $('step-title').textContent=f.title[lang];$('step-explanation').innerHTML=rich(f.explanation[lang]);
       $('step-equation').textContent=f.equation;$('step-equation').hidden=!f.equation;
-      $('story-mark').textContent=s.done?(f.kind==='missing'?'∅':'✓'):'↳';
-      $('phase-badge').textContent=t(s.done?'complete':index===0?'ready':'running');
       const vars=lesson()?frame().variables.map(v=>[v.name,V.display(v.value),'']):isBinary()?[['left',s.left,'L'],['middle',s.middle,'M'],['right',s.right,'R']]:[['current',s.current,'C'],['value',s.value,''],['compareIndex',s.compareIndex,'i']];
       const previous=index?frames[index-1].state:null;
-      $('variables').innerHTML=vars.map(([name,value,marker])=>`<div class="variable ${previous&&(lesson()?V.display(frames[index-1].variables.find(v=>v.name===name)?.value)!==value:previous[name]!==value)?'changed':''}"><span class="variable-name">${marker?`<small class="pointer">${marker}</small>`:''}${escape(name)}</span><span class="variable-value ${value===null?'unset':''}" data-variable="${escape(name)}">${value===null?'—':escape(value)}</span></div>`).join('');
+      const visibleVars=vars.filter(([,value])=>value!==null&&value!==undefined&&value!=='—');
+      $('variables').hidden=visibleVars.length===0;
+      $('variables').innerHTML=visibleVars.map(([name,value,marker])=>`<div class="variable ${previous&&(lesson()?V.display(frames[index-1].variables.find(v=>v.name===name)?.value)!==value:previous[name]!==value)?'changed':''}"><span class="variable-name">${escape(name)}</span><span class="variable-value ${value===null?'unset':''}" data-variable="${escape(name)}">${value===null?'—':escape(value)}</span></div>`).join('');
       const metrics=lesson()?frame().metrics.map(m=>[m.value,V.text(m.label,lang)]):isBinary()?[[s.probes,'probes'],[s.comparisons,'comparisons']]:[[s.comparisons,'comparisons'],[s.shifts,'shifts']];
       $('metrics').innerHTML=metrics.map(([count,label])=>`<div class="metric"><strong>${escape(String(count).padStart(2,'0'))}</strong><span>${escape(lesson()?label:t(label))}</span></div>`).join('');
       $('code-lines').querySelectorAll('.code-line').forEach(row=>{
@@ -191,21 +241,14 @@
     function renderCopy(){
       document.documentElement.lang=lang==='ar'?'ar-EG':'en';document.documentElement.dir=lang==='ar'?'rtl':'ltr';
       document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n);});
-      $('language').innerHTML=`${lang==='ar'?'EN':'AR'} <span aria-hidden="true">↗</span>`;
+      $('language').textContent=lang==='ar'?'EN':'AR';
       $('language').setAttribute('aria-label',lang==='ar'?'Switch to English':'التغيير للعربية');
       ['reset','previous','next'].forEach(id=>{$(id).setAttribute('aria-label',t(id));$(id).title=t(id);});
       $('copy-code').setAttribute('aria-label',t('copy'));$('copy-code').title=t('copy');
       $('timeline').setAttribute('aria-label',t('execution'));$('speed').setAttribute('aria-label',t('speed'));
       document.querySelector('.visual-panel').classList.toggle('modular-panel',!!lesson());
       const c=configs[algorithm];document.title=`${c.name} · CS Concept Lab`;
-      $('lesson-id').textContent=`${c.number} / ALGORITHMS / ${c.label}`;
-      $('lesson-title').innerHTML=`${escape(c.name)}<span class="title-dot">.</span>`;
-      $('lesson-description').textContent=lesson()?V.text(c.description,lang):t(isBinary()?'binaryDescription':'insertionDescription');
-      $('complexity-badge').textContent=c.cost;$('complexity-badge').title=t('worst');
-      $('legend-last').textContent=lesson()?t(c.category==='graph'?'visited':c.category==='string'?'matched':'sorted'):t(isBinary()?'discarded':'sorted');
-      $('legend-last').previousElementSibling.className='legend-dot '+(isBinary()?'excluded':'completed');
-      $('code-note').innerHTML=rich(lesson()?V.text(c.note,lang):t(isBinary()?'binaryNote':'insertionNote'));
-      $('dataset-description').textContent=lesson()?V.text(c.summary(inputs[algorithm]),lang):lang==='ar'?`${inputs[algorithm].numbers.length} عنصر${isBinary()?' · بالترتيب':''}`:`${inputs[algorithm].numbers.length} elements${isBinary()?' · sorted ascending':''}`;
+      $('lesson-title').textContent=c.name;
       $('edge-preset').textContent=t(isBinary()?'notFound':'reverse');$('target-field').hidden=!isBinary();
       $('legacy-input-fields').hidden=!!lesson();$('legacy-presets').hidden=!!lesson();$('input-help').hidden=!!lesson();
       $('lesson-input-fields').hidden=!lesson();$('lesson-presets').hidden=!lesson();$('algorithm-select').value=algorithm;
@@ -216,7 +259,7 @@
       renderTheory();if(frames.length)renderState();
     }
     function setView(next){
-      pause();view=next;$('explore-panel').hidden=next!=='explore';$('theory-panel').hidden=next!=='theory';
+      pause();view=next;$('input-actions').hidden=next!=='explore';$('explore-panel').hidden=next!=='explore';$('theory-panel').hidden=next!=='theory';
       for(const name of ['explore','theory']){$(`${name}-tab`).setAttribute('aria-selected',String(name===next));$(`${name}-tab`).tabIndex=name===next?0:-1;}
       if(next==='explore')requestAnimationFrame(renderStage);
     }
@@ -277,7 +320,7 @@
         costs:[['best','O(n)'],['average','O(n²)'],['worst','O(n²)'],['space','O(1)']],
       };
       const diagram=binary?`<div class="theory-diagram" aria-label="The search interval becomes smaller"><div class="mini-row">${Array.from({length:15},(_,i)=>`<i class="mini-bar ${i>=8?'bright':''}"></i>`).join('')}</div><span class="mini-arrow">↓</span><div class="mini-row">${Array.from({length:7},(_,i)=>`<i class="mini-bar ${i<3?'bright':''}"></i>`).join('')}</div><span class="diagram-note">15 → 7 → 3 → 1</span></div>`:`<div class="theory-diagram" aria-label="Insert 5 between 3 and 7"><div class="mini-row"><span class="mini-cell">3</span><span class="mini-cell">7</span><span class="mini-cell bright">5</span></div><span class="mini-arrow">↓</span><div class="mini-row"><span class="mini-cell">3</span><span class="mini-cell bright">5</span><span class="mini-cell">7</span></div><span class="diagram-note">compare → shift → insert</span></div>`;
-      $('theory-panel').innerHTML=`<div class="theory-intro"><div><span class="eyebrow">${configs[algorithm].label}</span><h2>${content.title}</h2><p>${content.intro}</p></div>${diagram}</div><div class="theory-steps">${content.steps.map(([title,body],i)=>`<article class="theory-step"><span class="step-number">0${i+1}</span><h3>${title}</h3><p>${rich(body)}</p></article>`).join('')}</div><div class="theory-bottom"><article class="theory-card"><h3>${t('cost')}</h3>${content.costs.map(([label,cost])=>`<div class="complexity-row"><span>${t(label)}</span><code>${cost}</code></div>`).join('')}</article><article class="theory-card"><h3>${t('watchFor')}</h3><ul>${content.notes.map(note=>`<li>${rich(note)}</li>`).join('')}</ul></article></div><div class="theory-cta"><p>${rich(content.invariant)}</p><button class="primary-button" id="theory-play">${t('backToLab')} <span aria-hidden="true">↗</span></button></div>`;
+      $('theory-panel').innerHTML=`<div class="theory-intro"><div><h2>${content.title}</h2><p>${content.intro}</p></div>${diagram}</div><div class="theory-steps">${content.steps.map(([title,body],i)=>`<article class="theory-step"><span class="step-number">0${i+1}</span><h3>${title}</h3><p>${rich(body)}</p></article>`).join('')}</div><div class="theory-bottom"><article class="theory-card"><h3>${t('cost')}</h3>${content.costs.map(([label,cost])=>`<div class="complexity-row"><span>${t(label)}</span><code>${cost}</code></div>`).join('')}</article><article class="theory-card"><h3>${t('watchFor')}</h3><ul>${content.notes.map(note=>`<li>${rich(note)}</li>`).join('')}</ul></article></div><div class="theory-cta"><p>${rich(content.invariant)}</p><button class="primary-button" id="theory-play">${t('backToLab')}</button></div>`;
       $('theory-play').addEventListener('click',()=>{setView('explore');$('explore-tab').focus();});
     }
     document.querySelectorAll('.algorithm-option[data-algorithm]').forEach(button=>button.addEventListener('click',()=>selectAlgorithm(button.dataset.algorithm)));
@@ -300,10 +343,9 @@
       inputs[algorithm]={numbers,target:numbers[Math.floor(Math.random()*numbers.length)]};closeEditor();buildTrace();renderCopy();
     });
     $('explore-tab').addEventListener('click',()=>setView('explore'));$('theory-tab').addEventListener('click',()=>setView('theory'));
-    $('open-theory').addEventListener('click',()=>{setView('theory');$('theory-tab').focus();});
     document.querySelector('.view-tabs').addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?'explore':event.key==='End'?'theory':view==='explore'?'theory':'explore';setView(next);$(`${next}-tab`).focus();}});
     document.addEventListener('keydown',event=>{
-      if(view!=='explore'||event.ctrlKey||event.metaKey||event.altKey||event.target.closest('input,select,textarea,button,a,[contenteditable=true]'))return;
+      if(view!=='explore'||event.ctrlKey||event.metaKey||event.altKey||event.target.closest('input,select,textarea,button,a,summary,[contenteditable=true]'))return;
       if(event.code==='Space'){event.preventDefault();togglePlay();}
       if(event.key==='ArrowRight'){event.preventDefault();pause();setIndex(index+1);}
       if(event.key==='ArrowLeft'){event.preventDefault();pause();setIndex(index-1);}

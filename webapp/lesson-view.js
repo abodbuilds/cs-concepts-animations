@@ -2,6 +2,13 @@
   'use strict';
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const text=(value,lang)=>value&&typeof value==='object'?(value[lang]??value.en??''):String(value??'');
+  const shortLabel=(value,lang)=>text(value,lang).split(' · ')[0];
+  const rowLabels={
+    'bfs-current':{en:'Current',ar:'الحالي'},
+    'bfs-distance':{en:'Distances',ar:'المسافات'},
+    'distances':{en:'Distances',ar:'المسافات'},
+    'predecessors':{en:'Predecessors',ar:'السابق'},
+  };
   const tone=value=>['active','sorted','muted','pivot','found'].includes(value)?value:'default';
   const display=value=>value===null||value===undefined?'—':Array.isArray(value)?value.join(', '):typeof value==='object'?JSON.stringify(value):String(value);
   let active=false,sceneRoot=null,lastLesson=null;
@@ -12,7 +19,7 @@
     [...stage.children].forEach(child=>{if(child!==sceneRoot)child.classList.toggle('legacy-scene-hidden',next);});
     if(next)stage.style.height='auto';
   }
-  function renderScene(stage,scene,lang,lessonId){
+  function renderScene(stage,scene,lang,lessonId,kind){
     setActive(stage,true);sceneRoot.classList.toggle('graph-scene',!!scene.graph);sceneRoot.style.setProperty('--aligned-cell-count',Math.max(0,...(scene.rows||[]).filter(row=>row.layout==='aligned').map(row=>row.cells.length)));
     if(lastLesson!==lessonId){sceneRoot.replaceChildren();rowCache.clear();cellCache.clear();lastLesson=lessonId;}
     const oldPositions=new Map();
@@ -34,13 +41,16 @@
         const wx=loop?a.x+41:reciprocal?(a.x+b.x)/4+qx/2:(a.x+b.x)/2,wy=loop?a.y-30:reciprocal?(a.y+b.y)/4+qy/2:(a.y+b.y)/2;
         const w=edge.weight===undefined?'':`<g class="edge-weight"><rect x="${wx-15}" y="${wy-12}" width="30" height="24" rx="7"/><text x="${wx}" y="${wy+4}">${escape(edge.weight)}</text></g>`;
         return `<g class="graph-edge tone-${tone(edge.tone)}"><path d="${path}"${edge.directed?' marker-end="url(#edge-arrow)"':''}/>${w}</g>`;
-      }).join('')}${nodes.map(node=>{const p=positions.get(String(node.id));return `<g class="graph-node tone-${tone(node.tone)}" transform="translate(${p.x},${p.y})" data-node="${escape(node.id)}"><circle r="24"/><text y="5" class="node-label">${escape(node.label??node.id)}</text>${node.detail!==undefined?`<text y="44" class="node-detail">${escape(text(node.detail,lang))}</text>`:''}</g>`;}).join('')}</svg>`;
+      }).join('')}${nodes.map(node=>{const p=positions.get(String(node.id));return `<g class="graph-node tone-${tone(node.tone)}" transform="translate(${p.x},${p.y})" data-node="${escape(node.id)}"><circle r="24"/><text y="5" class="node-label">${escape(node.label??node.id)}</text>${node.detail!==undefined?`<title>${escape(text(node.detail,lang))}</title>`:''}</g>`;}).join('')}</svg>`;
     }
     for(const row of scene.rows||[]){
+      const meaningful=row.cells?.some(cell=>cell.value!==null&&cell.value!==undefined&&cell.value!=='—');
+      const emptyQueueOrStack=['bfs-queue','dfs-stack'].includes(row.id)&&kind!=='ready'&&!row.cells?.length;
+      if(scene.graph&&!meaningful&&!emptyQueueOrStack)continue;
       const rowKey='row:'+row.id,el=part(rowKey,'scene-row'+(row.layout==='aligned'?' aligned-row':''));
       let heading=el.querySelector('.scene-row-label'),container=el.querySelector('.scene-row-cells');
       if(!heading){heading=document.createElement('div');heading.className='scene-row-label';container=document.createElement('div');container.className='scene-row-cells';container.setAttribute('role','list');el.append(heading,container);el.addEventListener('scroll',()=>{if(el.classList.contains('aligned-row'))sceneRoot.querySelectorAll('.aligned-row').forEach(row=>{if(row!==el&&Math.abs(row.scrollLeft-el.scrollLeft)>1)row.scrollLeft=el.scrollLeft;});},{passive:true});}
-      heading.textContent=text(row.label,lang);heading.dir=lang==='ar'?'rtl':'ltr';
+      heading.textContent=shortLabel(rowLabels[row.id]||row.label,lang);heading.dir=lang==='ar'?'rtl':'ltr';
       const cells=row.cells||[];el.classList.toggle('row-empty',cells.length===0);
       for(const cell of cells){
         const key=rowKey+':'+cell.id;let card=cellCache.get(key);
@@ -53,8 +63,9 @@
       }
       let empty=el.querySelector('.scene-empty');if(!empty){empty=document.createElement('div');empty.className='scene-empty';el.append(empty);}empty.hidden=cells.length>0;empty.textContent=lang==='ar'?'فاضي · [ ]':'Empty · [ ]';
     }
-    if(scene.collections?.length){const el=part('collections','scene-collections');el.innerHTML=scene.collections.map(collection=>`<div class="scene-collection"><span dir="${lang==='ar'?'rtl':'ltr'}">${escape(text(collection.label,lang))}</span><div class="collection-values">${collection.values?.length?collection.values.map(v=>`<span>${escape(display(v))}</span>`).join(''):'<i>∅</i>'}</div></div>`).join('');}
-    if(scene.note){const el=part('note','scene-note');el.dir=lang==='ar'?'rtl':'ltr';el.textContent=text(scene.note,lang);}
+    const collections=(scene.collections||[]).filter(collection=>collection.values?.length);
+    if(collections.length){const el=part('collections','scene-collections');el.innerHTML=collections.map(collection=>`<div class="scene-collection"><span dir="${lang==='ar'?'rtl':'ltr'}">${escape(shortLabel(collection.label,lang))}</span><div class="collection-values">${collection.values?.length?collection.values.map(v=>`<span>${escape(display(v))}</span>`).join(''):'<i>∅</i>'}</div></div>`).join('');}
+
     for(const [key,el] of rowCache)if(!seenRows.has(key)){el.remove();rowCache.delete(key);}
     for(const [key,el] of cellCache)if(!seenCells.has(key)){el.remove();cellCache.delete(key);}
     const reduced=root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -63,7 +74,7 @@
   }
   function renderTheory(panel,lesson,lang,onExplore){
     const c=lesson.theory,tr=v=>escape(text(v,lang));
-    panel.innerHTML=`<div class="theory-intro extension-theory"><div><span class="eyebrow">${escape(lesson.label)}</span><h2>${tr(c.title)}</h2><p>${tr(c.intro)}</p></div><div class="theory-invariant"><span>${lang==='ar'?'الفكرة اللي بنحافظ عليها':'THE INVARIANT'}</span><p>${tr(c.invariant)}</p></div></div><div class="theory-steps">${c.steps.map((step,i)=>`<article class="theory-step"><span class="step-number">${String(i+1).padStart(2,'0')}</span><h3>${tr(step.title)}</h3><p>${tr(step.body)}</p></article>`).join('')}</div><div class="theory-bottom"><article class="theory-card"><h3>${lang==='ar'?'تكلفة الخوارزمية':'Algorithm cost'}</h3>${c.costs.map(cost=>`<div class="complexity-row"><span>${tr(cost.label)}</span><code>${escape(cost.value)}</code></div>`).join('')}</article><article class="theory-card"><h3>${lang==='ar'?'خلي بالك':'Keep in mind'}</h3><ul>${c.notes.map(note=>`<li>${tr(note)}</li>`).join('')}</ul></article></div><div class="theory-cta"><p>${lang==='ar'?'غيّر المدخلات، وامشي مع كل خطوة.':'Change the input, then follow every operation.'}</p><button class="primary-button" id="theory-play">${lang==='ar'?'جرّب الفكرة':'Back to the lab'} ↗</button></div>`;
+    panel.innerHTML=`<div class="theory-intro extension-theory"><div><h2>${tr(c.title)}</h2><p>${tr(c.intro)}</p></div><div class="theory-invariant"><span>${lang==='ar'?'الفكرة اللي بنحافظ عليها':'THE INVARIANT'}</span><p>${tr(c.invariant)}</p></div></div><div class="theory-steps">${c.steps.map((step,i)=>`<article class="theory-step"><span class="step-number">${String(i+1).padStart(2,'0')}</span><h3>${tr(step.title)}</h3><p>${tr(step.body)}</p></article>`).join('')}</div><div class="theory-bottom"><article class="theory-card"><h3>${lang==='ar'?'تكلفة الخوارزمية':'Algorithm cost'}</h3>${c.costs.map(cost=>`<div class="complexity-row"><span>${tr(cost.label)}</span><code>${escape(cost.value)}</code></div>`).join('')}</article><article class="theory-card"><h3>${lang==='ar'?'خلي بالك':'Keep in mind'}</h3><ul>${c.notes.map(note=>`<li>${tr(note)}</li>`).join('')}</ul></article></div><div class="theory-cta"><button class="primary-button" id="theory-play">${lang==='ar'?'ارجع للتجربة':'Back to animation'}</button></div>`;
     panel.querySelector('#theory-play').addEventListener('click',onExplore);
   }
   root.LessonView={setActive,renderScene,renderTheory,escape,text,display};

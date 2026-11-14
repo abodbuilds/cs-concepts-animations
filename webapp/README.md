@@ -17,7 +17,7 @@ npm run test:web
 ## Explore a lesson
 
 - Use the bottom playback bar to play or pause, change speed, step forward or backward, reset, or seek to any execution step. It stays within reach while you scroll.
-- Follow the highlighted pseudocode line, variables, comparisons, and card movements together.
+- Follow the highlighted pseudocode line, variables, and card movements together. Open “Explain this step” for the reasoning or “Operation counts” for comparisons and other metrics.
 - Edit up to 16 integers for searching and sorting; try reverse order, duplicate identities, and empty inputs.
 - Explore BFS and DFS on undirected graphs, or Dijkstra on directed nonnegative weighted graphs. Graphs support up to 8 nodes and 20 edges. Each editor explains its syntax.
 - Slide a pattern through text with naive first-match search; indices count Unicode code points. Try overlapping candidates, missing matches, and empty patterns.
@@ -42,3 +42,7 @@ The complexity figures describe the algorithms themselves. The visualizer additi
 The project uses Cloudflare Workers static assets, configured in `wrangler.jsonc`. From an authenticated Cloudflare account, run `npm run deploy:web` to test, build, and deploy the static output from the current checkout. Only `webapp/dist` is uploaded; server-side credentials are not needed by the published app.
 
 GitHub Actions runs the algorithm and contract tests and builds the app on pushes to `main` and pull requests. Cloudflare publication is explicit through the deploy command; no GitHub deployment secrets are required.
+
+## Interface principles
+
+Keep visible content limited to navigation, controls, the current operation, and meaningful algorithm state. Avoid slogans, repeated headings, category subtitles, decorative badges, and duplicated navigation. Show secondary explanations and counters on demand. Keep input labels, validation messages, and accessible control names.
