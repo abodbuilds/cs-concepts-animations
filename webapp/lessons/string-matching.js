@@ -224,7 +224,7 @@
   }
 
   const lesson = {
-    id: 'string-matching', name: 'String Matching', category: 'string', number: '10',
+    id: 'string-matching', name: 'String Matching', theme: 'algorithms', category: 'string', number: '10',
     label: 'NAIVE STRING MATCHING', cost: 'O((n − m + 1)m)',
     description: message('Find the first exact occurrence by sliding the pattern one code point at a time.', 'نلاقي أول تطابق بالظبط، ونحرّك pattern كل مرة code point واحد.'),
     note: message('Zero-based code-point indices. Empty pattern → 0; no match → -1. Case and whitespace matter.', 'الأماكن بتبدأ من صفر وبنعدّ code points. pattern فاضي → 0؛ مفيش تطابق → -1. حالة الحروف والمسافات بتفرق.'),

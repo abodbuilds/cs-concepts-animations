@@ -315,7 +315,7 @@
 
   const defaults = { nodes: 'A B C D E F', graph: 'A B 4\nA C 1\nC B 2\nC D 5\nB D 1\nB E 7\nD E 3\nE B 1', start: 'A', target: 'E' };
   const lesson = {
-    id: 'shortest-paths', name: 'Shortest Paths · Dijkstra', category: 'graph', number: '09',
+    id: 'shortest-paths', name: 'Shortest Paths · Dijkstra', theme: 'algorithms', category: 'graph', number: '09',
     label: 'DIJKSTRA · LINEAR MINIMUM', cost: 'O(V² + E)',
     description: message('Find shortest paths from one start node with nonnegative edge weights. Scan for the cheapest frontier node, then relax every outgoing edge.', 'نلاقي أقصر المسارات من start واحد، بأوزان مش سالبة. ندوّر على أقل مسافة في الـ frontier، وبعدين نجرب نحسّن المسافات بكل edge خارج منه.'),
     note: message('Directed graph; alphabetical scans and neighbors. Equal costs keep the first route. All source distances are computed, even with a target.', 'الجراف موجّه؛ المسح والجيران بترتيب الحروف. التكلفة المتساوية بتسيب أول طريق زي ما هو. بنحسب كل المسافات من start حتى لو فيه target.'),

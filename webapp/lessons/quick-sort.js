@@ -395,7 +395,7 @@
   }
 
   const lesson = {
-    id: 'quick-sort', name: 'Quicksort', category: 'sort', number: '06',
+    id: 'quick-sort', name: 'Quicksort', theme: 'algorithms', category: 'sort', number: '06',
     label: 'QUICKSORT', cost: 'O(n²)',
     description: message('Use a last-element pivot to partition a range, fix its position, and recursively sort both sides.',
       'نختار آخر كارت كـ pivot، نقسّم الجزء حواليه ونثبّته، وبعدين نرتّب كل ناحية بـ recursion.'),

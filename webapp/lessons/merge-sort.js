@@ -372,7 +372,7 @@
   }
 
   const lesson = {
-    id: 'merge-sort', name: 'Merge Sort', category: 'sort', number: '05',
+    id: 'merge-sort', name: 'Merge Sort', theme: 'algorithms', category: 'sort', number: '05',
     label: 'MERGE SORT', cost: 'O(n log n)',
     description: message('Split into smaller ranges, then merge sorted halves with a reusable buffer.', 'نقسّم لأجزاء أصغر، وبعدين ندمج النصّين المترتّبين باستخدام buffer واحد.'),
     note: message('Stable: take left on equality. Time O(n log n), auxiliary storage O(n), plus O(log n) call frames.', 'ثابت: عند التساوي ناخد الشمال. الوقت O(n log n)، والذاكرة المساعدة O(n)، ومعاها O(log n) نداءات.'),

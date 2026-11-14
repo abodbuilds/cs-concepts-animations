@@ -108,15 +108,23 @@
     };
     const episodeValues = [4,9,14,21,28,35,43,50,57,64,71,78,85,92,99];
     const configs = {
-      'binary-search':{number:'01',name:'Binary Search',label:'BINARY SEARCH',cost:'O(log n)',values:episodeValues,target:71,keySteps:['ready','middle','move-left','move-right','found','missing']},
-      'insertion-sort':{number:'02',name:'Insertion Sort',label:'INSERT SORT',cost:'O(n²)',values:[7,3,5,2,6],target:71,keySteps:['ready','save','compare','shift','insert','done']},
+      'binary-search':{theme:'algorithms',number:'01',name:'Binary Search',label:'BINARY SEARCH',cost:'O(log n)',values:episodeValues,target:71,keySteps:['ready','middle','move-left','move-right','found','missing']},
+      'insertion-sort':{theme:'algorithms',number:'02',name:'Insertion Sort',label:'INSERT SORT',cost:'O(n²)',values:[7,3,5,2,6],target:71,keySteps:['ready','save','compare','shift','insert','done']},
     };
-    Object.values(lessons).sort((a,b)=>Number(a.number)-Number(b.number)).forEach(lesson=>{
-      configs[lesson.id]=lesson;
-      const button=document.createElement('button');button.className='algorithm-option';button.dataset.algorithm=lesson.id;button.setAttribute('aria-pressed','false');
-      button.textContent=lesson.name;document.querySelector('.algorithm-nav').append(button);
-    });
-    Object.entries(configs).forEach(([id,c])=>{const option=document.createElement('option');option.value=id;option.textContent=c.name;$('algorithm-select').append(option);});
+    // Themes group the library; a lesson joins one through its `theme` id. Add a theme here before its first lesson.
+    const themes=[{id:'algorithms',name:{en:'Algorithms',ar:'الخوارزميات'}}];
+    Object.values(lessons).sort((a,b)=>Number(a.number)-Number(b.number)).forEach(lesson=>{configs[lesson.id]=lesson;});
+    for(const theme of themes){
+      const ids=Object.keys(configs).filter(id=>(configs[id].theme||'algorithms')===theme.id);if(!ids.length)continue;
+      const group=document.createElement('section'),title=document.createElement('h2'),list=document.createElement('div'),optgroup=document.createElement('optgroup');
+      group.className='nav-group';group.dataset.theme=theme.id;title.className='nav-group-title';title.dataset.theme=theme.id;list.className='nav-group-items';
+      group.setAttribute('aria-labelledby',title.id=`theme-${theme.id}`);optgroup.dataset.theme=theme.id;
+      for(const id of ids){
+        const button=document.createElement('button');button.className='algorithm-option';button.dataset.algorithm=id;button.setAttribute('aria-pressed','false');button.textContent=configs[id].name;list.append(button);
+        const option=document.createElement('option');option.value=id;option.textContent=configs[id].name;optgroup.append(option);
+      }
+      group.append(title,list);document.querySelector('.algorithm-nav').append(group);$('algorithm-select').append(optgroup);
+    }
     let lang = 'ar'; try { const stored=localStorage.getItem('algorithm-lab-language'); if(stored==='en'||stored==='ar')lang=stored; } catch {}
     let algorithm = configs[location.hash.slice(1)] ? location.hash.slice(1) : 'binary-search';
     let inputs = Object.fromEntries(Object.entries(configs).map(([id,c])=>[id,lessons[id]?c.parse({...c.defaults}):{numbers:[...c.values],target:c.target}]));
@@ -262,6 +270,7 @@
       document.documentElement.lang=lang==='ar'?'ar-EG':'en';document.documentElement.dir=lang==='ar'?'rtl':'ltr';
       document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n);});
       $('language').textContent=lang==='ar'?'EN':'AR';
+      for(const theme of themes){const name=theme.name[lang];document.querySelectorAll(`.nav-group-title[data-theme="${theme.id}"]`).forEach(el=>{el.textContent=name;el.lang=lang;});document.querySelectorAll(`optgroup[data-theme="${theme.id}"]`).forEach(el=>{el.label=name;});}
       $('language').setAttribute('aria-label',lang==='ar'?'Switch to English':'التغيير للعربية');
       ['reset','previous','next'].forEach(id=>{$(id).setAttribute('aria-label',t(id));$(id).title=t(id);});
       $('copy-code').setAttribute('aria-label',t('copy'));$('copy-code').title=t('copy');
@@ -367,7 +376,7 @@
       inputs[algorithm]={numbers,target:numbers[Math.floor(Math.random()*numbers.length)]};closeEditor();buildTrace();renderCopy();
     });
     $('explore-tab').addEventListener('click',()=>setView('explore'));$('theory-tab').addEventListener('click',()=>setView('theory'));
-    document.querySelector('.view-tabs').addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?'explore':event.key==='End'?'theory':view==='explore'?'theory':'explore';setView(next);$(`${next}-tab`).focus();}});
+    document.querySelector('.view-tabs').addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?'theory':event.key==='End'?'explore':view==='explore'?'theory':'explore';setView(next);$(`${next}-tab`).focus();}});
     document.addEventListener('keydown',event=>{
       if(view!=='explore'||event.ctrlKey||event.metaKey||event.altKey||event.target.closest('input,select,textarea,button,a,summary,[contenteditable=true]'))return;
       if(event.code==='Space'){event.preventDefault();togglePlay();}

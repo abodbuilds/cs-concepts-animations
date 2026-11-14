@@ -17,6 +17,7 @@ The host owns navigation, inputs, playback, seeking, pseudocode, localization, l
 - `build(parsedInput)`: returns a finite, deterministic array of immutable-by-snapshot frames (independent deep copies; no input mutation). First frame is ready, last has `state.done === true` and a meaningful `state.result`.
 - `summary(parsedInput)`: bilingual short dataset summary.
 - `theory`: `{title,idea?,intro,invariant,steps:[{title,body}],notes:[bilingual],costs:[{label:bilingual,value:string}]}`; all title/body text bilingual. `idea` is one or two plain sentences a beginner can repeat back; it leads the theory page. Describe the algorithm, not this app's trace storage. Include prerequisites, complexity assumptions, correctness invariant, and honest tradeoffs.
+- `theme` (optional, default `algorithms`): the library group the lesson appears under. Theme ids and their bilingual names live in `app.js`; add a theme there before its first lesson.
 - `keySteps` (optional): frame kinds that carry the idea (a comparison, a move, a decision). The default "Key steps" view plays the first frame, the last frame, and these; "Every line" plays the full trace. Without it every frame is a key step.
 - `view` (optional): presentation hints, so frames can stay complete while the screen stays quiet.
   - `hideRows: [rowId]`, `hideCollections: true`: state the picture already shows.

@@ -325,7 +325,7 @@
 
   const defaults = { graph: 'A-B, A-C, B-D, C-D, D-E, C-F', start: 'A' };
   const lesson = {
-    id: 'bfs', name: 'Breadth-First Search', category: 'graph', number: '07',
+    id: 'bfs', name: 'Breadth-First Search', theme: 'algorithms', category: 'graph', number: '07',
     label: 'BREADTH-FIRST SEARCH', cost: 'O(V + E)',
     description: message('A FIFO queue explores the reachable graph one level at a time, finding shortest paths by edge count.',
       'طابور FIFO بيكتشف الجزء المتصل بالبداية مستوى ورا مستوى، وبيجيب أقصر مسافات بعدد الوصلات.'),

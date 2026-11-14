@@ -1,6 +1,8 @@
 {
   "name": "cs-concepts-animations",
   "compatibility_date": "2026-11-01",
+  "routes": [{ "pattern": "cs.abod.dev", "custom_domain": true }],
+  "workers_dev": true,
   "assets": {
     "directory": "./webapp/dist"
   }

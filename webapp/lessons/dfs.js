@@ -295,7 +295,7 @@
 
   const defaults = { graph: 'A-B, A-C, B-D, B-E, C-F, E-G, F-G, H', start: 'A' };
   const lesson = {
-    id: 'dfs', name: 'Depth-First Search', category: 'graph', number: '08',
+    id: 'dfs', name: 'Depth-First Search', theme: 'algorithms', category: 'graph', number: '08',
     label: 'DEPTH-FIRST SEARCH', cost: 'O(V + E)',
     description: message('Go deep along one branch, then backtrack. Watch recursive calls build the discovery order.', 'ننزل في فرع لحد آخره وبعدين نرجع. شوف الـ recursive calls وهي بتبني ترتيب الاكتشاف.'),
     note: message('Undirected, unweighted graph. Neighbors run A to H. Only the start component is visited; the result is discovery order.', 'Graph من غير اتجاه أو أوزان. الجيران من A لحد H. بنزور بس الجزء المتصل بـ start، والنتيجة ترتيب الاكتشاف.'),
