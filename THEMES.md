@@ -34,4 +34,4 @@ Keep individual sorting algorithms in separate episodes. Insertion sort introduc
 
 ## Interactive lessons
 
-[CS Concept Lab](webapp/dist/index.html) contains Binary Search, Insertion Sort, Selection Sort, Bubble Sort, Merge Sort, Quicksort, BFS, DFS, Dijkstra shortest paths, and naive string matching. Each lesson includes editable inputs, theory, line-by-line pseudocode, animated execution, and Arabic/English explanations. Open the standalone HTML file offline, or run `npm run web` from the project root.
+[CS Concept Lab](webapp/dist/index.html) contains Binary Search, Insertion Sort, Selection Sort, Bubble Sort, Merge Sort, Quicksort, BFS, DFS, Dijkstra shortest paths, and naive string matching under Algorithms, and Arrays, Linked List, Stack, Queue, Hash Table, Binary Search Tree, Binary Heap, and Graph under Data Structures. Each lesson includes editable inputs, theory, line-by-line pseudocode, animated execution, and Arabic/English explanations. Open the standalone HTML file offline, or run `npm run web` from the project root.
