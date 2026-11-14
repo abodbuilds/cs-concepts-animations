@@ -54,3 +54,7 @@ html[dir=rtl] .sidebar-note,html[dir=rtl] .sidebar-heading,html[dir=rtl] main,ht
 @media(max-width:760px){.step-code{display:block}.playback{grid-template-columns:minmax(0,1fr) auto}.detail-select{grid-column:2;grid-row:2}.scrubber{grid-column:1;grid-row:2}.graph-scene .lesson-graph{max-width:350px}.graph-scene .scene-row,.graph-scene .scene-row.row-empty{grid-template-columns:78px minmax(0,1fr);gap:9px;padding-inline:4px}}
 .theory-idea{margin:0 0 12px;color:var(--foreground);font-size:17px;line-height:1.75;font-weight:600}
 .nav-group+.nav-group{margin-top:22px}.nav-group-title{margin:0 0 8px;padding:0 10px;font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);text-align:left}.nav-group-title:lang(ar){font-size:11px;letter-spacing:0}.nav-group-items{display:grid;gap:4px}
+/* Arabic mirrors the workspace: the library sits on the right, its divider and selection mark on the inner edge. */
+html[dir=rtl] .sidebar{direction:rtl;border-right:0;border-left:1px solid var(--border);padding-right:0;padding-left:24px}html[dir=rtl] .algorithm-option,html[dir=rtl] .nav-group-title{text-align:right}html[dir=rtl] .algorithm-option.selected:before{left:auto;right:-1px}
+@media(max-width:1250px){html[dir=rtl] .sidebar{padding-left:16px}}
+@media(max-width:1050px){html[dir=rtl] .sidebar{border:0;padding-left:0}}

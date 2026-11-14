@@ -112,7 +112,7 @@
       'insertion-sort':{theme:'algorithms',number:'02',name:'Insertion Sort',label:'INSERT SORT',cost:'O(n²)',values:[7,3,5,2,6],target:71,keySteps:['ready','save','compare','shift','insert','done']},
     };
     // Themes group the library; a lesson joins one through its `theme` id. Add a theme here before its first lesson.
-    const themes=[{id:'algorithms',name:{en:'Algorithms',ar:'الخوارزميات'}},{id:'data-structures',name:{en:'Data Structures',ar:'الـ Data Structures'}}];
+    const themes=[{id:'algorithms',name:{en:'Algorithms',ar:'الخوارزميات'}},{id:'data-structures',name:{en:'Data Structures',ar:'Data Structures'}}];
     Object.values(lessons).sort((a,b)=>Number(a.number)-Number(b.number)).forEach(lesson=>{configs[lesson.id]=lesson;});
     for(const theme of themes){
       const ids=Object.keys(configs).filter(id=>(configs[id].theme||'algorithms')===theme.id);if(!ids.length)continue;
