@@ -9,7 +9,8 @@
     "build": "node production/finalize-voice.mjs && node production/prepare-timeline.mjs && node production/render.mjs",
     "web": "node webapp/serve.mjs",
     "build:web": "node webapp/build.mjs",
-    "test:web": "node --test webapp/tests/*.test.cjs"
+    "test:web": "node --test webapp/tests/*.test.cjs",
+    "deploy:web": "npm run test:web && npm run build:web && npx --yes wrangler@4.158.0 deploy --config wrangler.jsonc"
   },
   "dependencies": {
     "@elevenlabs/elevenlabs-js": "2.77.0",

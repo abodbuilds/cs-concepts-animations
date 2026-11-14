@@ -1,6 +1,7 @@
 // Injected into the built page for browser QA only; excluded from the app build.
 (async function () {
   if(document.readyState==='loading')await new Promise(resolve=>document.addEventListener('DOMContentLoaded',resolve,{once:true}));
+  if(window.__appReady)await window.__appReady;
   if(window.__fontReady)await window.__fontReady;
   await document.fonts.ready;
   const $=id=>document.getElementById(id),results=[];

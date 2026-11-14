@@ -13,7 +13,7 @@
     if(next)stage.style.height='auto';
   }
   function renderScene(stage,scene,lang,lessonId){
-    setActive(stage,true);
+    setActive(stage,true);sceneRoot.classList.toggle('graph-scene',!!scene.graph);sceneRoot.style.setProperty('--aligned-cell-count',Math.max(0,...(scene.rows||[]).filter(row=>row.layout==='aligned').map(row=>row.cells.length)));
     if(lastLesson!==lessonId){sceneRoot.replaceChildren();rowCache.clear();cellCache.clear();lastLesson=lessonId;}
     const oldPositions=new Map();
     cellCache.forEach((el,key)=>{if(el.isConnected)oldPositions.set(key,el.getBoundingClientRect());});
@@ -25,26 +25,30 @@
       nodes.forEach((node,i)=>{const angle=-Math.PI/2+i*2*Math.PI/Math.max(1,n);positions.set(String(node.id),{x:n===1?centerX:centerX+radius*Math.cos(angle),y:n===1?centerY:centerY+radius*Math.sin(angle)});});
       const graphPart=part('graph','lesson-graph');
       if(!nodes.length)graphPart.innerHTML=`<div class="scene-empty">${lang==='ar'?'الجراف فاضي':'An empty graph'}</div>`;
-      else graphPart.innerHTML=`<svg viewBox="0 0 440 370" role="img" aria-label="${lang==='ar'?'حالة الجراف الحالية':'Current graph state'}"><defs><marker id="edge-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="currentColor" stroke="none"/></marker></defs>${edges.map(edge=>{
+      else graphPart.innerHTML=`<svg viewBox="0 0 440 370" role="img" aria-label="${lang==='ar'?'حالة الجراف الحالية':'Current graph state'}"><defs><marker id="edge-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="context-stroke" stroke="none"/></marker></defs>${edges.map(edge=>{
         const a=positions.get(String(edge.from)),b=positions.get(String(edge.to));if(!a||!b)return '';
         const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1,sx=a.x+dx/len*26,sy=a.y+dy/len*26,ex=b.x-dx/len*29,ey=b.y-dy/len*29;
-        const w=edge.weight===undefined?'':`<g class="edge-weight"><rect x="${(a.x+b.x)/2-15}" y="${(a.y+b.y)/2-12}" width="30" height="24" rx="7"/><text x="${(a.x+b.x)/2}" y="${(a.y+b.y)/2+4}">${escape(edge.weight)}</text></g>`;
-        return `<g class="graph-edge tone-${tone(edge.tone)}"><path d="M${sx} ${sy}L${ex} ${ey}"${edge.directed?' marker-end="url(#edge-arrow)"':''}/>${w}</g>`;
+        const loop=String(edge.from)===String(edge.to),reciprocal=edge.directed&&edges.some(other=>other!==edge&&other.from===edge.to&&other.to===edge.from);
+        const qx=(a.x+b.x)/2-dy/len*36,qy=(a.y+b.y)/2+dx/len*36;
+        const path=loop?`M${a.x-18} ${a.y-16}C${a.x-52} ${a.y-53} ${a.x+52} ${a.y-53} ${a.x+18} ${a.y-16}`:reciprocal?`M${sx} ${sy}Q${qx} ${qy} ${ex} ${ey}`:`M${sx} ${sy}L${ex} ${ey}`;
+        const wx=loop?a.x+41:reciprocal?(a.x+b.x)/4+qx/2:(a.x+b.x)/2,wy=loop?a.y-30:reciprocal?(a.y+b.y)/4+qy/2:(a.y+b.y)/2;
+        const w=edge.weight===undefined?'':`<g class="edge-weight"><rect x="${wx-15}" y="${wy-12}" width="30" height="24" rx="7"/><text x="${wx}" y="${wy+4}">${escape(edge.weight)}</text></g>`;
+        return `<g class="graph-edge tone-${tone(edge.tone)}"><path d="${path}"${edge.directed?' marker-end="url(#edge-arrow)"':''}/>${w}</g>`;
       }).join('')}${nodes.map(node=>{const p=positions.get(String(node.id));return `<g class="graph-node tone-${tone(node.tone)}" transform="translate(${p.x},${p.y})" data-node="${escape(node.id)}"><circle r="24"/><text y="5" class="node-label">${escape(node.label??node.id)}</text>${node.detail!==undefined?`<text y="44" class="node-detail">${escape(text(node.detail,lang))}</text>`:''}</g>`;}).join('')}</svg>`;
     }
     for(const row of scene.rows||[]){
       const rowKey='row:'+row.id,el=part(rowKey,'scene-row'+(row.layout==='aligned'?' aligned-row':''));
       let heading=el.querySelector('.scene-row-label'),container=el.querySelector('.scene-row-cells');
-      if(!heading){heading=document.createElement('div');heading.className='scene-row-label';container=document.createElement('div');container.className='scene-row-cells';container.setAttribute('role','list');el.append(heading,container);}
+      if(!heading){heading=document.createElement('div');heading.className='scene-row-label';container=document.createElement('div');container.className='scene-row-cells';container.setAttribute('role','list');el.append(heading,container);el.addEventListener('scroll',()=>{if(el.classList.contains('aligned-row'))sceneRoot.querySelectorAll('.aligned-row').forEach(row=>{if(row!==el&&Math.abs(row.scrollLeft-el.scrollLeft)>1)row.scrollLeft=el.scrollLeft;});},{passive:true});}
       heading.textContent=text(row.label,lang);heading.dir=lang==='ar'?'rtl':'ltr';
       const cells=row.cells||[];el.classList.toggle('row-empty',cells.length===0);
       for(const cell of cells){
         const key=rowKey+':'+cell.id;let card=cellCache.get(key);
-        if(!card){card=document.createElement('div');cellCache.set(key,card);card.innerHTML='<span class="scene-cell-value"></span><span class="scene-cell-index"></span><span class="scene-cell-marker"></span>';card.setAttribute('role','listitem');card.dataset.cell=cell.id;}
+        if(!card){card=document.createElement('div');cellCache.set(key,card);card.innerHTML='<span class="scene-cell-value"></span><small class="scene-cell-identity"></small><span class="scene-cell-index"></span><span class="scene-cell-marker"></span>';card.setAttribute('role','listitem');card.dataset.cell=cell.id;}
         seenCells.add(key);container.append(card);card.className='scene-cell tone-'+tone(cell.tone);
-        card.querySelector('.scene-cell-value').textContent=display(cell.value);
+        card.querySelector('.scene-cell-value').textContent=row.layout==='aligned'?({' ':'␠','\n':'↵','\t':'⇥'}[cell.value]??display(cell.value)):display(cell.value);card.title=String(cell.id);const duplicate=lessonId.endsWith('-sort')&&cells.some(other=>other.id!==cell.id&&other.value===cell.value),identity=String(cell.id).match(/(?:item|card)-(\d+)$/);card.querySelector('.scene-cell-identity').textContent=duplicate&&identity?String.fromCharCode(65+Number(identity[1])):'';
         card.querySelector('.scene-cell-index').textContent=cell.index===undefined?'':display(cell.index);
-        card.querySelector('.scene-cell-marker').textContent=cell.marker??'';
+        card.querySelector('.scene-cell-marker').textContent=cell.marker??'';card.querySelector('.scene-cell-marker').title=cell.marker??'';
         card.setAttribute('aria-label',[cell.index===undefined?'':`index ${cell.index}`,display(cell.value),cell.marker||''].filter(Boolean).join(': '));
       }
       let empty=el.querySelector('.scene-empty');if(!empty){empty=document.createElement('div');empty.className='scene-empty';el.append(empty);}empty.hidden=cells.length>0;empty.textContent=lang==='ar'?'فاضي · [ ]':'Empty · [ ]';

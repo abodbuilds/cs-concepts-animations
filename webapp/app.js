@@ -6,7 +6,7 @@
     const $ = id => document.getElementById(id);
     const dictionaries = {
       ar: {
-        chooseLesson:'اختار المفهوم',graphCategory:'خوارزميات الجراف',stringCategory:'البحث في النصوص',skip:'انتقل للتجربة',library:'المكتبة',searchCategory:'خوارزميات البحث',sortCategory:'خوارزميات الترتيب',
+        visited:'اتزار',matched:'مطابق',chooseLesson:'اختار المفهوم',graphCategory:'خوارزميات الجراف',stringCategory:'البحث في النصوص',skip:'انتقل للتجربة',library:'المكتبة',searchCategory:'خوارزميات البحث',sortCategory:'خوارزميات الترتيب',
         sideNote:'الفكرة بتوضح لما تشوف كل خطوة.',sideDescription:'غيّر المدخلات. امشي مع الكود. وشوف اللي بيحصل.',local:'التجربة كلها على جهازك',
         interactive:'تجربة تفاعلية',explore:'جرّب بنفسك',theory:'افهم الفكرة',tabsNote:'خطوة واحدة. تغيير واضح.',newExample:'مثال جديد',editInput:'غيّر المدخلات',
         arrayLabel:'الأرقام',targetLabel:'المطلوب · target',inputHelp:'لحد 16 عدد صحيح من -999 لـ 999، بينهم فاصلة. سيبها فاضية لتجربة الصف الفاضي.',
@@ -25,7 +25,7 @@
         insertionNote:'الخانة المعلّمة مكان للكتابة، مش حذف من الذاكرة. الرقم الباهت يفضل موجود لحد ما نكتب فوقه.',
       },
       en: {
-        chooseLesson:'Choose a concept',graphCategory:'Graph algorithms',stringCategory:'String algorithms',skip:'Skip to the lab',library:'THE LIBRARY',searchCategory:'Search algorithms',sortCategory:'Sorting algorithms',
+        visited:'Visited',matched:'Matched',chooseLesson:'Choose a concept',graphCategory:'Graph algorithms',stringCategory:'String algorithms',skip:'Skip to the lab',library:'THE LIBRARY',searchCategory:'Search algorithms',sortCategory:'Sorting algorithms',
         sideNote:'A little movement. A lot more clarity.',sideDescription:'Change the input. Follow the code. See what happens.',local:'Runs entirely on your device',
         interactive:'Interactive lesson',explore:'Explore',theory:'The idea',tabsNote:'One step. One clear change.',newExample:'New example',editInput:'Edit input',
         arrayLabel:'Array',targetLabel:'Search target',inputHelp:'Up to 16 integers from -999 to 999, separated by commas. Leave blank to try an empty array.',
@@ -178,14 +178,14 @@
       const previous=index?frames[index-1].state:null;
       $('variables').innerHTML=vars.map(([name,value,marker])=>`<div class="variable ${previous&&(lesson()?V.display(frames[index-1].variables.find(v=>v.name===name)?.value)!==value:previous[name]!==value)?'changed':''}"><span class="variable-name">${marker?`<small class="pointer">${marker}</small>`:''}${escape(name)}</span><span class="variable-value ${value===null?'unset':''}" data-variable="${escape(name)}">${value===null?'—':escape(value)}</span></div>`).join('');
       const metrics=lesson()?frame().metrics.map(m=>[m.value,V.text(m.label,lang)]):isBinary()?[[s.probes,'probes'],[s.comparisons,'comparisons']]:[[s.comparisons,'comparisons'],[s.shifts,'shifts']];
-      $('metrics').innerHTML=metrics.map(([count,label])=>`<div class="metric"><strong>${String(count).padStart(2,'0')}</strong><span>${escape(lesson()?label:t(label))}</span></div>`).join('');
+      $('metrics').innerHTML=metrics.map(([count,label])=>`<div class="metric"><strong>${escape(String(count).padStart(2,'0'))}</strong><span>${escape(lesson()?label:t(label))}</span></div>`).join('');
       $('code-lines').querySelectorAll('.code-line').forEach(row=>{
         const number=Number(row.dataset.line),active=f.lines.includes(number);
         row.classList.toggle('active',active);row.classList.toggle('skipped',!lesson()&&!isBinary()&&f.kind==='bounds'&&!s.condition&&number===6);
         if(active)row.setAttribute('aria-current','step');else row.removeAttribute('aria-current');
       });
       const activeLine=$('code-lines').querySelector('.code-line.active'),scroll=$('code-scroll');
-      if(activeLine&&scroll.clientHeight){const top=activeLine.offsetTop-scroll.offsetTop;if(top<scroll.scrollTop||top+activeLine.offsetHeight>scroll.scrollTop+scroll.clientHeight)scroll.scrollTop=Math.max(0,top-scroll.clientHeight/2);}
+      if(activeLine&&scroll.clientHeight){const top=activeLine.getBoundingClientRect().top-scroll.getBoundingClientRect().top+scroll.scrollTop;if(top<scroll.scrollTop||top+activeLine.offsetHeight>scroll.scrollTop+scroll.clientHeight)scroll.scrollTop=Math.max(0,top-scroll.clientHeight/2);}
       renderStage();renderControls();
     }
     function renderCopy(){
@@ -196,12 +196,14 @@
       ['reset','previous','next'].forEach(id=>{$(id).setAttribute('aria-label',t(id));$(id).title=t(id);});
       $('copy-code').setAttribute('aria-label',t('copy'));$('copy-code').title=t('copy');
       $('timeline').setAttribute('aria-label',t('execution'));$('speed').setAttribute('aria-label',t('speed'));
+      document.querySelector('.visual-panel').classList.toggle('modular-panel',!!lesson());
       const c=configs[algorithm];document.title=`${c.name} · Algorithm Lab`;
       $('lesson-id').textContent=`${c.number} / ALGORITHMS / ${c.label}`;
       $('lesson-title').innerHTML=`${escape(c.name)}<span class="title-dot">.</span>`;
       $('lesson-description').textContent=lesson()?V.text(c.description,lang):t(isBinary()?'binaryDescription':'insertionDescription');
       $('complexity-badge').textContent=c.cost;$('complexity-badge').title=t('worst');
-      $('legend-last').textContent=lesson()?t('complete'):t(isBinary()?'discarded':'sorted');
+      $('legend-last').textContent=lesson()?t(c.category==='graph'?'visited':c.category==='string'?'matched':'sorted'):t(isBinary()?'discarded':'sorted');
+      $('legend-last').previousElementSibling.className='legend-dot '+(isBinary()?'excluded':'completed');
       $('code-note').innerHTML=rich(lesson()?V.text(c.note,lang):t(isBinary()?'binaryNote':'insertionNote'));
       $('dataset-description').textContent=lesson()?V.text(c.summary(inputs[algorithm]),lang):lang==='ar'?`${inputs[algorithm].numbers.length} عنصر${isBinary()?' · بالترتيب':''}`:`${inputs[algorithm].numbers.length} elements${isBinary()?' · sorted ascending':''}`;
       $('edge-preset').textContent=t(isBinary()?'notFound':'reverse');$('target-field').hidden=!isBinary();
@@ -209,6 +211,8 @@
       $('lesson-input-fields').hidden=!lesson();$('lesson-presets').hidden=!lesson();$('algorithm-select').value=algorithm;
       if(lesson()&&!$('input-editor').hidden)renderLessonFields(readLessonFields());
       document.querySelectorAll('.algorithm-option[data-algorithm]').forEach(button=>{const selected=button.dataset.algorithm===algorithm;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',selected);});
+      const nav=document.querySelector('.algorithm-nav'),selectedButton=nav.querySelector('.selected');
+      if(selectedButton&&getComputedStyle(nav).display==='flex'){const box=selectedButton.getBoundingClientRect(),bounds=nav.getBoundingClientRect();if(box.left<bounds.left)nav.scrollLeft+=box.left-bounds.left;else if(box.right>bounds.right)nav.scrollLeft+=box.right-bounds.right;}
       renderTheory();if(frames.length)renderState();
     }
     function setView(next){

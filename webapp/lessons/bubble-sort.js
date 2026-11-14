@@ -220,7 +220,7 @@
 
   const lesson = {
     id: 'bubble-sort', name: 'Bubble Sort', category: 'sort', number: '04',
-    label: 'ADJACENT SWAPS', cost: 'O(n²)',
+    label: 'BUBBLE SORT', cost: 'O(n²)',
     description: message('Compare neighbors, move larger values right, and stop when a pass makes no swaps.',
       'نقارن الكروت اللي جنب بعض، ونحرّك الأكبر يمين، ونقف لما لفة تخلص من غير تبديل.'),
     note: message('Strict > keeps equal cards stable. Each pass shrinks right; an already-sorted input needs just one pass.',
