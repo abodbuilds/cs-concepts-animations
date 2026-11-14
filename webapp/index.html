@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#2D123F">
-  <meta name="description" content="Explore searching, sorting, graph algorithms and string matching with interactive animations, theory, and line-by-line pseudocode.">
-  <title>Algorithm Lab · @abodbuilds</title>
+  <meta name="description" content="Explore computer science through interactive lessons, animated visualizations, theory, and line-by-line pseudocode.">
+  <title>CS Concept Lab · @abodbuilds</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232D123F'/%3E%3Cpath d='M16 43V29h8v14zm12 0V16h8v27zm12 0V23h8v20z' fill='%23F4D35E'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
   <script src="algorithms.js" defer></script>
@@ -17,14 +17,14 @@
   <a class="skip-link" href="#workbench" data-i18n="skip">انتقل للتجربة</a>
   <div class="app-shell">
     <header class="site-header" dir="ltr">
-      <a class="wordmark" href="#binary-search" aria-label="Algorithm Lab home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>ALGORITHM<span class="wordmark-light"> LAB</span></span></a>
+      <a class="wordmark" href="#binary-search" aria-label="CS Concept Lab home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>CS CONCEPT<span class="wordmark-light"> LAB</span></span></a>
       <div class="header-right"><span class="brand-handle">@abodbuilds</span><span class="header-divider"></span><button class="language-switch" id="language" aria-label="Switch to English">EN <span aria-hidden="true">↗</span></button></div>
     </header>
     <div class="workspace" dir="ltr">
-      <aside class="sidebar" aria-label="Algorithm library">
+      <aside class="sidebar" aria-label="CS concept library">
         <div class="sidebar-heading"><span class="eyebrow" data-i18n="library">المكتبة</span><span class="library-count">02</span></div>
-        <div class="library-mobile"><label for="algorithm-select" data-i18n="chooseLesson">اختار المفهوم</label><select id="algorithm-select" aria-label="Algorithm"></select></div>
-        <nav class="algorithm-nav" aria-label="Algorithms">
+        <div class="library-mobile"><label for="algorithm-select" data-i18n="chooseLesson">اختار المفهوم</label><select id="algorithm-select" aria-label="Concept"></select></div>
+        <nav class="algorithm-nav" aria-label="Concepts">
           <button class="algorithm-option selected" data-algorithm="binary-search" aria-pressed="true"><span class="nav-icon" aria-hidden="true">⌕</span><span><b>Binary Search</b><small data-i18n="searchCategory">خوارزميات البحث</small></span><span class="nav-arrow" aria-hidden="true">↗</span></button>
           <button class="algorithm-option" data-algorithm="insertion-sort" aria-pressed="false"><span class="nav-icon sort-icon" aria-hidden="true">▂▅▇</span><span><b>Insertion Sort</b><small data-i18n="sortCategory">خوارزميات الترتيب</small></span><span class="nav-arrow" aria-hidden="true">↗</span></button>
         </nav>
@@ -47,7 +47,7 @@
             <div class="editor-bottom"><div id="lesson-presets" class="presets" hidden></div><div class="presets" id="legacy-presets"><span data-i18n="try">جرّب:</span><button type="button" data-preset="default" data-i18n="presetDefault">مثال الحلقة</button><button type="button" data-preset="edge" id="edge-preset">مش موجود</button><button type="button" data-preset="duplicates" data-i18n="duplicates">قيم مكرّرة</button><button type="button" data-preset="empty" data-i18n="empty">صف فاضي</button></div><div class="editor-actions"><button type="button" class="text-button" id="cancel-input" data-i18n="cancel">إلغاء</button><button type="button" id="sort-apply" class="secondary-button compact" hidden data-i18n="sortApply">رتّب وطبّق</button><button class="primary-button compact" type="submit" data-i18n="apply">طبّق</button></div></div>
           </form>
           <div class="lab-grid">
-            <section class="visual-panel panel" aria-label="Algorithm animation">
+            <section class="visual-panel panel" aria-label="Concept visualization">
               <div class="panel-heading"><div><span class="panel-kicker" data-i18n="liveState">الحالة دلوقتي</span><h2 data-i18n="visualization">شوف الفكرة بتتحرّك</h2></div><span class="phase-badge" id="phase-badge"></span></div>
               <div class="legend"><span><i class="legend-dot neutral"></i><span data-i18n="available">متاح</span></span><span><i class="legend-dot active"></i><span data-i18n="active">الخطوة الحالية</span></span><span><i class="legend-dot excluded"></i><span id="legend-last"></span></span></div>
               <div class="stage" id="stage" dir="ltr"><div class="stage-grid" aria-hidden="true"></div><div class="target-capsule" id="target-capsule"><span>target</span><strong id="target-display">71</strong></div><div class="held-label" id="held-label" hidden>value<span data-i18n="savedValue">القيمة المحفوظة</span></div><div class="array-label">numbers</div><div class="slot-layer" id="slot-layer"></div><div class="card-layer" id="card-layer"></div><div class="empty-state" id="empty-state" hidden><span class="empty-symbol">[ ]</span><b data-i18n="emptyArray">الصف فاضي</b><span data-i18n="emptyHint">شغّل الكود وشوف بيتعامل مع الحالة دي إزاي.</span></div><div class="range-note" id="range-note"></div></div>

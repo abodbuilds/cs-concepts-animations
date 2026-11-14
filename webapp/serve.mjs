@@ -17,4 +17,4 @@ server.on('error',error=>{
   console.error(error.code==='EADDRINUSE'?`Port ${port} is in use. Set LAB_PORT to choose another port.`:`Could not start the local server (${error.code}). You can still open webapp/dist/index.html directly.`);
   process.exitCode=1;
 });
-server.listen(port,'127.0.0.1',()=>console.log(`Algorithm Lab: http://127.0.0.1:${server.address().port}`));
+server.listen(port,'127.0.0.1',()=>console.log(`CS Concept Lab: http://127.0.0.1:${server.address().port}`));

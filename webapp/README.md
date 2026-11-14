@@ -1,8 +1,8 @@
-# Algorithm Lab
+# CS Concept Lab
 
-An interactive library covering Binary Search, Insertion Sort, Selection Sort, Bubble Sort, Merge Sort, Quicksort, BFS, DFS, Dijkstra shortest paths, and naive string matching. It uses the existing Logic Workshop palette and Alexandria font, with Egyptian Arabic explanations, an English toggle, and English pseudocode.
+A computer-science learning library organized by theme. The Algorithms theme currently covers Binary Search, Insertion Sort, Selection Sort, Bubble Sort, Merge Sort, Quicksort, BFS, DFS, Dijkstra shortest paths, and naive string matching. It uses the existing Logic Workshop palette and Alexandria font, with Egyptian Arabic explanations, an English toggle, and English pseudocode.
 
-Open **[dist/index.html](dist/index.html)** in a browser. The built file contains the font, styles, code, and both lessons; it works offline and needs no backend or account.
+Open **[dist/index.html](dist/index.html)** in a browser. The built file contains the font, styles, code, and all lessons; it works offline and needs no backend or account.
 
 From the project root:
 
@@ -16,7 +16,7 @@ npm run test:web
 
 ## Explore a lesson
 
-- Play or pause, change speed, step forward or backward, reset, or seek to any execution step.
+- Use the bottom playback bar to play or pause, change speed, step forward or backward, reset, or seek to any execution step. It stays within reach while you scroll.
 - Follow the highlighted pseudocode line, variables, comparisons, and card movements together.
 - Edit up to 16 integers for searching and sorting; try reverse order, duplicate identities, and empty inputs.
 - Explore BFS and DFS on undirected graphs, or Dijkstra on directed nonnegative weighted graphs. Graphs support up to 8 nodes and 20 edges. Each editor explains its syntax.

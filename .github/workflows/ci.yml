@@ -1,4 +1,4 @@
-name: Algorithm Lab checks
+name: CS Concept Lab checks
 on:
   push:
     branches: [main]

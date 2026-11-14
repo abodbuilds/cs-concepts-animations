@@ -1,4 +1,4 @@
-# Algorithm Lab lesson interface
+# CS Concept Lab lesson interface
 
 Each lesson is one dependency-free classic JavaScript module at `webapp/lessons/<id>.js`. Attach the object to `globalThis.AlgorithmLessons[id]` and export it through `module.exports` when available. Do not require another new lesson. `globalThis.AlgorithmLab` is available in the browser; tests may require `../algorithms.js` explicitly if needed.
 

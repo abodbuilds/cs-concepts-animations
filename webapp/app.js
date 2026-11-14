@@ -197,7 +197,7 @@
       $('copy-code').setAttribute('aria-label',t('copy'));$('copy-code').title=t('copy');
       $('timeline').setAttribute('aria-label',t('execution'));$('speed').setAttribute('aria-label',t('speed'));
       document.querySelector('.visual-panel').classList.toggle('modular-panel',!!lesson());
-      const c=configs[algorithm];document.title=`${c.name} · Algorithm Lab`;
+      const c=configs[algorithm];document.title=`${c.name} · CS Concept Lab`;
       $('lesson-id').textContent=`${c.number} / ALGORITHMS / ${c.label}`;
       $('lesson-title').innerHTML=`${escape(c.name)}<span class="title-dot">.</span>`;
       $('lesson-description').textContent=lesson()?V.text(c.description,lang):t(isBinary()?'binaryDescription':'insertionDescription');

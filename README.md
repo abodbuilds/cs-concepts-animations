@@ -1,6 +1,6 @@
-# Algorithm Lab
+# CS Concept Lab
 
-Interactive computer-science lessons in English and Egyptian Arabic, with purple-and-gold card animations, theory, and synchronized pseudocode. Built for the @abodbuilds CS concepts series.
+A visual lab for computer science across all themes, starting with ten algorithm lessons. Available in English and Egyptian Arabic, with purple-and-gold card animations, theory, and synchronized pseudocode. Built for the @abodbuilds CS concepts series.
 
 ```sh
 npm run build:web
