@@ -19,4 +19,4 @@ const html=template.replace('<link rel="stylesheet" href="styles.css">',`<style>
 await mkdir(new URL('dist/',folder),{recursive:true});
 await writeFile(new URL('dist/index.html',folder),html);
 await writeFile(new URL('dist/FONT-LICENSE.txt',folder),await readFile(new URL('../skills/cs-concept-script/assets/fonts/OFL.txt',folder)));
-console.log(`Built ${fileURLToPath(new URL('dist/index.html',folder))} (${Buffer.byteLength(html)} bytes; no network dependencies)`);
+console.log(`Built ${fileURLToPath(new URL('dist/index.html',folder))} (${Buffer.byteLength(html)} bytes; the app runs offline, only the Plausible analytics script loads from the network)`);

@@ -2,7 +2,7 @@
 
 A computer-science learning library organized by theme. The Algorithms theme currently covers Binary Search, Insertion Sort, Selection Sort, Bubble Sort, Merge Sort, Quicksort, BFS, DFS, Dijkstra shortest paths, and naive string matching. The Data Structures theme covers Arrays, Linked List, Stack, Queue, Hash Table, Binary Search Tree, Binary Heap, and Graph, each driven by an editable script of operations. It uses the existing Logic Workshop palette and Alexandria font, with Egyptian Arabic explanations, an English toggle, and English pseudocode.
 
-Open **[dist/index.html](dist/index.html)** in a browser. The built file contains the font, styles, code, and all lessons; it works offline and needs no backend or account.
+Open **[dist/index.html](dist/index.html)** in a browser. The built file contains the font, styles, code, and all lessons; it works offline and needs no backend or account. When online, the page loads Plausible's cookieless analytics script.
 
 From the project root:
 
@@ -35,7 +35,7 @@ npm run test:web
 
 `tests/browser-check.js` exercises the actual interface, including seeking, playback, input validation, language switching, theory tabs, and responsive layout. It is a QA fixture and is not bundled into the app. Results are recorded in `review/qa.json`. `node webapp/prepare-preview.mjs` generates compact standalone and inline review versions after building.
 
-The complexity figures describe the algorithms themselves. The visualizer additionally stores execution history so users can seek backward. No inputs are uploaded; only the language preference is saved locally. The bundled font's license is in `dist/FONT-LICENSE.txt`.
+The complexity figures describe the algorithms themselves. The visualizer additionally stores execution history so users can seek backward. No inputs are uploaded; only the language preference is saved locally. Plausible counts page views without cookies. The bundled font's license is in `dist/FONT-LICENSE.txt`.
 
 ## Cloudflare
 
